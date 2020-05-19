@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -23,20 +23,27 @@
           <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/">Home</a>
-              <a class="nav-item nav-link" href="/">About</a>
-            </div>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                      <li class="nav-item active"><a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a></li>
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Dropdown link
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" href="#">Action</a>
+                          <a class="dropdown-item" href="#">Another action</a>
+                          <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                      </li>
+                        <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+                    </ul>
+                  </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-
-                    <a class="nav-item nav-link" href="/">New Post</a>
-                    <a class="nav-item nav-link" href="/">Profile</a>
-                    <a class="nav-item nav-link" href="/">Logout</a>
-
-              <a class="nav-item nav-link" href="/">Login</a>
-              <a class="nav-item nav-link" href="/">Register</a>
-
+                    <small class="mt-2 btn-info">Logged in as </small>
+                    <a class="nav-item nav-link" href="/">{{ user.username }}</a>
+                    <a class="nav-item nav-link" href="{% url 'logout'%}">Logout</a>
             </div>
           </div>
         </div>
@@ -47,19 +54,6 @@
       <div class="row">
         <div class="col-md-8">
           {% block content %}{% endblock %}
-        </div>
-        <div class="col-md-4">
-          <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>You can put any information here you'd like.
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-              </ul>
-            </p>
-          </div>
         </div>
       </div>
     </main>
