@@ -1,0 +1,30 @@
+from django.urls import path
+from .views import (
+    SaleUpdateView,
+    BuyVoucherCreateView,
+    BuyListView,
+    BuyDeleteView,
+    BuyVoucherUpdateView,
+    SaleCreateView,
+    SaleListView,
+    SaleDeleteView,
+    GeneralVoucherCreateView,
+    GeneralVoucherListView,
+    GeneralVoucherUpdateView,
+    GeneralVoucherDeleteView
+    )
+
+urlpatterns = [
+    path('add_buy_voucher', BuyVoucherCreateView.as_view(), name='add-buy-voucher'),
+    path('buy_list', BuyListView.as_view(), name='buy-list'),
+    path('buy/<int:pk>/update', BuyVoucherUpdateView.as_view(), name='buy-update'),
+    path('buy/<int:pk>/delete', BuyDeleteView.as_view(), name='buy-delete'),
+    path('add_sale', SaleCreateView.as_view(), name='add-sale'),
+    path('sale_list', SaleListView.as_view(), name='sale-list'),
+    path('sale/<int:pk>/update', SaleUpdateView.as_view(), name='sale-update'),
+    path('sale/<int:pk>/delete', SaleDeleteView.as_view(), name='sale-delete'),
+    path('add_general_voucher', GeneralVoucherCreateView.as_view(), name='add-general-voucher'),
+    path('general_voucher/<int:pk>/update', GeneralVoucherUpdateView.as_view(), name='general-voucher-update'),
+    path('general_voucher_list', GeneralVoucherListView.as_view(), name='general-voucher-list'),
+    path('general_voucher/<int:pk>/delete', GeneralVoucherDeleteView.as_view(), name='general-voucher-delete'),
+]

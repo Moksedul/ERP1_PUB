@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row">
+{% include 'main/settings_sidebar.html' %}
+    <div class="col card">
+        <form method="post" >
+            {% csrf_token %}
+
+            <div class="form-group">
+                {{ form|crispy }}
+                <button class="btn btn-outline-info" type="submit">Update</button>
+            </div>
+        </form>
+    </div> </div>
+{% endblock content %}

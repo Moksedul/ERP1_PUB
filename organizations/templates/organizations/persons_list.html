@@ -1,0 +1,37 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="row">
+{% include 'main/settings_sidebar.html' %}
+	<div class=" card card-body">
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-person'%}">Add Person</a>
+			<table class="table table-sm table-striped">
+				<tr>
+					<th>Person Name</th>
+					<th>Company Name</th>
+					<th>Address</th>
+					<th>Contact Number</th>
+
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+
+				{% for person in persons %}
+					<tr>
+						<td>{{ person.person_name }}</td>
+						<td>{{ person.company_name }}</td>
+						<td>{{ person.address }}</td>
+						<td>{{ person.contact_number }}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'person-update' person.id %}">Edit</a></td>
+
+						<td><a class="btn btn-sm btn-danger" href="{% url 'person-delete' person.id %}">Delete</a></td>
+
+					</tr>
+				{% endfor %}
+
+
+			</table>
+		</div>
+</div>
+
+{% endblock content %}

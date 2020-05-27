@@ -1,0 +1,18 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class="row">
+{% include 'main/settings_sidebar.html' %}
+    <div class="col content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-b">Delete Company</legend>
+                <h2>Are sure want to delete the Company "{{ object.name_of_company }}" ?</h2>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                <a href="{% url 'company-list' %}">Cancel</a>
+            </div>
+        </form>
+    </div></div>
+{% endblock content %}

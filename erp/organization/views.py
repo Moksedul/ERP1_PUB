@@ -11,7 +11,7 @@ from .models import Organizations
 def add_organizations(request):
     form = OrganizationsFrom()
     if request.method == 'POST':
-        form = OrganizationsFrom(request.POST)
+        form = OrganizationsFrom(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('/organizations_list')

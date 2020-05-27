@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
     <link rel="stylesheet" type="text/css" href="{% static 'main/main.css'%}">
 
 
@@ -18,31 +20,33 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">TechAlong ERP</a>
+          <a class="navbar-brand mr-3" href="/">TechAlong ERP</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
-                      <li class="nav-item active"><a class="nav-link" href="#">HOME<span class="sr-only">(current)</span></a></li>
+                      <li class="nav-item active"><a class="nav-link" href="/">HOME<span class="sr-only">(current)</span></a></li>
                       <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           VOUCHER
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                          <a class="dropdown-item" href="#">BUY</a>
-                          <a class="dropdown-item" href="#">SALE</a>
-                          <a class="dropdown-item" href="#">GENERAL</a>
+                          <a class="dropdown-item" href="{% url 'buy-list' %}">BUY</a>
+                          <a class="dropdown-item" href="{% url 'sale-list' %}">SALE</a>
+                          <a class="dropdown-item" href="{% url 'general-voucher-list' %}">GENERAL</a>
                         </div>
                       </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'product-list' %}">PRODUCTS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">CHALLAN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">PAYMENT</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">STOCK</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">ACCOUNT</a></li>
                     </ul>
                   </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'main-settings'%}"><i class="fa fa-cog"></i></a></li>
                     <small class="mt-2">Logged in as </small>
                     <a class="nav-item nav-link" href="/">{{ user.username }}</a>
                     <li class="nav-item"><a href="{% url 'logout'%}"><button class="btn btn-outline-dark">LOGOUT</button></a></li>
@@ -53,13 +57,12 @@
     </header>
 
     <main role="main" class="container">
-      <div class="row">
+
 
           {% block content %}{% endblock %}
 
-      </div>
-    </main>
 
+    </main>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

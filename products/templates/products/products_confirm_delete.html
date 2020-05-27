@@ -1,6 +1,8 @@
 {% extends "main/base.html" %}
 {% block content %}
-    <div class="content-section">
+<div class="row">
+{% include 'main/settings_sidebar.html' %}
+    <div class="col content-section">
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
@@ -9,8 +11,8 @@
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                <button class="btn btn-outline-secondary"><a href="{% url 'product-list' %}">Cancel</a></button>
+                <a href="{% url 'product-list' %}">Cancel</a>
             </div>
         </form>
-    </div>
+    </div></div>
 {% endblock content %}

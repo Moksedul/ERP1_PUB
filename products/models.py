@@ -11,7 +11,7 @@ class Products(models.Model):
         unique_together = [("product_name", "product_category")]
 
     def __str__(self):
-        return self.product_name, self.product_category
+        return str(self.product_name)
 
     @staticmethod
     def get_absolute_url():
