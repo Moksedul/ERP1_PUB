@@ -1,0 +1,45 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <form method="post" >
+            {% csrf_token %}
+            <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.challan_no|as_crispy_field }}
+            </div>
+                <div class="form-group col-md-6 mb-0">
+                {{ form.buyer_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                {{ form.company_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                {{ form.product_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                {{ form.weight_per_bag|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                {{ form.number_of_bag|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-2 mb-0">
+                {{ form.number_of_vehicle|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-5 mb-0">
+                {{ form.vehicle_plate_number|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-5 mb-0">
+                {{ form.name_of_driver|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-5 mb-0">
+                {{ form.date_added|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-7 mb-0">
+                {{ form.remarks|as_crispy_field }}
+                </div>
+            </div>
+                <button class="btn btn-outline-info" type="submit">Save</button>
+        </form>
+    </div>
+{% endblock content %}

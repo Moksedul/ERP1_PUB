@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'orders',
+    'challan',
     'vouchers',
     'django_tables2',
     'crispy_forms',
