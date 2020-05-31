@@ -30,7 +30,8 @@ urlpatterns = [
     path('', include('organizations.urls')),
     path('', include('vouchers.urls')),
     path('', include('challan.urls')),
-    path('', include('orders.urls'))
+    path('', include('orders.urls')),
+    path('', include('stocks.urls'))
 
 ]
 
