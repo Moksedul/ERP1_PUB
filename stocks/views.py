@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Stocks
@@ -14,3 +16,13 @@ class StockCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.added_by = self.request.user
         return super().form_valid(form)
+
+
+def stock_view(request):
+    stocks = Stocks.objects.all()
+    all_weights = []
+    for stock in stocks:
+        all_weights.append(stock.weight)
+    total_weight = sum(all_weights)
+    context = {"total_weight": int(total_weight)}
+    return render(request, 'stocks/report.html', context)

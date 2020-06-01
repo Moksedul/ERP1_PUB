@@ -9,9 +9,16 @@ CONDITION_CHOICES = [
 ]
 
 
+class Rooms(models.Model):
+    room_name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return str(self.room_name)
+
+
 # Create your models here. RoomNo,NumberOfBags,Weight,ProductId,ProductCondition,LastModifiedBy,CreatedBy,Remarks
 class Stocks(models.Model):
-    room_no = models.IntegerField()
+    room_no = models.ForeignKey(Rooms, on_delete=models.CASCADE)
     number_of_bag = models.FloatField()
     weight = models.FloatField()
     name_of_product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
@@ -20,7 +27,7 @@ class Stocks(models.Model):
     remarks = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return str(self.product_condition)
+        return str(self.room_no)
 
     @staticmethod
     def get_absolute_url():

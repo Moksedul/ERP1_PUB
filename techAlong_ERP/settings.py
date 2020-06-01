@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'orders',
     'challan',
     'vouchers',
-    'django_tables2',
     'crispy_forms',
     'organizations',
     'products.apps.ProductsConfig',
