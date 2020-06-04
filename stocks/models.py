@@ -15,6 +15,10 @@ class Rooms(models.Model):
     def __str__(self):
         return str(self.room_name)
 
+    @staticmethod
+    def get_absolute_url():
+        return reverse('room-list')
+
 
 # Create your models here. RoomNo,NumberOfBags,Weight,ProductId,ProductCondition,LastModifiedBy,CreatedBy,Remarks
 class Stocks(models.Model):
@@ -31,4 +35,4 @@ class Stocks(models.Model):
 
     @staticmethod
     def get_absolute_url():
-        return reverse('add-stock')
+        return reverse('stock-list')

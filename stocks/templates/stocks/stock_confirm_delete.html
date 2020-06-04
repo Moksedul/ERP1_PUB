@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class="col-6">
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-b">Delete Stock</legend>
+                <h4>Are you sure want to delete the Stock "{{ object.name_of_product }} ?"</h4>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                <a href="{% url 'sale-list' %}">Cancel</a>
+            </div>
+        </form>
+    </div></div>
+{% endblock content %}

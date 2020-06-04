@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Stocks
+from .models import Stocks, Rooms
 
 
 # Create your views here.
@@ -26,3 +26,47 @@ def stock_view(request):
     total_weight = sum(all_weights)
     context = {"total_weight": int(total_weight)}
     return render(request, 'stocks/report.html', context)
+
+
+class StockListView(LoginRequiredMixin, ListView):
+    model = Stocks
+    template_name = 'stocks/stock_list.html'
+    context_object_name = 'stocks'
+    paginate_by = 5
+
+
+class StockUpdateView(LoginRequiredMixin, UpdateView):
+    model = Stocks
+    template_name = 'stocks/stock_update_form.html'
+    fields = '__all__'
+
+
+class StockDeleteView(LoginRequiredMixin, DeleteView):
+    model = Stocks
+    template_name = 'stocks/stock_confirm_delete.html'
+    success_url = '/stock_list'
+
+
+class RoomCreateView(LoginRequiredMixin, CreateView):
+    model = Rooms
+    template_name = 'stocks/room_add_form.html'
+    fields = '__all__'
+
+
+class RoomListView(LoginRequiredMixin, ListView):
+    model = Rooms
+    template_name = 'stocks/room_list.html'
+    context_object_name = 'rooms'
+    paginate_by = 5
+
+
+class RoomUpdateView(LoginRequiredMixin, UpdateView):
+    model = Rooms
+    template_name = 'stocks/room_update_form.html'
+    fields = '__all__'
+
+
+class RoomDeleteView(LoginRequiredMixin, DeleteView):
+    model = Rooms
+    template_name = 'stocks/room_confirm_delete.html'
+    success_url = '/room_list'
