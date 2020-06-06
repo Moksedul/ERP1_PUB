@@ -58,3 +58,13 @@ class OtherAccountDelete(LoginRequiredMixin, DeleteView):
     model = OtherAccounts
     template_name = 'accounts/other_account_delete.html'
     success_url = '/other_account_list'
+
+
+class InvestmentCreateView(LoginRequiredMixin, CreateView):
+    model = Investment
+    template_name = 'accounts/investment_add_form.html'
+    fields = ('source_of_investment', 'investing_amount', 'investing_to_account', 'remarks',)
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)

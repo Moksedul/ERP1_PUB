@@ -12,4 +12,5 @@ urlpatterns = [
     path('other_account_list', OtherAccountList.as_view(), name='other-account-list'),
     path('other_account/<int:pk>/update', OtherAccountUpdate.as_view(), name='other-account-update'),
     path('other_account/<int:pk>/delete', OtherAccountDelete.as_view(), name='other-account-delete'),
+    path('add_investment', InvestmentCreateView.as_view(), name='add-investment'),
 ]
