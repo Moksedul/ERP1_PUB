@@ -1,0 +1,7 @@
+{% extends "main/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <a href="{% url 'bank-account-list' %}" class="btn btn-secondary btn-lg btn-block">Bank Accounts</a>
+        <a href="{% url 'other-account-list' %}" class="btn btn-secondary btn-lg btn-block">Other Accounts</a>
+    </div>
+{% endblock content %}

@@ -31,7 +31,8 @@ urlpatterns = [
     path('', include('vouchers.urls')),
     path('', include('challan.urls')),
     path('', include('orders.urls')),
-    path('', include('stocks.urls'))
+    path('', include('stocks.urls')),
+    path('', include('accounts.urls'))
 
 ]
 

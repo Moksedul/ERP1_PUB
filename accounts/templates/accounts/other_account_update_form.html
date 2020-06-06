@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <form method="post" >
+            {% csrf_token %}
+            <div class="form-row">
+            <div class="form-group col-md-12 mb-0" >
+                {{ form.account_name|as_crispy_field }}
+            </div>
+                <div class="form-group col-md-6 mb-0">
+                {{ form.opening_balance|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                {{ form.remarks|as_crispy_field }}
+                </div>
+            </div>
+                <button class="btn btn-outline-info" type="submit">Update</button>
+        </form>
+    </div>
+{% endblock content %}
