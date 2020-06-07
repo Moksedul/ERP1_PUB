@@ -3,12 +3,10 @@
 {% block content %}
 <!--<div class="card card-body">-->
 	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-bank-account'%}">Add Bank Account</a>
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-other-account'%}">Add other Account</a>
 			<table class="table table-sm table-striped">
 				<tr>
 					<th>Account Name</th>
-					<th>Account Number</th>
-					<th>Bank & Branch</th>
 					<th>Opening Balance</th>
 					<th>Remaining Balance</th>
 					<th>Remarks</th>
@@ -19,14 +17,12 @@
 				{% for account in accounts %}
 					<tr>
 						<td>{{ account.account_name }}</td>
-						<td>{{ account.account_no }}</td>
-						<td>{{ account.bank_name }} :{{ account.bank_branch }}</td>
 						<td>{{ account.opening_balance }}</td>
-						<td>{{ remaining_balance }}</td>
+						<td>{{ account.opening_balance }}</td>
 						<td>{{ account.remarks }}</td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'bank-account-update' account.id %}">Edit</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'other-account-update' account.id %}">Edit</a></td>
 
-						<td><a class="btn btn-sm btn-danger" href="{% url 'bank-account-delete' account.id %}">Delete</a></td>
+						<td><a class="btn btn-sm btn-danger" href="{% url 'other-account-delete' account.id %}">Delete</a></td>
 
 					</tr>
 				{% endfor %}
