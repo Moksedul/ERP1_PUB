@@ -13,4 +13,6 @@ urlpatterns = [
     path('other_account/<int:pk>/update', OtherAccountUpdate.as_view(), name='other-account-update'),
     path('other_account/<int:pk>/delete', OtherAccountDelete.as_view(), name='other-account-delete'),
     path('add_investment', InvestmentCreateView.as_view(), name='add-investment'),
+    path('investment_list', InvestmentList.as_view(), name='investment-list'),
+    path('investment/<int:pk>/delete', InvestmentDelete.as_view(), name='investment-delete'),
 ]

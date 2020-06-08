@@ -1,6 +1,9 @@
 {% extends "main/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="row">
+{% include 'main/settings_sidebar.html' %}
+    <div class=" card card-body">
     <div class="container">
         <form method="post">
             {% csrf_token %}
@@ -10,5 +13,5 @@
                 <button class="btn btn-outline-info" type="submit">Add</button>
             </div>
         </form>
-    </div>
+    </div></div></div>
 {% endblock content %}

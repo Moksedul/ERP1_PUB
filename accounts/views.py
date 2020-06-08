@@ -16,6 +16,10 @@ class BankAccountCreate(LoginRequiredMixin, CreateView):
     template_name = 'accounts/bank_account_add_form.html'
     fields = '__all__'
 
+    def form_valid(self, form):
+        form.instance.remaining_balance = form.cleaned_data['opening_balance']
+        return super().form_valid(form)
+
 
 class BankAccountList(LoginRequiredMixin, ListView):
     model = Accounts
@@ -74,5 +78,26 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.added_by = self.request.user
         account = Accounts.objects.get(pk=form.cleaned_data['investing_to_account'].id)
-        print(account.bank_name)
+        amount = form.cleaned_data['investing_amount']
+        remaining_balance = account.remaining_balance
+        new_remaining_balance = amount + remaining_balance
+        account.remaining_balance = new_remaining_balance
+        account.save()
         return super().form_valid(form)
+
+
+class InvestmentList(LoginRequiredMixin, ListView):
+    model = Investment
+    template_name = 'accounts/investment_list.html'
+    context_object_name = 'investments'
+    paginate_by = 5
+
+
+class InvestmentDelete(LoginRequiredMixin, DeleteView):
+    model = Investment
+    template_name = 'accounts/investment_delete.html'
+    success_url = '/investment_list.html'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.items_to_delete = self.request.POST.getlist('itemsToDelete')

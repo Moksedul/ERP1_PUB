@@ -22,7 +22,7 @@
 						<td>{{ account.account_no }}</td>
 						<td>{{ account.bank_name }} :{{ account.bank_branch }}</td>
 						<td>{{ account.opening_balance }}</td>
-						<td>{{ remaining_balance }}</td>
+						<td>{{ account.remaining_balance }}</td>
 						<td>{{ account.remarks }}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'bank-account-update' account.id %}">Edit</a></td>
 
