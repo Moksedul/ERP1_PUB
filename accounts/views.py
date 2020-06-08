@@ -27,11 +27,6 @@ class BankAccountList(LoginRequiredMixin, ListView):
     context_object_name = 'accounts'
     paginate_by = 5
 
-    def get_context_data(self, **kwargs):
-        context = super(BankAccountList, self).get_context_data(**kwargs)
-        context['remaining_balance'] = '50000'
-        return context
-
 
 class BankAccountUpdate(LoginRequiredMixin, UpdateView):
     model = Accounts
@@ -49,6 +44,11 @@ class OtherAccountCreate(LoginRequiredMixin, CreateView):
     model = Accounts
     template_name = 'accounts/other_account_add_form.html'
     fields = ('account_name', 'opening_balance', 'remarks')
+
+    def form_valid(self, form):
+        form.instance.remaining_balance = form.cleaned_data['opening_balance']
+        return super().form_valid(form)
+    success_url = '/other_account_list'
 
 
 class OtherAccountList(LoginRequiredMixin, ListView):
