@@ -17,6 +17,7 @@
 				</tr>
 
 				{% for account in accounts %}
+				{% if account.account_no %}
 					<tr>
 						<td>{{ account.account_name }}</td>
 						<td>{{ account.account_no }}</td>
@@ -29,6 +30,7 @@
 						<td><a class="btn btn-sm btn-danger" href="{% url 'bank-account-delete' account.id %}">Delete</a></td>
 
 					</tr>
+				{% endif %}
 				{% endfor %}
 
 

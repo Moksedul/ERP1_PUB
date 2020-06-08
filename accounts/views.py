@@ -93,11 +93,11 @@ class InvestmentList(LoginRequiredMixin, ListView):
     paginate_by = 5
 
 
-class InvestmentDelete(LoginRequiredMixin, DeleteView):
-    model = Investment
-    template_name = 'accounts/investment_delete.html'
-    success_url = '/investment_list.html'
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.items_to_delete = self.request.POST.getlist('itemsToDelete')
+def delete_investment(request, pk):
+    investment = Investment.objects.get(id=pk)
+    account = investment.investing_to_account
+    context = {
+        'investment': investment,
+        'account': account
+                }
+    return render(request, "accounts/investment_delete.html", context)

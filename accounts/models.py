@@ -11,7 +11,7 @@ class Accounts(models.Model):
     bank_branch = models.CharField(max_length=50, null=True, blank=True)
     opening_balance = models.FloatField(null=True, default=0)
     remaining_balance = models.FloatField(null=True, blank=True, default=0)
-    date_dated = models.DateTimeField(default=now, blank=True)
+    date_added = models.DateTimeField(default=now, blank=True)
     remarks = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
@@ -27,7 +27,7 @@ class Investment(models.Model):
     investing_amount = models.FloatField()
     investing_to_account = models.ForeignKey(Accounts, null=True, on_delete=models.CASCADE)
     added_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    date_dated = models.DateTimeField(default=now, blank=True)
+    date_added = models.DateTimeField(default=now, blank=True)
     remarks = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
