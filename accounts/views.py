@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -25,6 +26,7 @@ class BankAccountList(LoginRequiredMixin, ListView):
     model = Accounts
     template_name = 'accounts/bank_account_list.html'
     context_object_name = 'accounts'
+    ordering = ['-date_added']
     paginate_by = 5
 
 
@@ -55,6 +57,7 @@ class OtherAccountList(LoginRequiredMixin, ListView):
     model = Accounts
     template_name = 'accounts/other_account_list.html'
     context_object_name = 'accounts'
+    ordering = ['-date_added']
     paginate_by = 5
 
 
@@ -90,14 +93,24 @@ class InvestmentList(LoginRequiredMixin, ListView):
     model = Investment
     template_name = 'accounts/investment_list.html'
     context_object_name = 'investments'
+    ordering = ['-date_added']
     paginate_by = 5
 
 
 def delete_investment(request, pk):
     investment = Investment.objects.get(id=pk)
-    account = investment.investing_to_account
+    account_selected = investment.investing_to_account
+    account_db = Accounts.objects.get(id=account_selected.id)
+    investment_amount = investment.investing_amount
+    remaining_balance_db = account_db.remaining_balance
+    account_db.remaining_balance = remaining_balance_db - investment_amount
+    if request.method == "POST":
+        url = investment.get_absolute_url()
+        investment.delete()
+        account_db.save()
+        return HttpResponseRedirect(url)
     context = {
         'investment': investment,
-        'account': account
+        'account': account_selected
                 }
     return render(request, "accounts/investment_delete.html", context)
