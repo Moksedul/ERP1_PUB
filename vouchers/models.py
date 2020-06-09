@@ -40,7 +40,7 @@ class BuyVoucher(models.Model):
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
-        return str(self.product_name)
+        return str(self.voucher_number)
 
     @staticmethod
     def get_absolute_url():
