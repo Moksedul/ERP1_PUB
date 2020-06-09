@@ -5,33 +5,44 @@
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-12 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.payment_no|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-12 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.voucher_no|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-12 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.payed_by|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-12 mb-0" >
+                 <div class="form-group col-md-12 mb-0" >
+                   {{ form.payed_to|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
                    {{ form.payment_date|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-12 mb-0" >
+                <div class="form-group col-md-6 mb-0" >
                    {{ form.payment_mode|as_crispy_field }}
                 </div>
 
-                  <div id="demo" style="display:none;" class="container">
-                      <div class="from-row">
-                        <div class="form-group col-md-2 mb-0" >
-                            {{ form.cheque_PO_TT_No|as_crispy_field }}
+                  <div id="demo" style="display:none; border: 1px solid gray; margin-bottom: 15px;" class="container">
+                      <div class="row">
+                        <div class="form-group col-md-4 mb-0" >
+                            {{ form.cheque_PO_ONL_no|as_crispy_field }}
                         </div>
-                        <div class="form-group col-md-2 mb-0" >
-                            {{ form.cheque_PO_TT_No|as_crispy_field }}
+                        <div class="form-group col-md-4 mb-0" >
+                            {{ form.cheque_date|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0" >
+                            {{ form.bank_name|as_crispy_field }}
                         </div>
                       </div>
                   </div>
-
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.payment_from_account|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.remarks|as_crispy_field }}
+                </div>
             </div>
                 <button class="btn btn-outline-info" type="submit">Save</button>
         </form>
@@ -40,7 +51,7 @@
 
 
 <script>
-function myFunction() {
+function showChequeDetails() {
   var x = document.getElementById("id_payment_mode").value;
   if (x == "CQ" || x == "ONL" || x == "PO") {
     document.getElementById("demo").style.display = "block";
