@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+        <article class="media content-section">
+              <div class="media-body">
+                <div class="article-metadata">
+hi
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1" href="{% url 'payment-update' object.id%}">Update</a>
+                        <a class="btn btn-danger btn-sm mt-1" href="{% url 'payment-delete' object.id%}">Delete</a>
+                    </div>
+                </div>
+              </div>
+        </article>
+
+{% endblock content %}
