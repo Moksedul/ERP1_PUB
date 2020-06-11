@@ -7,10 +7,10 @@ class PaymentForm(ModelForm):
     class Meta:
         model = Payment
         fields = '__all__'
-        widgets = {
-            'payment_date': AdminSplitDateTime(),
-            'cheque_date': AdminDateWidget(),
-        }
+        # widgets = {
+        #     'payment_date': AdminDateWidget(),
+        #     'cheque_date': AdminDateWidget(),
+        # }
         labels = {
             'cheque_PO_ONL_no': 'Cheque/PO/ONL No',
             'cheque_date': 'Date',

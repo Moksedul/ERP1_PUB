@@ -18,11 +18,12 @@ class Payment(models.Model):
     voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE)
     payed_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     payed_to = models.CharField(max_length=50)
-    payment_date = models.DateTimeField(default=now)
+    payment_date = models.DateField(default=now, null=True, blank=True)
     payment_mode = models.CharField(choices=PAYMENT_MODE_CHOICES, max_length=10)
     cheque_PO_ONL_no = models.IntegerField(null=True, blank=True)
     cheque_date = models.DateField(default=now, null=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
+    payment_amount = models.FloatField()
     payment_from_account = models.ForeignKey(Accounts, on_delete=models.CASCADE)
     remarks = models.CharField(max_length=50, blank=True)
 
