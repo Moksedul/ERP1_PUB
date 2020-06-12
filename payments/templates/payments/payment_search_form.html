@@ -1,13 +1,35 @@
-{% extends 'main/base.html' %}
-
+{% extends "main/base.html" %}
 {% block content %}
-<!--<div class="card card-body">-->
-<div>
+    <div class="container">
+        <form method="GET" >
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                <div class="input-group">
+                <input id="name_contains" class="form-control py-2 border-right-0 border" name="name_contains" type="search" placeholder="Name Contains..">
+                <span class="input-group-append">
+                    <div class="input-group-text bg-transparent">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </span>
+                </div>
+            </div>
+            </div>
+            <div class="form-row">
+             <div class="form-group col-md-4">
+                  <label for="voucher_no">Voucher No</label>
+                  <select id="voucher_no" class="form-control" name="voucher_no">
+                    <option selected>Choose...</option>
+					  {% for payment in page_obj %}
+                    <option>{{ payment.voucher_no }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-info">Search</button>
+        </form>
+    </div>
 
-</div>
-<a class="btn btn-sm btn-info" href="{% url 'payment-search' %}">Search</a>
-	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-payment'%}">New Payment</a>
+<div class=" card card-body">
 			<table class="table table-sm table-striped">
 				<tr>
 					<th>Payment Number</th>
@@ -21,7 +43,7 @@
 					<th>Delete</th>
 				</tr>
 
-				{% for payment in payments %}
+				{% for payment in page_obj %}
 					<tr>
 						<td>{{ payment.payment_no }}</td>
 						<td>{{ payment.voucher_no }}</td>
@@ -40,7 +62,7 @@
 			</table>
 		</div>
 		<div class="mt-3 float-right">
-		        {% if is_paginated %}
+
 
 					{% if page_obj.has_previous %}
 						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
@@ -60,8 +82,9 @@
 						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
 					{% endif %}
 
-        		{% endif %}
+
 		</div>
+
 
 
 

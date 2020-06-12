@@ -1,17 +1,73 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+<div class="container">
+    <div class="row ">
+        <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
+    </div>
+    <hr>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Payment Number</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ payment.payment_no }}</div>
+        <div class="col-2"><strong>Payment Date</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.payment_date }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Payed To</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.payed_to }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Payed Against Voucher</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.voucher_no }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Payed By</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.payed_by }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Payment Mode</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.payment_mode }}</div>
+    </div>
+    {% if payment.payment_mode == "CQ" or payment.payment_mode == "ONL" or payment.payment_mode == "PO" %}
+    <div class="row mb-5">
+        <div class="col-3"></div>
+        <div class="col-9">
+            <strong>Cheque/PO/ONL No : </strong>{{ payment.cheque_PO_ONL_no }}
+            <strong> Date : </strong>{{ payment.cheque_date }}
+            <strong> Bank : </strong>{{ payment.bank_name }}
+        </div>
+    </div>
+    {% endif %}
 
-        <article class="media content-section">
-              <div class="media-body">
-                <div class="article-metadata">
-hi
-                    <div>
-                        <a class="btn btn-secondary btn-sm mt-1" href="{% url 'payment-update' object.id%}">Update</a>
-                        <a class="btn btn-danger btn-sm mt-1" href="{% url 'payment-delete' object.id%}">Delete</a>
-                    </div>
-                </div>
-              </div>
-        </article>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Payment Amount</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.payment_amount }} BDT.</div>
+    </div>
+        <div class="row mb-5">
+        <div class="col-3"><strong>Amount in Words</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-8">{{ payed_amount_word }} Taka Only.</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Remarks</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ payment.remarks }}</div>
+    </div>
 
+</div>
+<script>
+    function printPage() {
+        var printButton = document.getElementById("print");
+        printButton.style.visibility = 'hidden';
+        window.print()
+        printButton.style.visibility = 'visible';
+    }
+</script>
 {% endblock content %}
