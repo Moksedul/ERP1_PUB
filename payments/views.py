@@ -66,7 +66,8 @@ def payment_search(request):
     if name_contains_query != '' and name_contains_query is not None:
         payments = payments.filter(payed_to__contains=name_contains_query)
     if name_contains_query == '' and voucher_contains_query is not None:
-        payments = payments.filter(voucher_no=voucher_contains_query)
+        buy_voucher = buy_voucher.filter(voucher_number=voucher_contains_query)
+        payments = payments.filter(buy_voucher)
     paginator = Paginator(payments, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
