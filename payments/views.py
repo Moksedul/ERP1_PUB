@@ -5,6 +5,7 @@ from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from .models import Payment
+from vouchers.models import BuyVoucher
 from accounts.models import Accounts
 from .forms import PaymentForm
 
@@ -57,15 +58,20 @@ class PaymentDeleteView(LoginRequiredMixin, DeleteView):
 
 
 def payment_search(request):
+    buy_voucher = BuyVoucher.objects.all()
     payments = Payment.objects.all()
     name_contains_query = request.GET.get('name_contains')
+    voucher_contains_query = request.GET.get('voucher_no')
 
     if name_contains_query != '' and name_contains_query is not None:
         payments = payments.filter(payed_to__contains=name_contains_query)
+    if name_contains_query == '' and voucher_contains_query is not None:
+        payments = payments.filter(voucher_no=voucher_contains_query)
     paginator = Paginator(payments, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'vouchers': buy_voucher
     }
     return render(request, "payments/payment_search_form.html", context)

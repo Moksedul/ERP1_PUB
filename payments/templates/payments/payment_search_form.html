@@ -19,8 +19,8 @@
                   <label for="voucher_no">Voucher No</label>
                   <select id="voucher_no" class="form-control" name="voucher_no">
                     <option selected>Choose...</option>
-					  {% for payment in page_obj %}
-                    <option>{{ payment.voucher_no }}</option>
+					  {% for voucher in vouchers %}
+                    <option>{{ voucher.voucher_number }}</option>
 					  {% endfor %}
                   </select>
                 </div>
