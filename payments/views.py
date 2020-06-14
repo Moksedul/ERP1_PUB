@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Sum
 from django.core.paginator import Paginator
 import string
 from num2words import num2words
@@ -63,6 +63,7 @@ def payment_search(request):
     payments = Payment.objects.all()
     name_contains_query = request.GET.get('name_contains')
     voucher_contains_query = request.GET.get('voucher_no')
+    total = 0
 
     if name_contains_query != '' and name_contains_query is not None:
         payments = payments.filter(payed_to__contains=name_contains_query)
@@ -70,13 +71,14 @@ def payment_search(request):
         buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
         for voucher in buy_voucher:
             payments = payments.filter(voucher_no_id=voucher.id)
-
+            total = payments.filter(voucher_no_id=voucher.id).aggregate(Sum('payment_amount'))
     paginator = Paginator(payments, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
         'page_obj': page_obj,
-        'vouchers': buy_vouchers
+        'vouchers': buy_vouchers,
+        'total': total
     }
     return render(request, "payments/payment_search_form.html", context)
