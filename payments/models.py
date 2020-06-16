@@ -34,16 +34,16 @@ def increment_payment_number():
 
 class Payment(models.Model):
     payment_no = models.CharField(max_length=50, unique=True, default=increment_payment_number)
-    voucher_no = models.ForeignKey(BuyVoucher, null=True, blank=True, on_delete=models.CASCADE)
+    voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE)
     payed_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    payed_to = models.CharField(max_length=50)
-    payment_date = models.DateField(default=now, null=True, blank=True)
+    payed_to = models.CharField(max_length=50, null=True)
+    payment_date = models.DateField(default=now)
     payment_mode = models.CharField(choices=PAYMENT_MODE_CHOICES, max_length=10)
     cheque_PO_ONL_no = models.IntegerField(null=True, blank=True)
     cheque_date = models.DateField(default=now, null=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     payment_amount = models.FloatField()
-    payment_from_account = models.ForeignKey(Accounts, null=True, on_delete=models.CASCADE, blank=True)
+    payment_from_account = models.ForeignKey(Accounts, null=True, on_delete=models.CASCADE)
     remarks = models.CharField(max_length=50, blank=True)
 
     def __str__(self):

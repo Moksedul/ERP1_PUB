@@ -76,6 +76,7 @@ class SaleVoucher(models.Model):
     rate = models.FloatField(max_length=10)
     company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
+    driver_name = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateTimeField(default=now)
     remarks = models.CharField(max_length=500, blank=True)
 

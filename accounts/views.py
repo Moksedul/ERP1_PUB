@@ -97,6 +97,7 @@ class InvestmentList(LoginRequiredMixin, ListView):
     paginate_by = 5
 
 
+@login_required()
 def delete_investment(request, pk):
     investment = Investment.objects.get(id=pk)
     account_selected = investment.investing_to_account

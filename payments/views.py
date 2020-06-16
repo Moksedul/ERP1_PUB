@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from .models import Payment
 from vouchers.models import BuyVoucher
+from django.contrib.auth.decorators import login_required
 from accounts.models import Accounts
 from .forms import PaymentForm
 
@@ -42,6 +43,7 @@ class PaymentUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'payments/payment_update_form.html'
 
 
+@login_required()
 def payment_details(request, pk):
     payment = Payment.objects.get(id=pk)
     payed_amount_word = string.capwords(num2words(payment.payment_amount))
@@ -58,6 +60,7 @@ class PaymentDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/payment_list'
 
 
+@login_required()
 def payment_search(request):
     buy_vouchers = BuyVoucher.objects.all()
     payments = Payment.objects.all()
