@@ -17,25 +17,25 @@ COLLECTION_MODE_CHOICES = [
 def increment_collection_number():
     last_collection = Collection.objects.all().order_by('id').last()
     if not last_collection:
-        return 'FEP-0001'
-    collection_number = last_collection.payment_no
-    collection_int = int(collection_number.split('FEP-')[-1])
+        return 'FEC-0001'
+    collection_number = last_collection.collection_no
+    collection_int = int(collection_number.split('FEC-')[-1])
     new_collection_int = collection_int + 1
-    new_payment_no = ''
+    new_collection_no = ''
     if new_collection_int < 10:
-        new_payment_no = 'FEP-000' + str(new_collection_int)
+        new_collection_no = 'FEC-000' + str(new_collection_int)
     if 100 > new_collection_int >= 10:
-        new_payment_no = 'FEP-00' + str(new_collection_int)
+        new_collection_no = 'FEC-00' + str(new_collection_int)
     if 100 <= new_collection_int < 1000:
-        new_payment_no = 'FEP-0' + str(new_collection_int)
+        new_collection_no = 'FEC-0' + str(new_collection_int)
     if new_collection_int >= 1000:
-        new_payment_no = 'FEP-' + str(new_collection_int)
-    return new_payment_no
+        new_collection_no = 'FEC-' + str(new_collection_int)
+    return new_collection_no
 
 
 # Create your models here.
 class Collection(models.Model):
-    collection_no = models.CharField(max_length=10, unique=True)
+    collection_no = models.CharField(max_length=10, unique=True, default=increment_collection_number)
     sale_voucher_no = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE)
     collected_by = models.ForeignKey(User, on_delete=models.CASCADE)
     collection_date = models.DateField(default=now)

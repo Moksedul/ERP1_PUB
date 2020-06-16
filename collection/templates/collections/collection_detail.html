@@ -1,0 +1,68 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row ">
+        <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
+    </div>
+    <hr>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Collection Number</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ collection.collection_no }}</div>
+        <div class="col-2"><strong>Collection Date</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ collection.collection_date }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Collection Against Voucher</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ collection.sale_voucher_no }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Collected By</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ collection.collected_by }}</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Collection Mode</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ collection.collection_mode }}</div>
+    </div>
+    {% if collection.collection_mode == "Cheque" or collection.collection_mode == "Online" or collection.collection_mode == "Pay Order" %}
+    <div class="row mb-5">
+        <div class="col-3"></div>
+        <div class="col-9">
+            <strong>Cheque/PO/ONL No : </strong>{{ collection.cheque_PO_ONL_no }}
+            <strong> Date : </strong>{{ collection.cheque_date }}
+            <strong> Bank : </strong>{{ collection.bank_name }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mb-5">
+        <div class="col-3"><strong>Collected Amount</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ collection.collection_amount }} BDT.</div>
+    </div>
+        <div class="row mb-5">
+        <div class="col-3"><strong>Amount in Words</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-8">{{ collected_amount_word }} Taka Only.</div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-3"><strong>Remarks</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ collection.remarks }}</div>
+    </div>
+
+</div>
+<script>
+    function printPage() {
+        var printButton = document.getElementById("print");
+        printButton.style.visibility = 'hidden';
+        window.print()
+        printButton.style.visibility = 'visible';
+    }
+</script>
+{% endblock content %}

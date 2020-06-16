@@ -14,6 +14,7 @@
 					<th>Sale Voucher Number</th>
 					<th>Collection Amount</th>
 					<th>Collection Date</th>
+					<th>Status</th>
 					<th>Remarks</th>
 					<th>Detail</th>
 					<th>Update</th>
@@ -26,9 +27,21 @@
 						<td>{{ collection.sale_voucher_no }}</td>
 						<td>{{ collection.collection_amount }} TK</td>
 						<td>{{ collection.collection_date }}</td>
+						<td>{% if collection.collection_status %}
+							Success
+							{% else %}
+							Pending
+							{%endif%}
+						</td>
 						<td>{{ collection.remarks }} </td>
-						<td><a class="btn btn-sm btn-info" href="#">Detail</a></td>
-						<td><a class="btn btn-sm btn-info" href="#">Edit</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'collection-detail' collection.id%}">Detail</a></td>
+						<td>
+							{% if collection.collection_status %}
+								<a class="btn btn-sm btn-secondary" href="#">Edit</a>
+							{% else %}
+								<a class="btn btn-sm btn-info" href="{% url 'collection-update' collection.id%}">Edit</a>
+							{%endif%}
+						</td>
 						<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">Cancel</a></td>
 
 					</tr>

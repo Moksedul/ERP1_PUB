@@ -5,6 +5,13 @@ from django.utils.timezone import now
 from products.models import Products
 from organizations.models import Persons, Companies
 
+ORDER_STATUS_CHOICES = [
+    ('Cheque', 'Cheque'),
+    ('Cash', 'Cash'),
+    ('Online', 'Online'),
+    ('Pay Order', 'Pay Order'),
+]
+
 
 def increment_order_number():
     last_order = Orders.objects.all().order_by('id').last()
@@ -38,6 +45,7 @@ class Orders(models.Model):
     delivery_deadline = models.DateField(default=now)
     date_ordered = models.DateTimeField(default=now)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    order_status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

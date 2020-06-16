@@ -10,7 +10,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
     template_name = 'orders/order_add_form.html'
     fields = ('order_no', 'person_name', 'company_name',
               'product_name', 'total_weight', 'rate_per_kg', 'percentage_of_fotka', 'percentage_of_moisture',
-              'delivery_deadline', 'date_ordered', 'remarks',)
+              'delivery_deadline', 'date_ordered', 'order_status', 'remarks',)
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user

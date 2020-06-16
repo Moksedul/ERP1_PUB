@@ -29,3 +29,19 @@ class CollectionDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'collections/collection_confirm_delete.html'
     success_url = '/collection_list'
 
+
+class CollectionUpdateView(LoginRequiredMixin, UpdateView):
+    model = Collection
+    form_class = CollectionForm
+    template_name = 'collections/collection_update_form.html'
+
+
+@login_required()
+def payment_details(request, pk):
+    collection = Collection.objects.get(id=pk)
+    collected_amount_word = string.capwords(num2words(collection.collection_amount))
+    context = {
+        'collection': collection,
+        'collected_amount_word': collected_amount_word,
+    }
+    return render(request, 'collections/collection_Detail.html', context)
