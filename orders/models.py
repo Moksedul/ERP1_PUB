@@ -6,10 +6,9 @@ from products.models import Products
 from organizations.models import Persons, Companies
 
 ORDER_STATUS_CHOICES = [
-    ('Cheque', 'Cheque'),
-    ('Cash', 'Cash'),
-    ('Online', 'Online'),
-    ('Pay Order', 'Pay Order'),
+    ('Processing', 'Processing'),
+    ('Confirmed', 'Confirmed'),
+    ('Delivered', 'Delivered'),
 ]
 
 
@@ -45,7 +44,7 @@ class Orders(models.Model):
     delivery_deadline = models.DateField(default=now)
     date_ordered = models.DateTimeField(default=now)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    order_status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES)
+    order_status = models.CharField(max_length=20, null=True, choices=ORDER_STATUS_CHOICES, default='Processing')
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

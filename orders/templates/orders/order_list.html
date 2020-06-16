@@ -11,6 +11,8 @@
 					<th>Company Name</th>
 					<th>Total Weight</th>
 					<th>Rate/KG</th>
+					<th>Status</th>
+					<th>Delivery Deadline</th>
 					<th>Update</th>
 					<th>Cancel</th>
 				</tr>
@@ -22,6 +24,8 @@
 						<td>{{ order.company_name }}</td>
 						<td>{{ order.total_weight }} KG</td>
 						<td>{{ order.rate_per_kg }} TK.</td>
+						<td>{{ order.order_status }}</td>
+						<td>{{ order.delivery_deadline }}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'order-update' order.id%}">Edit</a></td>
 
 						<td><a class="btn btn-sm btn-danger" href="{% url 'order-delete' order.id%}">Cancel</a></td>
