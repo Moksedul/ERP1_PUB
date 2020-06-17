@@ -1,13 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import BuyVoucher, SaleVoucher, GeneralVoucher
+from .forms import *
 
 
 # buy voucher start
 class BuyVoucherCreateView(LoginRequiredMixin, CreateView):
-    model = BuyVoucher
+    form_class = BuyForm
     template_name = 'vouchers/buyvoucher_add_form.html'
-    fields = '__all__'
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
 
 class BuyListView(LoginRequiredMixin, ListView):
@@ -31,9 +34,12 @@ class BuyDeleteView(LoginRequiredMixin, DeleteView):
 
 # sale voucher start
 class SaleCreateView(LoginRequiredMixin, CreateView):
-    model = SaleVoucher
+    form_class = SaleForm
     template_name = 'vouchers/salevoucher_add_form.html'
-    fields = '__all__'
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
 
 class SaleListView(LoginRequiredMixin, ListView):
@@ -45,8 +51,8 @@ class SaleListView(LoginRequiredMixin, ListView):
 
 class SaleUpdateView(LoginRequiredMixin, UpdateView):
     model = SaleVoucher
+    form_class = SaleForm
     template_name = 'vouchers/sale_update_form.html'
-    fields = '__all__'
 
 
 class SaleDeleteView(LoginRequiredMixin, DeleteView):

@@ -35,15 +35,13 @@
 						</td>
 						<td>{{ collection.remarks }} </td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'collection-detail' collection.id%}">Detail</a></td>
-						<td>
-							{% if collection.collection_status %}
-								<a class="btn btn-sm btn-secondary" href="#">Edit</a>
-							{% else %}
-								<a class="btn btn-sm btn-info" href="{% url 'collection-update' collection.id%}">Edit</a>
-							{%endif%}
-						</td>
-						<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">Cancel</a></td>
-
+						{% if collection.collection_status %}
+								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
+								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+						{% else %}
+								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update' collection.id%}">Edit</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">Delete</a></td>
+						{%endif%}
 					</tr>
 				{% endfor %}
 
@@ -74,6 +72,14 @@
         		{% endif %}
 		</div>
 
+<script>
+function alertEdit() {
+  alert("Can not be edited after Collection Success");
+}
 
+function alertDelete() {
+  alert("Can not be deleted after Collection Success");
+}
+</script>
 
 {% endblock content %}

@@ -1,10 +1,24 @@
 from django.forms import ModelForm
-from django import forms
-from .models import BuyVoucher
+from django.contrib.admin.widgets import AdminDateWidget
+from .models import *
 
 
-class BuyVoucherCreateFrom(ModelForm):
+class SaleForm(ModelForm):
+    class Meta:
+        model = SaleVoucher
+        fields = '__all__'
+        widgets = {
+            'date_added': AdminDateWidget(),
+        }
+        labels = {
+            'status': 'Confirm',
+        }
 
+
+class BuyForm(ModelForm):
     class Meta:
         model = BuyVoucher
         fields = '__all__'
+        widgets = {
+            'date_added': AdminDateWidget(),
+        }

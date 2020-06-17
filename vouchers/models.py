@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.timezone import now
+from django.contrib.auth.models import User
 from django.urls import reverse
 from products.models import Products
 from organizations.models import Persons, Companies
+from challan.models import Challan
 
 
 def increment_buy_voucher_number():
@@ -31,12 +33,16 @@ class BuyVoucher(models.Model):
     seller_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
     weight = models.FloatField(max_length=10)
+    per_bag_unloading_cost = models.IntegerField(blank=True, null=True)
+    measuring_cost_per_kg = models.IntegerField(blank=True, null=True)
+    weight_of_each_bag = models.IntegerField(blank=True, null=True)
     number_of_bag = models.FloatField(max_length=10)
     number_of_vehicle = models.IntegerField(blank=True, null=True)
     rate = models.FloatField(max_length=10)
     bazar_or_company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateTimeField(default=now)
+    added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
@@ -68,16 +74,14 @@ def increment_sale_number():
 
 class SaleVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_sale_number)
-    buyer_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
-    product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
-    weight = models.FloatField(max_length=10)
-    number_of_bag = models.FloatField(max_length=10)
-    number_of_vehicle = models.IntegerField(blank=True, null=True)
+    challan_no = models.ForeignKey(Challan, on_delete=models.CASCADE, null=True)
+    per_bag_unloading_cost = models.IntegerField(blank=True, null=True)
+    measuring_cost_per_kg = models.IntegerField(blank=True, null=True)
+    weight_of_each_bag = models.IntegerField(blank=True, null=True)
     rate = models.FloatField(max_length=10)
-    company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
-    vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
-    driver_name = models.CharField(max_length=50, blank=True, null=True)
-    date_added = models.DateTimeField(default=now)
+    date_added = models.DateField(default=now)
+    added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
+    status = models.BooleanField(default=False)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

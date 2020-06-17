@@ -1,18 +1,6 @@
 from django.urls import path
-from .views import (
-    SaleUpdateView,
-    BuyVoucherCreateView,
-    BuyListView,
-    BuyDeleteView,
-    BuyVoucherUpdateView,
-    SaleCreateView,
-    SaleListView,
-    SaleDeleteView,
-    GeneralVoucherCreateView,
-    GeneralVoucherListView,
-    GeneralVoucherUpdateView,
-    GeneralVoucherDeleteView
-    )
+from django.views.i18n import JavaScriptCatalog
+from .views import *
 
 urlpatterns = [
     path('add_buy_voucher', BuyVoucherCreateView.as_view(), name='add-buy-voucher'),
@@ -27,4 +15,5 @@ urlpatterns = [
     path('general_voucher/<int:pk>/update', GeneralVoucherUpdateView.as_view(), name='general-voucher-update'),
     path('general_voucher_list', GeneralVoucherListView.as_view(), name='general-voucher-list'),
     path('general_voucher/<int:pk>/delete', GeneralVoucherDeleteView.as_view(), name='general-voucher-delete'),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]
