@@ -22,3 +22,12 @@ class BuyForm(ModelForm):
         widgets = {
             'date_added': AdminDateWidget(),
         }
+
+
+class GeneralForm(ModelForm):
+    class Meta:
+        model = GeneralVoucher
+        fields = '__all__'
+        widgets = {
+            'date_added': AdminDateWidget(),
+        }

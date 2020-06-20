@@ -26,22 +26,20 @@ def increment_buy_voucher_number():
     return new_voucher_no
 
 
-# Create your models here.
-# RecordId,Name,ProductId,Weight,NumberOfBag,NumberOfVehicle,Rate,BazarOrCompanyName,VehicleNumberPlate,Date,Remarks
 class BuyVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_buy_voucher_number)
     seller_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
-    weight = models.FloatField(max_length=10)
-    per_bag_unloading_cost = models.IntegerField(blank=True, null=True)
-    measuring_cost_per_kg = models.IntegerField(blank=True, null=True)
-    weight_of_each_bag = models.IntegerField(blank=True, null=True)
+    weight_per_bag = models.FloatField(max_length=10)
+    per_bag_unloading_cost = models.FloatField(blank=True, null=True)
+    measuring_cost_per_kg = models.FloatField(blank=True, null=True)
+    weight_of_each_bag = models.FloatField(blank=True, null=True)
     number_of_bag = models.FloatField(max_length=10)
     number_of_vehicle = models.IntegerField(blank=True, null=True)
     rate = models.FloatField(max_length=10)
     bazar_or_company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
-    date_added = models.DateTimeField(default=now)
+    date_added = models.DateField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
     remarks = models.CharField(max_length=500, blank=True)
 
@@ -75,9 +73,9 @@ def increment_sale_number():
 class SaleVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_sale_number)
     challan_no = models.ForeignKey(Challan, on_delete=models.CASCADE, null=True)
-    per_bag_unloading_cost = models.IntegerField(blank=True, null=True)
-    measuring_cost_per_kg = models.IntegerField(blank=True, null=True)
-    weight_of_each_bag = models.IntegerField(blank=True, null=True)
+    per_bag_unloading_cost = models.FloatField(blank=True, null=True, default=0)
+    measuring_cost_per_kg = models.FloatField(blank=True, null=True, default=0)
+    weight_of_each_bag = models.FloatField(blank=True, null=True, default=0)
     rate = models.FloatField(max_length=10)
     date_added = models.DateField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
@@ -116,7 +114,7 @@ class GeneralVoucher(models.Model):
     person_name = models.CharField(max_length=200)
     cost_Descriptions = models.TextField(max_length=500, blank=True, null=True)
     cost_amount = models.FloatField()
-    date_added = models.DateTimeField(default=now)
+    date_added = models.DateField(default=now)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

@@ -20,12 +20,12 @@
 						<td>{{ voucher.challan_no }}</td>
 						{% if voucher.status %}
 								<td>Confirmed</td>
-								<td><a class="btn btn-sm btn-info" href="#">Detail</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">Detail</a></td>
 								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
 								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
 							{%else%}
 								<td>Processing</td>
-								<td><a class="btn btn-sm btn-info" href="#">Detail</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">Detail</a></td>
 								<td><a class="btn btn-sm btn-info" href="{% url 'sale-update' voucher.id%}">Edit</a></td>
 								<td><a class="btn btn-sm btn-danger" href="{% url 'sale-delete' voucher.id%}">Delete</a></td>
 							{% endif %}

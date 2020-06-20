@@ -8,6 +8,7 @@
 				<tr>
 					<th>Voucher Number</th>
 					<th>Seller Name</th>
+					<th>Details</th>
 					<th>Update</th>
 					<th>Remove</th>
 				</tr>
@@ -16,8 +17,8 @@
 					<tr>
 						<td>{{ voucher.voucher_number }}</td>
 						<td>{{ voucher.seller_name }}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'buy-detail' voucher.id%}">Detail</a></td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'buy-update' voucher.id%}">Edit</a></td>
-
 						<td><a class="btn btn-sm btn-danger" href="{% url 'buy-delete' voucher.id%}">Delete</a></td>
 
 					</tr>

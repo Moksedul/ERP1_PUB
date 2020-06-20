@@ -2,13 +2,57 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <form method="post">
+        <form method="post" >
             {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.voucher_number|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.seller_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.product_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.weight_per_bag|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.number_of_bag|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.number_of_vehicle|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.rate|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.vehicle_plate_number|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.per_bag_unloading_cost|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.measuring_cost_per_kg|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.weight_of_each_bag|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.bazar_or_company_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.date_added|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.added_by|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.remarks|as_crispy_field }}
+                </div>
 
-            <div class="form-group">
-                {{ form|crispy }}
-                <button class="btn btn-outline-info" type="submit">Update</button>
             </div>
+                <button class="btn btn-outline-info" type="submit">Save</button>
         </form>
     </div>
 {% endblock content %}
