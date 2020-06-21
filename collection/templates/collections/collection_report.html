@@ -1,0 +1,72 @@
+{% extends "main/base.html" %}
+{% block content %}
+    <div class="container">
+        <form method="GET" >
+            <div class="form-row">
+             <div class="form-group col-md-4">
+                  <label for="voucher_no">Voucher No</label>
+                  <select id="voucher_no" class="form-control" name="voucher_no">
+                    <option selected>Choose...</option>
+					  {% for voucher in vouchers %}
+                    <option>{{ voucher.voucher_number }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-sm btn-info">Search</button>
+        </form>
+    </div>
+
+<div class=" card card-body">
+			<table class="table table-sm table-striped">
+				<tr>
+					<th>Collection Number</th>
+					<th>Voucher Number</th>
+					<th>Collected By</th>
+					<th>Payed Amount={{total}}</th>
+					<th>Payed Date</th>
+					<th>Remarks</th>
+				</tr>
+
+				{% for collection in page_obj %}
+					<tr>
+						<td>{{ collection.collection_no }}</td>
+						<td>{{ collection.sale_voucher_no }}</td>
+						<td>{{ collection.collected_by }}</td>
+						<td>{{ collection.collection_amount }} TK</td>
+						<td>{{ collection.collection_date }}</td>
+						<td>{{ collection.remarks }} </td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+		</div>
+		<div class="mt-3 float-right">
+
+
+					{% if page_obj.has_previous %}
+						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
+						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+					{% endif %}
+
+					{% for num in page_obj.paginator.page_range %}
+						{% if page_obj.number == num %}
+							<a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+							<a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+						{% endif %}
+					{% endfor %}
+
+					{% if page_obj.has_next %}
+						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
+						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+					{% endif %}
+
+
+		</div>
+
+
+
+
+{% endblock content %}
