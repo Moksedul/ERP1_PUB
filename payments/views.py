@@ -85,3 +85,53 @@ def payment_search(request):
         'total': total
     }
     return render(request, "payments/payment_search_form.html", context)
+
+
+@login_required()
+def payment_report(request):
+    buy_vouchers = BuyVoucher.objects.all()
+    payments = Payment.objects.all()
+    voucher_contains_query = request.GET.get('voucher_no')
+    total_unloading_cost = 0
+    total_self_weight_of_bag = 0
+    total_measuring_cost = 0
+    total_payed = 0
+    total_payable = 0
+    payment_due = 0
+    payment = []
+
+    if voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
+        buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
+
+        for voucher in buy_voucher:
+            payment = payments.filter(voucher_no_id=voucher.id)
+            total_payed = payments.filter(voucher_no_id=voucher.id).aggregate(Sum('payment_amount'))
+            rate = voucher.rate
+            total_weight = voucher.number_of_bag * voucher.weight_per_bag
+
+            if voucher.weight_of_each_bag is not None:
+                total_self_weight_of_bag = voucher.weight_of_each_bag * voucher.number_of_bag
+
+            if voucher.per_bag_unloading_cost is not None:
+                total_unloading_cost = voucher.per_bag_unloading_cost * voucher.number_of_bag
+
+            if voucher.measuring_cost_per_kg is not None:
+                total_measuring_cost = voucher.measuring_cost_per_kg * total_weight
+
+            weight_after_deduction = total_weight - total_self_weight_of_bag
+            total_amount = rate*weight_after_deduction
+            total_payable = total_amount - total_unloading_cost - total_measuring_cost
+
+        if total_payed != 0 and total_payed['payment_amount__sum'] is not None:
+            print(total_payed['payment_amount__sum'])
+            payment_due = total_payable-total_payed['payment_amount__sum']
+
+    context = {
+        'page_obj': payment,
+        'vouchers': buy_vouchers,
+        'total_payed': total_payed,
+        'total_payable': total_payable,
+        'payment_due': payment_due,
+        'buy_voucher': voucher_contains_query
+    }
+    return render(request, "payments/payment_report.html", context)

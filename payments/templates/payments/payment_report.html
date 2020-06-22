@@ -4,7 +4,7 @@
         <form method="GET" >
             <div class="form-row">
              <div class="form-group col-md-4">
-                  <label for="voucher_no">Sale Voucher No</label>
+                  <label for="voucher_no">Buy Voucher No</label>
                   <select id="voucher_no" class="form-control" name="voucher_no">
                     <option selected>Choose...</option>
 					  {% for voucher in vouchers %}
@@ -18,23 +18,23 @@
     </div>
 
 <div class=" card card-body">
-			<div class="mb-3">Report for Sale Voucher: {{ sale_voucher }}</div>
+			<div class="mb-3">Report for Buy Voucher: {{ buy_voucher }}</div>
 	<hr>
 			<table class="table table-sm table-striped">
 				<tr>
-					<th>Collection Number</th>
-					<th>Collected By</th>
-					<th>Collected Amount</th>
-					<th>Collection Date</th>
+					<th>Payment Number</th>
+					<th>Payed By</th>
+					<th>payed Amount</th>
+					<th>Payment Date</th>
 					<th>Remarks</th>
 				</tr>
 
 				{% for collection in page_obj %}
 					<tr>
-						<td>{{ collection.collection_no }}</td>
-						<td>{{ collection.collected_by }}</td>
-						<td>{{ collection.collection_amount }} TK</td>
-						<td>{{ collection.collection_date }}</td>
+						<td>{{ collection.payment_no }}</td>
+						<td>{{ collection.payed_by }}</td>
+						<td>{{ collection.payment_amount }} TK</td>
+						<td>{{ collection.payment_date }}</td>
 						<td>{{ collection.remarks }} </td>
 					</tr>
 				{% endfor %}
@@ -42,9 +42,9 @@
 <hr>
 	<div class="container">
 	<div class="float-right">
-		<div>Total Receivable     : {{total_receivable}} Tk.</div>
-		<div>Total Collected      : {{total_collected.collection_amount__sum}} Tk.</div>
-		<div>Total Collection Due : {{collection_due}} Tk.</div>
+		<div>Total Payable     : {{total_payable}} Tk.</div>
+		<div>Total Payed      : {{total_payed.payment_amount__sum}} Tk.</div>
+		<div>Total Payment Due : {{payment_due}} Tk.</div>
 	</div>
 	</div>
 </div>

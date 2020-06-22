@@ -34,7 +34,8 @@ urlpatterns = [
     path('', include('stocks.urls')),
     path('', include('accounts.urls')),
     path('', include('payments.urls')),
-    path('', include('collection.urls'))
+    path('', include('collection.urls')),
+    path('', include('ledger.urls'))
 
 ]
 
