@@ -115,7 +115,8 @@ def sale_details(request, pk):
         total_measuring_cost = sale.measuring_cost_per_kg*total_weight
 
     weight_after_deduction = total_weight - total_self_weight_of_bag
-    amount_after_deduction = total_amount - total_unloading_cost - total_measuring_cost
+    total_amount_without_bag = sale.rate*weight_after_deduction
+    amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
 
     context = {
         'sale': sale,

@@ -1,14 +1,13 @@
 from django.shortcuts import render
 from django.db.models import Sum
-from django.core.paginator import Paginator
 import string
 from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
-from accounts.models import Accounts
+from challan.models import Challan
 from .forms import CollectionForm
 
 
@@ -52,21 +51,47 @@ def collection_report(request):
     sale_vouchers = SaleVoucher.objects.all()
     collections = Collection.objects.all()
     voucher_contains_query = request.GET.get('voucher_no')
-    total = 0
+    total_unloading_cost = 0
+    total_self_weight_of_bag = 0
+    total_measuring_cost = 0
+    total_collected = 0
+    total_receivable = 0
     collection = []
 
     if voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
         sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains_query)
+
         for voucher in sale_voucher:
             collection = collections.filter(sale_voucher_no_id=voucher.id)
-            total = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
-    paginator = Paginator(collection, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+            total_collected = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
+            rate = voucher.rate
+            challan = Challan.objects.filter(challan_no=voucher.challan_no)
 
+            for challan in challan:
+                pass
+
+            total_weight = challan.number_of_bag * challan.weight_per_bag
+            total_amount = rate*total_weight
+
+            if voucher.weight_of_each_bag is not None:
+                total_self_weight_of_bag = voucher.weight_of_each_bag * challan.number_of_bag
+
+            if voucher.per_bag_unloading_cost is not None:
+                total_unloading_cost = voucher.per_bag_unloading_cost * challan.number_of_bag
+
+            if voucher.measuring_cost_per_kg is not None:
+                total_measuring_cost = voucher.measuring_cost_per_kg * total_weight
+
+            weight_after_deduction = total_weight - total_self_weight_of_bag
+            total_amount = rate*weight_after_deduction
+            total_receivable = total_amount - total_unloading_cost - total_measuring_cost
+    print(total_collected['collection_amount__sum'])
+    collection_due = total_receivable-total_collected['collection_amount__sum']
     context = {
-        'page_obj': page_obj,
+        'page_obj': collection,
         'vouchers': sale_vouchers,
-        'total': total
+        'total_collected': total_collected,
+        'total_receivable': total_receivable,
+        'collection_due': collection_due
     }
     return render(request, "collections/collection_report.html", context)
