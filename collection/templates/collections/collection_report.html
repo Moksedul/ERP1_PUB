@@ -18,10 +18,10 @@
     </div>
 
 <div class=" card card-body">
+			<div class="mb-3">Report for Sale Voucher: {{ sale_voucher }}</div>
 			<table class="table table-sm table-striped">
 				<tr>
 					<th>Collection Number</th>
-					<th>Voucher Number</th>
 					<th>Collected By</th>
 					<th>Collected Amount</th>
 					<th>Payed Date</th>
@@ -31,7 +31,6 @@
 				{% for collection in page_obj %}
 					<tr>
 						<td>{{ collection.collection_no }}</td>
-						<td>{{ collection.sale_voucher_no }}</td>
 						<td>{{ collection.collected_by }}</td>
 						<td>{{ collection.collection_amount }} TK</td>
 						<td>{{ collection.collection_date }}</td>

@@ -56,6 +56,7 @@ def collection_report(request):
     total_measuring_cost = 0
     total_collected = 0
     total_receivable = 0
+    collection_due = 0
     collection = []
 
     if voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
@@ -85,13 +86,14 @@ def collection_report(request):
             weight_after_deduction = total_weight - total_self_weight_of_bag
             total_amount = rate*weight_after_deduction
             total_receivable = total_amount - total_unloading_cost - total_measuring_cost
-    print(total_collected['collection_amount__sum'])
-    collection_due = total_receivable-total_collected['collection_amount__sum']
+        print(total_collected['collection_amount__sum'])
+        collection_due = total_receivable-total_collected['collection_amount__sum']
     context = {
         'page_obj': collection,
         'vouchers': sale_vouchers,
         'total_collected': total_collected,
         'total_receivable': total_receivable,
-        'collection_due': collection_due
+        'collection_due': collection_due,
+        'sale_voucher': voucher_contains_query
     }
     return render(request, "collections/collection_report.html", context)
