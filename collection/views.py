@@ -86,8 +86,11 @@ def collection_report(request):
             weight_after_deduction = total_weight - total_self_weight_of_bag
             total_amount = rate*weight_after_deduction
             total_receivable = total_amount - total_unloading_cost - total_measuring_cost
-        print(total_collected['collection_amount__sum'])
-        collection_due = total_receivable-total_collected['collection_amount__sum']
+
+        if total_collected != 0 and total_collected['collection_amount__sum'] is not None:
+            print(total_collected['collection_amount__sum'])
+            collection_due = total_receivable-total_collected['collection_amount__sum']
+
     context = {
         'page_obj': collection,
         'vouchers': sale_vouchers,
