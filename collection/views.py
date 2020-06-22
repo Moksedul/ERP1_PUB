@@ -53,13 +53,14 @@ def collection_report(request):
     collections = Collection.objects.all()
     voucher_contains_query = request.GET.get('voucher_no')
     total = 0
+    collection = []
 
     if voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
-        sale_vouchers = sale_vouchers.filter(sale_voucher_no=voucher_contains_query)
-        for voucher in sale_vouchers:
-            collection = collections.filter(voucher_no_id=voucher.id)
-            total = collections.filter(voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
-    paginator = Paginator(collections, 5)
+        sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains_query)
+        for voucher in sale_voucher:
+            collection = collections.filter(sale_voucher_no_id=voucher.id)
+            total = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
+    paginator = Paginator(collection, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
