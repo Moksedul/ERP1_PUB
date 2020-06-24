@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from orders.models import Orders
 from vouchers.models import SaleVoucher, BuyVoucher
@@ -15,6 +15,10 @@ def home(request):
     order_count = orders.count()
     sale_count = SaleVoucher.objects.all().count()
     buy_count = BuyVoucher.objects.all().count()
+    total_stock_weight = stocks.aggregate(Sum('weight'))
+    total_order_weight = orders.aggregate(Sum('total_weight'))
+    total_ordered = total_order_weight['total_weight__sum']
+    total_stocked = total_stock_weight['weight__sum']
 
     # limiting stocks items to show
     paginator = Paginator(stocks, 3)
@@ -31,7 +35,9 @@ def home(request):
         'sale_count': sale_count,
         'buy_count': buy_count,
         'orders': orders,
-        'stocks': stocks
+        'total_ordered': total_ordered,
+        'stocks': stocks,
+        'total_stocked': total_stocked
     }
     return render(request, 'main/home.html', context)
 

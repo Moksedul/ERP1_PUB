@@ -4,11 +4,11 @@ from django.core.paginator import Paginator
 import string
 from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Payment
 from vouchers.models import BuyVoucher
+from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
-from accounts.models import Accounts
 from .forms import PaymentForm
 
 
@@ -62,19 +62,33 @@ class PaymentDeleteView(LoginRequiredMixin, DeleteView):
 
 @login_required()
 def payment_search(request):
+    persons = Persons.objects.all()
     buy_vouchers = BuyVoucher.objects.all()
     payments = Payment.objects.all()
     name_contains_query = request.GET.get('name_contains')
     voucher_contains_query = request.GET.get('voucher_no')
+    phone_number_query = request.GET.get('phone_no')
     total = 0
 
     if name_contains_query != '' and name_contains_query is not None:
         payments = payments.filter(payed_to__contains=name_contains_query)
+
+    elif phone_number_query != '' and phone_number_query is not None:
+        v_id = []
+        person = persons.filter(contact_number=phone_number_query)
+        for person in person:
+            pass
+        voucher = buy_vouchers.filter(seller_name=person.id)
+        for voucher in voucher:
+            v_id.append(voucher.id)
+        payments = payments.filter(voucher_no_id__in=v_id)
+
     elif voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
         buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
         for voucher in buy_voucher:
             payments = payments.filter(voucher_no_id=voucher.id)
             total = payments.filter(voucher_no_id=voucher.id).aggregate(Sum('payment_amount'))
+
     paginator = Paginator(payments, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
