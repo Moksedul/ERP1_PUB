@@ -11,6 +11,5 @@ urlpatterns = [
     path('collection/<int:pk>/update', CollectionUpdateView.as_view(), name='collection-update'),
     path('collection/<int:pk>/delete', CollectionDeleteView.as_view(), name='collection-delete'),
     path('collection/report', collection_report, name='collection-report'),
-
-    # path('payment_search/', payment_search, name='payment-search'),
+    path('collection_search/', collection_search, name='collection-search'),
 ]

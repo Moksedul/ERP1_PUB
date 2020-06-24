@@ -1,8 +1,33 @@
 body {
-  background-image: url("/media/backgrounds/home_bg.JPG");
-  color: #333333;
   margin-top: 5rem;
+  background-color: #002933;
 }
+.bg-ta {
+  background-image: url("/media/backgrounds/home_bg1.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-top {
+    background-color: #E6E6FA;
+    padding: 5px;
+}
+
+.rectangle {
+      text-align: center;
+      border-radius: 12px;
+      background: #005266;
+      width: 200px;
+      height: 150px;
+      padding: 55px;
+    }
+.home-box{
+      text-align: center;
+      border-radius: 12px;
+      background: grey;
+      width: 200px;
+      height: 185px;
+    }
 
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
@@ -13,7 +38,7 @@ ul {
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: #005266;
 }
 
 .site-header .navbar-nav .nav-link {

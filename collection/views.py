@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.db.models import Sum
 import string
@@ -100,3 +101,30 @@ def collection_report(request):
         'sale_voucher': voucher_contains_query
     }
     return render(request, "collections/collection_report.html", context)
+
+
+@login_required()
+def collection_search(request):
+    sale_voucher = SaleVoucher.objects.all()
+    collections = Collection.objects.all()
+    name_contains_query = request.GET.get('name_contains')
+    voucher_contains_query = request.GET.get('voucher_no')
+    total = 0
+
+    if name_contains_query != '' and name_contains_query is not None:
+        sales = sale_voucher.filter(payed_to__contains=name_contains_query)
+    elif voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
+        buy_voucher = sale_voucher.filter(voucher_number=voucher_contains_query)
+        for voucher in buy_voucher:
+            collections = collections.filter(sale_voucher_no_id=voucher.id)
+            total = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
+    paginator = Paginator(collections, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'vouchers': sale_voucher,
+        'total': total
+    }
+    return render(request, "collections/collection_search_form.html", context)
