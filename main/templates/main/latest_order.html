@@ -1,0 +1,26 @@
+
+
+	<div class=" card card-body">
+			<P class="btn btn-secondary  btn-sm btn-block bg-steel" >Latest Orders</P>
+			<table class="table table-sm table-striped">
+				<tr>
+					<th>Order Number</th>
+					<th>Company Name</th>
+					<th>Total Weight</th>
+					<th>Status</th>
+					<th>Delivery Deadline</th>
+				</tr>
+
+				{% for order in orders %}
+					<tr>
+						<td>{{ order.order_no }}</td>
+						<td>{{ order.company_name }}</td>
+						<td>{{ order.total_weight }} KG</td>
+						<td>{{ order.order_status }}</td>
+						<td>{{ order.delivery_deadline }}</td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+		</div>

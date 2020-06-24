@@ -8,6 +8,9 @@
 				<tr>
 					<th>Room Number</th>
 					<th>Product Name</th>
+					<th>Number of Bags</th>
+					<th>Total Weight</th>
+					<th>Condition</th>
 					<th>Update</th>
 					<th>Remove</th>
 				</tr>
@@ -16,6 +19,9 @@
 					<tr>
 						<td>{{ stock.room_no }}</td>
 						<td>{{ stock.name_of_product }}</td>
+						<td>{{ stock.number_of_bag }}</td>
+						<td>{{ stock.weight }}</td>
+						<td>{{ stock.product_condition }}</td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'stock-update' stock.id%}">Edit</a></td>
 
 						<td><a class="btn btn-sm btn-danger" href="{% url 'stock-delete' stock.id%}">Delete</a></td>

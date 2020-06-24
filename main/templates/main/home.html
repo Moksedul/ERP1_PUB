@@ -1,8 +1,9 @@
 {% extends "main/base.html" %}
 
-{% block content %}
-<div class="row mb-5">
-<div class="col-md-4 mb-0">
+{% block home %}
+
+<div class="row ml-2 ">
+<div class="col-md-4 d-flex justify-content-center">
     <div class="home-box">
         <div class="rectangle">
             <h3 style="color: white;">{{ order_count }}</h3>
@@ -10,27 +11,34 @@
         <h5 style="color: white;">Total Order</h5>
     </div>
 </div>
-<div class="col-md-4 mb-0">
+<div class="col-md-4 d-flex justify-content-center">
     <div class="home-box">
         <div class="rectangle">
-            <h3 style="color: white;">5</h3>
+            <h3 style="color: white;">{{ sale_count }}</h3>
         </div>
-        <h5 style="color: white;">Total Order</h5>
+        <h5 style="color: white;">Total Sale</h5>
     </div>
 </div>
-<div class="col-md-4 mb-0">
+<div class="col-md-4 d-flex justify-content-center">
     <div class="home-box">
-        <div class="rectangle">
-            <h3 style="color: white;">5</h3>
+        <div class="rectangle ">
+            <h3 style="color: white;">{{ buy_count }}</h3>
         </div>
-        <h5 style="color: white;">Total Order</h5>
+        <h5 style="color: white;">Total Buy</h5>
     </div>
 </div>
 </div>
-
-<div class="row">
-    hi
+<hr>
+<div class="row ml-2 mr-2">
+    <div class="col-6">
+        {% include 'main/latest_order.html' %}
+    </div>
+    <div class="col-6">
+        {% include 'main/latest_stock.html' %}
+    </div>
 </div>
 
 
-{% endblock content %}
+
+
+{% endblock home %}

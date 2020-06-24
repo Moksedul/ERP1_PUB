@@ -1,0 +1,25 @@
+
+	<div class=" card card-body">
+			<p class="btn btn-secondary  btn-sm btn-block bg-steel">Latest Stocks</p>
+			<table class="table table-sm table-striped">
+				<tr>
+					<th>Room Number</th>
+					<th>Product Name</th>
+					<th>Number of Bags</th>
+					<th>Total Weight</th>
+					<th>Condition</th>
+				</tr>
+
+				{% for stock in stocks %}
+					<tr>
+						<td>{{ stock.room_no }}</td>
+						<td>{{ stock.name_of_product }}</td>
+						<td>{{ stock.number_of_bag }}</td>
+						<td>{{ stock.weight }}</td>
+						<td>{{ stock.product_condition }}</td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+		</div>
