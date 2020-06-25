@@ -1,11 +1,45 @@
-<nav class="navbar navbar-dark bg-dark">
-  <!-- Navbar content -->
-</nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-steel fixed-top">
+  <div class="container">
+  <a class="navbar-brand" href="/">techAlong-ERP</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-<nav class="navbar navbar-dark bg-primary">
-  <!-- Navbar content -->
-</nav>
-
-<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-  <!-- Navbar content -->
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">HOME</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          VOUCHER
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'buy-list' %}">BUY</a>
+          <a class="dropdown-item" href="{% url 'sale-list' %}">SALE</a>
+          <a class="dropdown-item" href="{% url 'general-voucher-list' %}">GENERAL</a>
+        </div>
+      </li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'order-list' %}">ORDER</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'challan-list' %}">CHALLAN</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'stock-list' %}">STOCK</a></li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          FINANCE
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'collection-list' %}">COLLECTION</a>
+          <a class="dropdown-item" href="{% url 'payment-list' %}">PAYMENT</a>
+          <a class="dropdown-item" href="{% url 'accounts' %}">ACCOUNT</a>
+          <a class="dropdown-item" href="{% url 'investment-list' %}">INVESTMENT</a>
+          <a class="dropdown-item" href="#">LEDGER</a>
+        </div>
+      </li>
+    </ul>
+    <div class="my-2 my-lg-0 ">
+       <a style="color: rgba(255,255,255,.6);"> <small>Logged in as  </small> {{ user.username }}</a>
+      <a href="{% url 'logout'%}" ><button class="btn btn-outline-dark" style="color: rgba(255,255,255,.6);">LOGOUT</button></a>
+    </div>
+  </div>
+    </div>
 </nav>
