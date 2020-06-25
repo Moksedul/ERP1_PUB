@@ -26,7 +26,7 @@ SECRET_KEY = 'v-tx4u7u$qcjfrn=uy*=h1t6iybrn(kwkjr4vnl(mfkgdh8s=f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['techalong.pythonanywhere.com']
 
 
 # Application definition
@@ -132,6 +132,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/techalong/techAlong_ERP/static'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
