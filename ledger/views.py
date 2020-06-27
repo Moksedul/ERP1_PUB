@@ -6,10 +6,15 @@ from vouchers.models import GeneralVoucher
 @login_required()
 def index(request):
     general_vouchers = GeneralVoucher.objects.all()
-    ledger = {
+    ledgers = {}
 
-    }
+    for voucher in general_vouchers:
+        ledgers['voucher_no'] = voucher.voucher_number
+
+    for item in ledgers:
+        print(item)
     context = {
-        'general_vouchers': general_vouchers
+        'vouchers': ledgers['voucher_no']
     }
+
     return render(request, 'ledger/ledger.html', context)

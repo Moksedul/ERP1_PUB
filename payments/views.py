@@ -51,7 +51,7 @@ def payment_details(request, pk):
         'payment': payment,
         'payed_amount_word': payed_amount_word,
     }
-    return render(request, 'payments/payment_Detail.html', context)
+    return render(request, 'payments/payment_detail.html', context)
 
 
 class PaymentDeleteView(LoginRequiredMixin, DeleteView):
