@@ -5,6 +5,7 @@ from django.urls import reverse
 from products.models import Products
 from organizations.models import Persons, Companies
 from challan.models import Challan
+from accounts.models import Accounts
 
 
 def increment_buy_voucher_number():
@@ -115,6 +116,7 @@ class GeneralVoucher(models.Model):
     cost_Descriptions = models.TextField(max_length=500, blank=True, null=True)
     cost_amount = models.FloatField()
     date_added = models.DateField(default=now)
+    from_account = models.ForeignKey(Accounts, null=True, blank=True, on_delete=models.SET_NULL)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
