@@ -1,20 +1,30 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from vouchers.models import GeneralVoucher
+from collection.models import Collection
 
 
 @login_required()
 def index(request):
     general_vouchers = GeneralVoucher.objects.all()
-    ledgers = {}
+    collections = Collection.objects.all()
+
+    ledgers = {
+
+    }
 
     for voucher in general_vouchers:
-        ledgers['voucher_no'] = voucher.voucher_number
+        key = "voucher"
+        ledgers.setdefault(key, [])
+        ledgers[key].append({
+            'date': voucher.date_added,
+            'voucher_no': voucher.voucher_number,
+            'descriptions': voucher.cost_Descriptions,
+            'amount': voucher.cost_amount
+        })
 
-    for item in ledgers:
-        print(item)
     context = {
-        'vouchers': ledgers['voucher_no']
+        'ledgers': ledgers['voucher']
     }
 
     return render(request, 'ledger/ledger.html', context)

@@ -1,5 +1,7 @@
 
 
+{% for item in ledgers %}
+    <div>Voucher NO: {{ item.voucher_no }} Description: {{ item.descriptions }} Amount: {{ item.amount }} Date: {{ item.date }}</div>
+{% endfor %}
 
 
-<div>{{ vouchers }}</div>
