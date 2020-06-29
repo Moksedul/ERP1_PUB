@@ -10,7 +10,13 @@ def index(request):
     general_vouchers = GeneralVoucher.objects.all()
     collections = Collection.objects.all()
     payments = Payment.objects.all()
+    date1 = request.GET.get('date_from')
+    date2 = request.GET.get('date_to')
 
+    if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
+        payments = payments.filter(payment_date__range=[date1, date2])
+        collections = collections.filter(collection_date__range=[date1, date2])
+        general_vouchers = general_vouchers.filter(date_added__range=[date1, date1])
     ledgers = {
 
     }
@@ -45,13 +51,12 @@ def index(request):
             'debit_amount': voucher.payment_amount
         })
 
-    def my_function(e):
-        return e['date']
-
-    shorting_by_date = ledgers['voucher'].sort(key=my_function, reverse=True)
+    if ledgers['voucher']:
+        def my_function(e):
+            return e['date']
+        shorting_by_date = ledgers['voucher'].sort(key=my_function, reverse=True)
 
     context = {
-        'shorting_by_date': shorting_by_date,
         'ledgers': ledgers['voucher']
     }
 
