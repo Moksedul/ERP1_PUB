@@ -6,17 +6,6 @@ from .forms import OrganizationsFrom
 from .models import Persons, Companies
 
 
-# Create your views here.
-# @login_required()
-# def add_organizations(request):
-#     form = OrganizationsFrom()
-#     if request.method == 'POST':
-#         form = OrganizationsFrom(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('/organization_list')
-#     context = {'form': form}
-#     return render(request, 'organizations/organizations_add.html', context)
 class PersonCreateView(LoginRequiredMixin, CreateView):
     model = Persons
     fields = '__all__'
