@@ -1,7 +1,32 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<!--<div class="card card-body">-->
+<div>
+</div>
+	<div class=" card card-body">
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="#">Ledger</a>
+			<table class="table table-sm table-striped">
+				<tr>
+					<th>Date</th>
+					<th>Descriptions</th>
+					<th>Debit</th>
+					<th>Credit</th>
+					<th>Balance</th>
+				</tr>
+
+				{% for item in ledgers %}
+					<tr>
+						<td>{{ item.date }}</td>
+						<td>Voucher No: {{ item.voucher_no }} For: {{ item.descriptions }}</td>
+						<td>{{ item.debit_amount }}</td>
+						<td>{{ item.credit_amount }}</td>
+						<td>n/a</td>
+					</tr>
+				{% endfor %}
 
 
-{% for item in ledgers %}
-    <div>Voucher NO: {{ item.voucher_no }} Description: {{ item.descriptions }} Amount: {{ item.amount }} Date: {{ item.date }}</div>
-{% endfor %}
+			</table>
+		</div>
 
-
+{% endblock content %}
