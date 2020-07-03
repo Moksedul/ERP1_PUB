@@ -44,7 +44,7 @@ def collection_details(request, pk):
         'collection': collection,
         'collected_amount_word': collected_amount_word,
     }
-    return render(request, 'collections/collection_Detail.html', context)
+    return render(request, 'collections/collection_detail.html', context)
 
 
 @login_required()

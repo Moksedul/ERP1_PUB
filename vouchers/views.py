@@ -129,7 +129,7 @@ def sale_details(request, pk):
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost
     }
-    return render(request, 'vouchers/sale_Detail.html', context)
+    return render(request, 'vouchers/sale_detail.html', context)
 
 
 @login_required()
@@ -165,4 +165,4 @@ def buy_details(request, pk):
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost
     }
-    return render(request, 'vouchers/buy_Detail.html', context)
+    return render(request, 'vouchers/buy_detail.html', context)
