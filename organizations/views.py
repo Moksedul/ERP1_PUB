@@ -48,7 +48,7 @@ class CompanyCreateView(LoginRequiredMixin, CreateView):
 
 class CompanyListView(LoginRequiredMixin, ListView):
     model = Companies
-    template_name = 'organizations/Company_list.html'
+    template_name = 'organizations/company_list.html'
     context_object_name = 'companies'
     # products = Products.objects.all()
     # return render(request, 'products/buy_list.html', {'products': products})
