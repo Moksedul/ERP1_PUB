@@ -31,7 +31,7 @@ class BuyVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_buy_voucher_number)
     seller_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
-    weight_per_bag = models.FloatField(max_length=10)
+    weight = models.FloatField(max_length=10)
     per_bag_unloading_cost = models.FloatField(blank=True, null=True)
     measuring_cost_per_kg = models.FloatField(blank=True, null=True)
     weight_of_each_bag = models.FloatField(blank=True, null=True)

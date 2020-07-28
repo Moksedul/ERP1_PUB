@@ -8,7 +8,7 @@ class ChallanCreateView(LoginRequiredMixin, CreateView):
     model = Challan
     template_name = 'challan/challan_add_form.html'
     fields = ('challan_no', 'buyer_name', 'company_name',
-              'product_name', 'weight_per_bag', 'number_of_bag', 'number_of_vehicle', 'name_of_driver',
+              'product_name', 'weight', 'number_of_bag', 'number_of_vehicle', 'name_of_driver',
               'vehicle_plate_number', 'date_added', 'remarks',)
 
     def form_valid(self, form):

@@ -102,7 +102,7 @@ def sale_details(request, pk):
     for challan in challan:
         pass
 
-    total_weight = challan.number_of_bag*challan.weight_per_bag
+    total_weight = challan.weight
     total_amount = total_weight*sale.rate
 
     if sale.weight_of_each_bag is not None:
@@ -139,7 +139,7 @@ def buy_details(request, pk):
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
 
-    total_weight = buy.number_of_bag*buy.weight_per_bag
+    total_weight = buy.weight
     total_amount = total_weight*buy.rate
 
     if buy.weight_of_each_bag is not None:

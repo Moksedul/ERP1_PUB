@@ -32,7 +32,7 @@ class Challan(models.Model):
     buyer_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
-    weight_per_bag = models.FloatField(max_length=10)
+    weight = models.FloatField(max_length=10)
     number_of_bag = models.FloatField(max_length=10)
     number_of_vehicle = models.IntegerField(blank=True, null=True)
     name_of_driver = models.CharField(max_length=200, blank=True, null=True)
