@@ -10,9 +10,9 @@ from vouchers.models import BuyVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from .forms import PaymentForm
+from core.views import buy_details
 
 
-# Create your views here.
 class PaymentCreate(LoginRequiredMixin, CreateView):
     form_class = PaymentForm
     # model = Payment
@@ -93,7 +93,8 @@ def payment_search(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-
+    for voucher in buy_voucher:
+        buy_details(voucher.id)
 
     context = {
         'page_obj': page_obj,
