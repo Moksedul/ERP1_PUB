@@ -13,8 +13,6 @@
                 </span>
                 </div>
             </div>
-            </div>
-             <div class="form-row">
                 <div class="form-group col-md-4">
                 <div class="input-group">
                 <input id="phone_no" class="form-control py-2 border-right-0 border" name="phone_no" type="search" placeholder="Type Phone No">
@@ -25,17 +23,6 @@
                 </span>
                 </div>
             </div>
-            </div>
-            <div class="form-row">
-             <div class="form-group col-md-4">
-                  <label for="voucher_no">Voucher No</label>
-                  <select id="voucher_no" class="form-control" name="voucher_no">
-                    <option selected>Choose...</option>
-					  {% for voucher in vouchers %}
-                    <option>{{ voucher.voucher_number }}</option>
-					  {% endfor %}
-                  </select>
-                </div>
             </div>
             <button type="submit" class="btn btn-sm btn-info">Search</button>
         </form>
@@ -72,7 +59,13 @@
 
 
 			</table>
-    <div>total payed:{{total}} BDT. </div>
+            <div class="container">
+                <div class="float-right">
+                    <div>Total Price:{{voucher_total_price}} BDT. </div>
+                    <div>Total Payed:{{total_payed}} BDT. </div>
+                    <div>Remaining Amount:{{remaining_amount}} BDT. </div>
+                </div>
+            </div>
 		</div>
 
 {% endblock content %}

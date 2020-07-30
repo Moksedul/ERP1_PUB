@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from challan.models import Challan
 from vouchers.models import *
 
@@ -42,7 +41,7 @@ def sale_details(pk):
     }
 
 
-def buy_details(pk):
+def buy_total_amount(pk):
     buy = BuyVoucher.objects.get(id=pk)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
@@ -63,14 +62,5 @@ def buy_details(pk):
     weight_after_deduction = total_weight - total_self_weight_of_bag
     total_amount_without_bag = buy.rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
-    print(weight_after_deduction)
-    context = {
-        'buy': buy,
-        'total_weight': total_weight,
-        'weight_after_deduction': weight_after_deduction,
-        'amount_after_deduction': amount_after_deduction,
-        'total_amount': total_amount,
-        'total_unloading_cost': total_unloading_cost,
-        'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': total_measuring_cost
-    }
+    return amount_after_deduction
+

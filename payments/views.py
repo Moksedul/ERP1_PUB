@@ -10,23 +10,14 @@ from vouchers.models import BuyVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from .forms import PaymentForm
-from core.views import buy_details
+from core.views import buy_total_amount
 
 
 class PaymentCreate(LoginRequiredMixin, CreateView):
     form_class = PaymentForm
-    # model = Payment
     template_name = 'payments/payment_add_form.html'
-    # fields = '__all__'
 
     def form_valid(self, form):
-        # account = Accounts.objects.get(pk=form.cleaned_data['payment_from_account'].id)
-        # amount = form.cleaned_data['payment_amount']
-        # remaining_balance = account.remaining_balance
-        # new_remaining_balance = amount + remaining_balance
-        # account.remaining_balance = new_remaining_balance
-        # account.save()
-        print('response')
         return super().form_valid(form)
 
 
@@ -64,12 +55,13 @@ class PaymentDeleteView(LoginRequiredMixin, DeleteView):
 def payment_search(request):
     persons = Persons.objects.all()
     buy_vouchers = BuyVoucher.objects.all()
-    buy_voucher = []
+    buy_voucher = buy_vouchers
     payments = Payment.objects.all()
     name_contains_query = request.GET.get('name_contains')
-    voucher_contains_query = request.GET.get('voucher_no')
     phone_number_query = request.GET.get('phone_no')
-    total = 0
+    voucher_total_price = 0
+    for voucher in buy_voucher:
+        voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
 
     if name_contains_query != '' and name_contains_query is not None:
         payments = payments.filter(payed_to__contains=name_contains_query)
@@ -78,28 +70,29 @@ def payment_search(request):
         v_id = []
         person = persons.filter(contact_number=phone_number_query)
         for person in person:
-            pass
-        buy_voucher = buy_vouchers.filter(seller_name=person.id)
+            buy_voucher = buy_vouchers.filter(seller_name=person.id)
         for voucher in buy_voucher:
             v_id.append(voucher.id)
         payments = payments.filter(voucher_no_id__in=v_id)
-    elif voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
-        buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
-        for voucher in buy_voucher:
-            payments = payments.filter(voucher_no_id=voucher.id)
-    total = payments.aggregate(Sum('payment_amount'))
 
-    paginator = Paginator(payments, 5)
+    for voucher in buy_voucher:
+        voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
+
+    total_payed = payments.aggregate(Sum('payment_amount'))
+    total_payed = total_payed['payment_amount__sum']
+    remaining_amount = 0
+    if total_payed is not None:
+        remaining_amount = voucher_total_price - total_payed
+
+    paginator = Paginator(payments, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    for voucher in buy_voucher:
-        buy_details(voucher.id)
-
     context = {
         'page_obj': page_obj,
-        'vouchers': buy_vouchers,
-        'total': total['payment_amount__sum']
+        'total_payed': total_payed,
+        'voucher_total_price': voucher_total_price,
+        'remaining_amount': remaining_amount
     }
     return render(request, "payments/payment_search_form.html", context)
 
@@ -109,39 +102,25 @@ def payment_report(request):
     buy_vouchers = BuyVoucher.objects.all()
     payments = Payment.objects.all()
     voucher_contains_query = request.GET.get('voucher_no')
-    total_unloading_cost = 0
-    total_self_weight_of_bag = 0
-    total_measuring_cost = 0
     total_payed = 0
     total_payable = 0
     payment_due = 0
     payment = []
 
-    if voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
+    if voucher_contains_query != '' and voucher_contains_query != 'Choose...':
         buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
 
         for voucher in buy_voucher:
             payment = payments.filter(voucher_no_id=voucher.id)
-            total_payed = payments.filter(voucher_no_id=voucher.id).aggregate(Sum('payment_amount'))
-            rate = voucher.rate
-            total_weight = voucher.number_of_bag * voucher.weight_per_bag
+            total_payed = payment.aggregate(Sum('payment_amount'))
+            total_payed = total_payed['payment_amount__sum']
+            total_payable = buy_total_amount(voucher.id)
 
-            if voucher.weight_of_each_bag is not None:
-                total_self_weight_of_bag = voucher.weight_of_each_bag * voucher.number_of_bag
-
-            if voucher.per_bag_unloading_cost is not None:
-                total_unloading_cost = voucher.per_bag_unloading_cost * voucher.number_of_bag
-
-            if voucher.measuring_cost_per_kg is not None:
-                total_measuring_cost = voucher.measuring_cost_per_kg * total_weight
-
-            weight_after_deduction = total_weight - total_self_weight_of_bag
-            total_amount = rate*weight_after_deduction
-            total_payable = total_amount - total_unloading_cost - total_measuring_cost
-
-        if total_payed != 0 and total_payed['payment_amount__sum'] is not None:
-            print(total_payed['payment_amount__sum'])
-            payment_due = total_payable-total_payed['payment_amount__sum']
+        if total_payed != 0 and total_payed is not None:
+            payment_due = total_payable-total_payed
+        else:
+            payment_due = total_payable
+            total_payed = 0
 
     context = {
         'page_obj': payment,

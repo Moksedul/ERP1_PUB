@@ -4,6 +4,15 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .forms import *
 from challan.models import Challan
+from organizations.models import Persons
+
+
+# person creation from buy form
+class PersonCreateBuy(LoginRequiredMixin, CreateView):
+    model = Persons
+    fields = '__all__'
+    template_name = 'vouchers/person_add.html'
+    success_url = '/add_buy_voucher'
 
 
 # buy voucher start
