@@ -10,9 +10,9 @@ from vouchers.models import BuyVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from .forms import PaymentForm
+from core.views import buy_details
 
 
-# Create your views here.
 class PaymentCreate(LoginRequiredMixin, CreateView):
     form_class = PaymentForm
     # model = Payment
@@ -64,6 +64,7 @@ class PaymentDeleteView(LoginRequiredMixin, DeleteView):
 def payment_search(request):
     persons = Persons.objects.all()
     buy_vouchers = BuyVoucher.objects.all()
+    buy_voucher = []
     payments = Payment.objects.all()
     name_contains_query = request.GET.get('name_contains')
     voucher_contains_query = request.GET.get('voucher_no')
@@ -78,25 +79,27 @@ def payment_search(request):
         person = persons.filter(contact_number=phone_number_query)
         for person in person:
             pass
-        voucher = buy_vouchers.filter(seller_name=person.id)
-        for voucher in voucher:
+        buy_voucher = buy_vouchers.filter(seller_name=person.id)
+        for voucher in buy_voucher:
             v_id.append(voucher.id)
         payments = payments.filter(voucher_no_id__in=v_id)
-
     elif voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
         buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
         for voucher in buy_voucher:
             payments = payments.filter(voucher_no_id=voucher.id)
-            total = payments.filter(voucher_no_id=voucher.id).aggregate(Sum('payment_amount'))
+    total = payments.aggregate(Sum('payment_amount'))
 
     paginator = Paginator(payments, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    for voucher in buy_voucher:
+        buy_details(voucher.id)
+
     context = {
         'page_obj': page_obj,
         'vouchers': buy_vouchers,
-        'total': total
+        'total': total['payment_amount__sum']
     }
     return render(request, "payments/payment_search_form.html", context)
 
