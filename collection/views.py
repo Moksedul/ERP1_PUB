@@ -8,7 +8,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
-from challan.models import Challan
+from challan.models import *
 from .forms import CollectionForm
 
 
@@ -107,12 +107,16 @@ def collection_report(request):
 def collection_search(request):
     sale_voucher = SaleVoucher.objects.all()
     collections = Collection.objects.all()
+    persons = Persons.objects.all()
+    challans = Challan.objects.all()
     name_contains_query = request.GET.get('name_contains')
     voucher_contains_query = request.GET.get('voucher_no')
     total = 0
 
     if name_contains_query != '' and name_contains_query is not None:
-        sales = sale_voucher.filter(payed_to__contains=name_contains_query)
+        person = persons.filter(person_name__contains=name_contains_query)
+        print(person.id)
+        # sales = sale_voucher.filter(payed_to__contains=name_contains_query)
     elif voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
         buy_voucher = sale_voucher.filter(voucher_number=voucher_contains_query)
         for voucher in buy_voucher:

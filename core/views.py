@@ -1,8 +1,7 @@
-from challan.models import Challan
 from vouchers.models import *
 
 
-def sale_details(pk):
+def sale_total_amount(pk):
     sale = SaleVoucher.objects.get(id=pk)
     challan = Challan.objects.filter(challan_no=sale.challan_no)
     total_unloading_cost = 0
@@ -13,7 +12,6 @@ def sale_details(pk):
         pass
 
     total_weight = challan.weight
-    total_amount = total_weight*sale.rate
 
     if sale.weight_of_each_bag is not None:
         total_self_weight_of_bag = sale.weight_of_each_bag*challan.number_of_bag
@@ -27,18 +25,7 @@ def sale_details(pk):
     weight_after_deduction = total_weight - total_self_weight_of_bag
     total_amount_without_bag = sale.rate*weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
-
-    context = {
-        'sale': sale,
-        'challan': challan,
-        'total_weight': total_weight,
-        'weight_after_deduction': weight_after_deduction,
-        'amount_after_deduction': amount_after_deduction,
-        'total_amount': total_amount,
-        'total_unloading_cost': total_unloading_cost,
-        'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': total_measuring_cost
-    }
+    return amount_after_deduction
 
 
 def buy_total_amount(pk):
@@ -48,7 +35,6 @@ def buy_total_amount(pk):
     total_measuring_cost = 0
 
     total_weight = buy.weight
-    total_amount = total_weight*buy.rate
 
     if buy.weight_of_each_bag is not None:
         total_self_weight_of_bag = buy.weight_of_each_bag*buy.number_of_bag
@@ -63,4 +49,3 @@ def buy_total_amount(pk):
     total_amount_without_bag = buy.rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
     return amount_after_deduction
-
