@@ -60,8 +60,6 @@ def payment_search(request):
     name_contains_query = request.GET.get('name_contains')
     phone_number_query = request.GET.get('phone_no')
     voucher_total_price = 0
-    for voucher in buy_voucher:
-        voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
 
     if name_contains_query != '' and name_contains_query is not None:
         payments = payments.filter(payed_to__contains=name_contains_query)
