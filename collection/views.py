@@ -10,6 +10,7 @@ from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
 from challan.models import *
 from .forms import CollectionForm
+from core.views import sale_total_amount
 
 
 class CollectionCreate(LoginRequiredMixin, CreateView):
@@ -105,30 +106,48 @@ def collection_report(request):
 
 @login_required()
 def collection_search(request):
-    sale_voucher = SaleVoucher.objects.all()
+    sale_vouchers = SaleVoucher.objects.all()
+    sales = sale_vouchers
     collections = Collection.objects.all()
     persons = Persons.objects.all()
     challans = Challan.objects.all()
     name_contains_query = request.GET.get('name_contains')
+    phone_query = request.GET.get('phone_contains')
     voucher_contains_query = request.GET.get('voucher_no')
-    total = 0
+    total_receivable = 0
 
+    # filter collection by name
     if name_contains_query != '' and name_contains_query is not None:
-        person = persons.filter(person_name__contains=name_contains_query)
-        print(person.id)
-        # sales = sale_voucher.filter(payed_to__contains=name_contains_query)
-    elif voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
-        buy_voucher = sale_voucher.filter(voucher_number=voucher_contains_query)
-        for voucher in buy_voucher:
-            collections = collections.filter(sale_voucher_no_id=voucher.id)
-            total = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
-    paginator = Paginator(collections, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        persons = persons.filter(person_name__contains=name_contains_query)
+        v_id = []
+        c_id = []
+        for person in persons:
+            challans = challans.filter(buyer_name=person.id)
+        for challan in challans:
+            c_id.append(challan.id)
+        sales = sale_vouchers.filter(challan_no_id__in=c_id)
+        for sale in sales:
+            v_id.append(sale.id)
+        collections = collections.filter(sale_voucher_no_id__in=v_id)
+
+    # filter collection by sale voucher
+    elif voucher_contains_query != '' and voucher_contains_query is not 'Select Voucher No':
+        sales = sale_vouchers.filter(voucher_number=voucher_contains_query)
+        for sale in sales:
+            collections = collections.filter(sale_voucher_no_id=sale.id)
+
+    total_collected = collections.aggregate(Sum('collection_amount'))
+    total_collected = total_collected['collection_amount__sum']
+
+    for sale in sales:
+        total_receivable = total_receivable + sale_total_amount(sale.id)
+
+    print(total_receivable)
 
     context = {
-        'page_obj': page_obj,
-        'vouchers': sale_voucher,
-        'total': total
+        'collections': collections,
+        'vouchers': sale_vouchers,
+        'total_collected': total_collected,
+        'total_receivable': total_receivable
     }
     return render(request, "collections/collection_search_form.html", context)

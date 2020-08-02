@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'report',
     'ledger',
     'collection',
     'payments',

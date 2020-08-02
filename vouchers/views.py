@@ -163,9 +163,11 @@ def buy_details(request, pk):
     weight_after_deduction = total_weight - total_self_weight_of_bag
     total_amount_without_bag = buy.rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
+    grand_total_amount = amount_after_deduction + buy.previous_amount
 
     context = {
         'buy': buy,
+        'grand_total_amount': grand_total_amount,
         'total_weight': total_weight,
         'weight_after_deduction': weight_after_deduction,
         'amount_after_deduction': amount_after_deduction,

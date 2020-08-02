@@ -42,6 +42,7 @@ class BuyVoucher(models.Model):
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
+    previous_amount = models.FloatField(blank=True, null=True, default=0)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

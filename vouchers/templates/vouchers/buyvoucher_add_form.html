@@ -47,12 +47,15 @@
                 <div class="form-group col-md-6 mb-0" >
                    {{ form.date_added|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-12 mb-0" >
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.previous_amount|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
 
             </div>
-                <button class="btn btn-outline-info" type="submit">Save</button>
+                <button class="btn btn-outline-info" type="submit">Saves</button>
         </form>
     </div>
 {% endblock content %}
