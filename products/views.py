@@ -23,7 +23,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     model = Products
     template_name = 'products/product_list.html'
     context_object_name = 'products'
-    paginate_by = 5
+    paginate_by = 20
     # products = Products.objects.all()
     # return render(request, 'products/buy_list.html', {'products': products})
 

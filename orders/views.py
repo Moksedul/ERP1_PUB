@@ -21,7 +21,7 @@ class OrderListView(LoginRequiredMixin, ListView):
     model = Orders
     template_name = 'orders/order_list.html'
     context_object_name = 'orders'
-    paginate_by = 5
+    paginate_by = 20
 
 
 class OrderUpdateView(LoginRequiredMixin, UpdateView):

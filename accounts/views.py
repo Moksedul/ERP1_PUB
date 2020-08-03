@@ -27,7 +27,7 @@ class BankAccountList(LoginRequiredMixin, ListView):
     template_name = 'accounts/bank_account_list.html'
     context_object_name = 'accounts'
     ordering = ['-date_added']
-    paginate_by = 5
+    paginate_by = 20
 
 
 class BankAccountUpdate(LoginRequiredMixin, UpdateView):
@@ -58,7 +58,7 @@ class OtherAccountList(LoginRequiredMixin, ListView):
     template_name = 'accounts/other_account_list.html'
     context_object_name = 'accounts'
     ordering = ['-date_added']
-    paginate_by = 5
+    paginate_by = 20
 
 
 class OtherAccountUpdate(LoginRequiredMixin, UpdateView):
@@ -94,7 +94,7 @@ class InvestmentList(LoginRequiredMixin, ListView):
     template_name = 'accounts/investment_list.html'
     context_object_name = 'investments'
     ordering = ['-date_added']
-    paginate_by = 5
+    paginate_by = 20
 
 
 @login_required()

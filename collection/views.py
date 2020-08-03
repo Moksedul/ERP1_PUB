@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.db.models import Sum
 import string
@@ -22,7 +21,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
     model = Collection
     template_name = 'collections/collection_list.html'
     context_object_name = 'collections'
-    paginate_by = 5
+    paginate_by = 20
 
 
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):

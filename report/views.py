@@ -14,10 +14,12 @@ def payment_search(request):
     buy_voucher = []
     payments_all = Payment.objects.all()
     payments = []
+    voucher_contains_query = request.GET.get('voucher_no')
     name_contains_query = request.GET.get('name_contains')
     phone_number_query = request.GET.get('phone_no')
     voucher_total_price = 0
     total_payed = 0
+    remaining_amount = 0
 
     # filter payments by name
     if name_contains_query != '' and name_contains_query is not None:
@@ -42,10 +44,17 @@ def payment_search(request):
         total_payed = payments.aggregate(Sum('payment_amount'))
         total_payed = total_payed['payment_amount__sum']
 
+    if voucher_contains_query != '' and voucher_contains_query != 'Choose...':
+        buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
+
+        for voucher in buy_voucher:
+            payments = payments_all.filter(voucher_no_id=voucher.id)
+            total_payed = payments.aggregate(Sum('payment_amount'))
+            total_payed = total_payed['payment_amount__sum']
+
     for voucher in buy_voucher:
         voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
 
-    remaining_amount = 0
     if total_payed is not None:
         remaining_amount = voucher_total_price - total_payed
 
@@ -54,6 +63,7 @@ def payment_search(request):
         'total_payed': total_payed,
         'voucher_total_price': voucher_total_price,
         'remaining_amount': remaining_amount,
-        'buy_voucher': buy_voucher
+        'buy_voucher': buy_voucher,
+        'buy_vouchers': buy_vouchers
     }
     return render(request, "report/buy_report.html", context)

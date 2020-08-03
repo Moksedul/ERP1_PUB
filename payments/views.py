@@ -82,7 +82,7 @@ def payment_search(request):
     if total_payed is not None:
         remaining_amount = voucher_total_price - total_payed
 
-    paginator = Paginator(payments, 10)
+    paginator = Paginator(payments, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -93,39 +93,3 @@ def payment_search(request):
         'remaining_amount': remaining_amount
     }
     return render(request, "payments/payment_search_form.html", context)
-
-
-@login_required()
-def payment_report(request):
-    buy_vouchers = BuyVoucher.objects.all()
-    payments = Payment.objects.all()
-    voucher_contains_query = request.GET.get('voucher_no')
-    total_payed = 0
-    total_payable = 0
-    payment_due = 0
-    payment = []
-
-    if voucher_contains_query != '' and voucher_contains_query != 'Choose...':
-        buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
-
-        for voucher in buy_voucher:
-            payment = payments.filter(voucher_no_id=voucher.id)
-            total_payed = payment.aggregate(Sum('payment_amount'))
-            total_payed = total_payed['payment_amount__sum']
-            total_payable = buy_total_amount(voucher.id)
-
-        if total_payed != 0 and total_payed is not None:
-            payment_due = total_payable-total_payed
-        else:
-            payment_due = total_payable
-            total_payed = 0
-
-    context = {
-        'page_obj': payment,
-        'vouchers': buy_vouchers,
-        'total_payed': total_payed,
-        'total_payable': total_payable,
-        'payment_due': payment_due,
-        'buy_voucher': voucher_contains_query
-    }
-    return render(request, "payments/payment_report.html", context)

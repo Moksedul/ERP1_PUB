@@ -10,6 +10,5 @@ urlpatterns = [
     path('payment/<int:pk>/detail', payment_details, name='payment-detail'),
     path('payment/<int:pk>/update', PaymentUpdateView.as_view(), name='payment-update'),
     path('payment/<int:pk>/delete', PaymentDeleteView.as_view(), name='payment-delete'),
-    path('payment_report/', payment_report, name='payment-report'),
     path('payment_search/', payment_search, name='payment-search'),
 ]

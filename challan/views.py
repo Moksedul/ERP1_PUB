@@ -20,7 +20,7 @@ class ChallanListView(LoginRequiredMixin, ListView):
     model = Challan
     template_name = 'challan/challan_list.html'
     context_object_name = 'challan'
-    paginate_by = 5
+    paginate_by = 20
 
 
 class ChallanUpdateView(LoginRequiredMixin, UpdateView):

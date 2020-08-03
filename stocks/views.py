@@ -32,7 +32,7 @@ class StockListView(LoginRequiredMixin, ListView):
     model = Stocks
     template_name = 'stocks/stock_list.html'
     context_object_name = 'stocks'
-    paginate_by = 5
+    paginate_by = 20
 
 
 class StockUpdateView(LoginRequiredMixin, UpdateView):
