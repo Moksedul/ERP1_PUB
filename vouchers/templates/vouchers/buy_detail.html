@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row ">
         <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
+        <a href="{% url 'buy-update' buy.id%}"><button id="edit" class="btn-xs btn-info">E</button></a>
     </div>
 
     <hr>
@@ -121,9 +122,12 @@
 <script>
     function printPage() {
         var printButton = document.getElementById("print");
+        var editButton = document.getElementById("edit");
         printButton.style.visibility = 'hidden';
+        editButton.style.visibility = 'hidden';
         window.print()
         printButton.style.visibility = 'visible';
+        editButton.style.visibility = 'visible';
     }
 </script>
 {% endblock content %}

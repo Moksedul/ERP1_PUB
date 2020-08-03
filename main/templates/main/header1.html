@@ -35,6 +35,14 @@
           <a class="dropdown-item" href="{% url 'ledger' %}">LEDGER</a>
         </div>
       </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          REPORT
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'report-buy' %}">BUY</a>
+          <a class="dropdown-item" href="#">SALE</a>
+        </div>
     </ul>
     <div class="my-2 my-lg-0 ">
      <a  href="{% url 'main-settings'%}"><i class="fa fa-cog"></i></a>

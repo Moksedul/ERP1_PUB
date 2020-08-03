@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 {% block content %}
     <div class="container">
-        <form method="GET" >
+        <form method="GET" id="search">
             <div class="form-row">
                 <div class="form-group col-md-4">
                 <div class="input-group">
@@ -28,27 +28,45 @@
         </form>
 
     <div class="row">
-        <div class=" card card-body col-md-6"></div>
         <div class=" card card-body col-md-6">
+            <a target="_new" class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-buy-voucher'%}">New Buy</a>
+			<table class="table table-sm table-striped">
+				<tr>
+					<th>Voucher No</th>
+					<th>Seller Name</th>
+                    <th>Weight</th>
+                    <th>Rate</th>
+                    <th>Date</th>
+				</tr>
+
+				{% for voucher in buy_voucher %}
+					<tr>
+						<td><a target="_new" href="{% url 'buy-detail' voucher.id%}">{{ voucher.voucher_number }} </a></td>
+						<td>{{ voucher.seller_name }}</td>
+                        <td>{{ voucher.weight }}</td>
+                        <td>{{ voucher.rate }}</td>
+						<td>{{ voucher.date_added }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+        </div>
+
+        <div class=" card card-body col-md-6">
+            <a target="_new" class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-payment'%}">New Payment</a>
                     <table class="table table-sm table-striped">
                         <tr>
                             <th>Payment No</th>
                             <th>Voucher No</th>
                             <th>Amount</th>
                             <th>Date</th>
-                            <td>Options</td>
                         </tr>
 
                         {% for payment in page_obj %}
                             <tr>
-                                <td>{{ payment.payment_no }}</td>
+                                <td><a target="_new" href="{% url 'payment-detail' payment.id%}">{{ payment.payment_no }}</a></td>
                                 <td>{{ payment.voucher_no }}</td>
                                 <td>{{ payment.payment_amount }} TK</td>
                                 <td>{{ payment.payment_date }}</td>
-                                <td>
-                                <a class="btn btn-sm btn-info" href="{% url 'payment-detail' payment.id%}">D</a>
-                                <a class="btn btn-sm btn-info" href="{% url 'payment-update' payment.id%}">E</a>
-                                </td>
                             </tr>
                         {% endfor %}
 

@@ -1,4 +1,5 @@
 from django.urls import path
+from .views_ajax import *
 from .views import *
 
 
