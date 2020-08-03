@@ -44,7 +44,7 @@ def payment_search(request):
         total_payed = payments.aggregate(Sum('payment_amount'))
         total_payed = total_payed['payment_amount__sum']
 
-    if voucher_contains_query != '' and voucher_contains_query != 'Choose...':
+    if voucher_contains_query != '' and voucher_contains_query != 'Select Voucher No':
         buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
 
         for voucher in buy_voucher:
