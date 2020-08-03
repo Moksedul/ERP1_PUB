@@ -25,7 +25,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
     model = Payment
     template_name = 'payments/payment_list.html'
     context_object_name = 'payments'
-    paginate_by = 5
+    paginate_by = 20
 
 
 class PaymentUpdateView(LoginRequiredMixin, UpdateView):
