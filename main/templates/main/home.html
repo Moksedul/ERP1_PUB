@@ -2,7 +2,7 @@
 
 
 {% block home %}
-
+<div class="container">
 <div class="row ml-2 ">
 <div class="col-md-4 d-flex justify-content-center">
     <div class="home-box">
@@ -30,15 +30,17 @@
 </div>
 </div>
 <hr>
-<div class="row ml-2 mr-2">
-    <div class="col-6">
+<div class="card card-body">
+    <div class="row">
+    <div class="col-md-6">
         {% include 'main/latest_order.html' %}
     </div>
-    <div class="col-6">
+    <div class="col-md-6">
         {% include 'main/latest_stock.html' %}
     </div>
+    </div>
 </div>
-
+</div>
 
 
 
