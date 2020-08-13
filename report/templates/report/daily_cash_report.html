@@ -25,7 +25,9 @@
 <div class="container">
 </div>
 	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="#">DAILY CASH REPORT</a>
+			<div class="btn btn-secondary  btn-sm btn-block bg-steel">
+				DAILY CASH REPORT (Today's Balance : {{ main_balance }})
+			</div>
 			<table class="table table-sm table-striped">
 				<tr>
 					<th>Date</th>
@@ -38,10 +40,13 @@
 				{% for item in ledgers %}
 					<tr>
 						<td>{{ item.date }}</td>
-						<td>Voucher No: {{ item.voucher_no }} For: {{ item.descriptions }}</td>
+						<td>
+							Voucher No: <a target="_blank" href="{{ item.url1 }}">{{ item.voucher_no }}</a>
+							Payment For: <a target="_blank" href="{{ item.url2 }}">{{ item.descriptions }}</a>
+						</td>
 						<td>{{ item.debit_amount }}</td>
 						<td>{{ item.credit_amount }}</td>
-						<td>n/a</td>
+						<td>{{ item.balance }}</td>
 					</tr>
 				{% endfor %}
 

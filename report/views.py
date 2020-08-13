@@ -3,7 +3,7 @@ from django.db.models import Sum
 from accounts.models import Accounts
 from collection.models import Collection
 from payments.models import Payment
-from vouchers.models import BuyVoucher, GeneralVoucher
+from vouchers.models import BuyVoucher, GeneralVoucher, SaleVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from core.views import buy_total_amount
@@ -79,10 +79,11 @@ def account_report_index(request):
 
 @login_required()
 def daily_cash_report(request):
-    account = get_object_or_404(Accounts, pk=14)
+    account = get_object_or_404(Accounts, account_name='Daily Cash')
     general_vouchers = GeneralVoucher.objects.filter(from_account=account.id)
     collections = Collection.objects.filter(collection_to_account=account.id)
     payments = Payment.objects.filter(payment_from_account=account.id)
+    account_balance = account.remaining_balance
 
     date1 = request.GET.get('date_from')
     date2 = request.GET.get('date_to')
@@ -102,7 +103,10 @@ def daily_cash_report(request):
             'date': voucher.date_added,
             'voucher_no': voucher.voucher_number + ' General Cost to ' + voucher.person_name,
             'descriptions': voucher.cost_Descriptions,
-            'debit_amount': voucher.cost_amount
+            'debit_amount': voucher.cost_amount,
+            'credit_amount': 0,
+            'url1': '/general_voucher_list',
+            'url2': '/general_voucher_list'
         })
 
     for voucher in collections:
@@ -112,26 +116,53 @@ def daily_cash_report(request):
             'date': voucher.collection_date,
             'voucher_no': voucher.collection_no + ' Collection',
             'descriptions': voucher.sale_voucher_no,
-            'credit_amount': voucher.collection_amount
+            'credit_amount': voucher.collection_amount,
+            'debit_amount': 0,
+            'url1': '#',
+            'url2': '#'
         })
 
     for voucher in payments:
+        # buy_voucher = get_object_or_404(BuyVoucher, voucher_number='voucher.voucher_no')
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.payment_date,
-            'voucher_no': voucher.payment_no + ' Payment',
+            'voucher_no': voucher.payment_no,
             'descriptions': voucher.voucher_no,
-            'debit_amount': voucher.payment_amount
+            'debit_amount': voucher.payment_amount,
+            'credit_amount': 0,
+            'url1': '/payment/' + str(voucher.id) + '/detail',
+            'url2': '/buy/' + str(voucher.voucher_no_id) + '/detail'
         })
 
     if ledgers['voucher']:
         def my_function(e):
             return e['date']
-        ledgers['voucher'].sort(key=my_function, reverse=True)
+        ledgers['voucher'].sort(key=my_function, reverse=False)
+
+    report = {
+        'voucher': []
+    }
+
+    for item in ledgers['voucher']:
+        account_balance = account_balance - item['debit_amount'] + item['credit_amount']
+        key = "voucher"
+        report.setdefault(key, [])
+        report[key].append({
+            'date': item['date'],
+            'voucher_no': item['voucher_no'],
+            'descriptions': item['descriptions'],
+            'debit_amount': item['debit_amount'],
+            'credit_amount': item['credit_amount'],
+            'balance': account_balance,
+            'url1': item['url1'],
+            'url2': item['url2'],
+        })
 
     context = {
-        'ledgers': ledgers['voucher']
+        'ledgers': report['voucher'],
+        'main_balance': account.remaining_balance
     }
 
     return render(request, 'report/daily_cash_report.html', context)
