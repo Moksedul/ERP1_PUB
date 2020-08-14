@@ -28,9 +28,10 @@
 			<div class="btn btn-secondary  btn-sm btn-block bg-steel">
 				DAILY CASH REPORT (Today's Balance : {{ main_balance }})
 			</div>
-			<table class="table table-sm table-striped">
+			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Date</th>
+					<th>Name</th>
 					<th>Descriptions</th>
 					<th>Debit</th>
 					<th>Credit</th>
@@ -40,6 +41,7 @@
 				{% for item in ledgers %}
 					<tr>
 						<td>{{ item.date }}</td>
+						<td>{{ item.name }}</td>
 						<td>
 							Voucher No: <a target="_blank" href="{{ item.url1 }}">{{ item.voucher_no }}</a>
 							Payment For: <a target="_blank" href="{{ item.url2 }}">{{ item.descriptions }}</a>

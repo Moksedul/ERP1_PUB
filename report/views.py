@@ -101,7 +101,8 @@ def daily_cash_report(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.date_added,
-            'voucher_no': voucher.voucher_number + ' General Cost to ' + voucher.person_name,
+            'name': voucher.person_name,
+            'voucher_no': voucher.voucher_number,
             'descriptions': voucher.cost_Descriptions,
             'debit_amount': voucher.cost_amount,
             'credit_amount': 0,
@@ -114,6 +115,7 @@ def daily_cash_report(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.collection_date,
+            'name': '',
             'voucher_no': voucher.collection_no + ' Collection',
             'descriptions': voucher.sale_voucher_no,
             'credit_amount': voucher.collection_amount,
@@ -128,6 +130,7 @@ def daily_cash_report(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.payment_date,
+            'name': '',
             'voucher_no': voucher.payment_no,
             'descriptions': voucher.voucher_no,
             'debit_amount': voucher.payment_amount,
@@ -151,6 +154,7 @@ def daily_cash_report(request):
         report.setdefault(key, [])
         report[key].append({
             'date': item['date'],
+            'name': item['name'],
             'voucher_no': item['voucher_no'],
             'descriptions': item['descriptions'],
             'debit_amount': item['debit_amount'],
