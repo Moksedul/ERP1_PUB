@@ -3,7 +3,7 @@ from django.db.models import Sum
 from accounts.models import Accounts
 from collection.models import Collection
 from payments.models import Payment
-from vouchers.models import BuyVoucher, GeneralVoucher, SaleVoucher
+from vouchers.models import BuyVoucher, GeneralVoucher, SaleVoucher, Challan
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from core.views import buy_total_amount
@@ -103,6 +103,7 @@ def daily_cash_report(request):
             'date': voucher.date_added,
             'name': voucher.person_name,
             'voucher_no': voucher.voucher_number,
+            'type': 'General Cost',
             'descriptions': voucher.cost_Descriptions,
             'debit_amount': voucher.cost_amount,
             'credit_amount': 0,
@@ -111,12 +112,16 @@ def daily_cash_report(request):
         })
 
     for voucher in collections:
+        sale_voucher = get_object_or_404(SaleVoucher, pk=voucher.sale_voucher_no_id)
+        challan = get_object_or_404(Challan, pk=sale_voucher.challan_no_id)
+
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.collection_date,
-            'name': '',
-            'voucher_no': voucher.collection_no + ' Collection',
+            'name': challan.buyer_name,
+            'voucher_no': voucher.collection_no,
+            'type': 'Collection',
             'descriptions': voucher.sale_voucher_no,
             'credit_amount': voucher.collection_amount,
             'debit_amount': 0,
@@ -125,13 +130,15 @@ def daily_cash_report(request):
         })
 
     for voucher in payments:
-        # buy_voucher = get_object_or_404(BuyVoucher, voucher_number='voucher.voucher_no')
+        buy_voucher = get_object_or_404(BuyVoucher, pk=voucher.voucher_no_id)
+
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.payment_date,
-            'name': '',
+            'name': buy_voucher.seller_name,
             'voucher_no': voucher.payment_no,
+            'type': 'Payment',
             'descriptions': voucher.voucher_no,
             'debit_amount': voucher.payment_amount,
             'credit_amount': 0,
@@ -156,6 +163,7 @@ def daily_cash_report(request):
             'date': item['date'],
             'name': item['name'],
             'voucher_no': item['voucher_no'],
+            'type': item['type'],
             'descriptions': item['descriptions'],
             'debit_amount': item['debit_amount'],
             'credit_amount': item['credit_amount'],
