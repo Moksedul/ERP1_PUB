@@ -34,11 +34,11 @@
             </div>
             <button type="submit" class="btn btn-sm btn-info">Search</button>
         </form>
-{% if voucher_total_price != 0 %}
+
     <div class="row">
         <div class=" card card-body col-md-6">
             <a target="_new" class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-buy-voucher'%}">New Buy</a>
-			<table class="table table-sm table-striped">
+			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Voucher No</th>
 					<th>Seller Name</th>
@@ -61,7 +61,7 @@
 
         <div class=" card card-body col-md-6">
             <a target="_new" class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-payment'%}">New Payment</a>
-                    <table class="table table-sm table-striped">
+                    <table class="table table-sm table-striped table-bordered">
                         <tr>
                             <th>Payment No</th>
                             <th>Voucher No</th>
@@ -89,6 +89,6 @@
                     </div>
                 </div>
     </div>
-        {% endif %}
+
 </div>
 {% endblock content %}

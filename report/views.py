@@ -14,9 +14,9 @@ from django.shortcuts import get_object_or_404
 def payment_search(request):
     persons = Persons.objects.all()
     buy_vouchers = BuyVoucher.objects.all()
-    buy_voucher = []
+    buy_voucher = buy_vouchers
     payments_all = Payment.objects.all()
-    payments = []
+    payments = payments_all
     voucher_contains_query = request.GET.get('voucher_no')
     name_contains_query = request.GET.get('name_contains')
     phone_number_query = request.GET.get('phone_no')
@@ -33,8 +33,6 @@ def payment_search(request):
         for voucher in buy_voucher:
             v_id.append(voucher.id)
         payments = payments_all.filter(voucher_no_id__in=v_id)
-        total_payed = payments.aggregate(Sum('payment_amount'))
-        total_payed = total_payed['payment_amount__sum']
 
     elif phone_number_query != '' and phone_number_query is not None:
         v_id = []
@@ -44,19 +42,18 @@ def payment_search(request):
         for voucher in buy_voucher:
             v_id.append(voucher.id)
         payments = payments_all.filter(voucher_no_id__in=v_id)
-        total_payed = payments.aggregate(Sum('payment_amount'))
-        total_payed = total_payed['payment_amount__sum']
 
-    if voucher_contains_query != '' and voucher_contains_query != 'Select Voucher No':
+    if voucher_contains_query != 'Select Voucher No' and voucher_contains_query is not None:
         buy_voucher = buy_vouchers.filter(voucher_number=voucher_contains_query)
 
         for voucher in buy_voucher:
             payments = payments_all.filter(voucher_no_id=voucher.id)
-            total_payed = payments.aggregate(Sum('payment_amount'))
-            total_payed = total_payed['payment_amount__sum']
 
     for voucher in buy_voucher:
         voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
+
+    total_payed = payments.aggregate(Sum('payment_amount'))
+    total_payed = total_payed['payment_amount__sum']
 
     if total_payed is not None:
         remaining_amount = voucher_total_price - total_payed
