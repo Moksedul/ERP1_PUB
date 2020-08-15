@@ -74,7 +74,18 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
 # sale voucher end
 
 
-# buy general voucher start
+# general voucher start
+def general_voucher_create(request):
+    context = {}
+    form = GeneralForm(request.POST or None)
+
+    if form.is_valid():
+        print(form.cleaned_data['cost_amount'])
+
+    context['form'] = form
+    return render(request, 'vouchers/general_voucher_add_form.html', context)
+
+
 class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
     form_class = GeneralForm
     template_name = 'vouchers/general_voucher_add_form.html'
