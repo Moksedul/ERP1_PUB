@@ -80,7 +80,7 @@ def general_voucher_create(request):
     form = GeneralForm(request.POST or None)
 
     if form.is_valid():
-        print(form.cleaned_data['cost_amount'])
+        print(form.cleaned_data)
 
     context['form'] = form
     return render(request, 'vouchers/general_voucher_add_form.html', context)
