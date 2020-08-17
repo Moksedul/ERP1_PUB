@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
+from daily_cash.views import create
 
 
 # person creation from buy form
@@ -80,7 +81,12 @@ def general_voucher_create(request):
     form = GeneralForm(request.POST or None)
 
     if form.is_valid():
-        print(form.cleaned_data)
+        data = {
+            'general_voucher': form.cleaned_data['voucher_number'],
+            'description': form.cleaned_data['cost_Descriptions'],
+            'debit': form.cleaned_data['cost_amount'],
+        }
+        create(data)
 
     context['form'] = form
     return render(request, 'vouchers/general_voucher_add_form.html', context)
