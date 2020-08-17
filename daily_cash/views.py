@@ -2,7 +2,8 @@ from django.shortcuts import render
 from .models import DailyCash
 
 
-def create(data):
-    daily_cash = DailyCash(payment_voucher=1, name='Physics', max_marks=100)
-    print(data)
+def create_daily_cash(data):
+    daily_cash = DailyCash(voucher=data['voucher'], description=data['description'], type=data['type'])
+    # daily_cash.save()
+    print(daily_cash)
 

@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
-from daily_cash.views import create
+from daily_cash.views import create_daily_cash
 
 
 # person creation from buy form
@@ -81,12 +81,14 @@ def general_voucher_create(request):
     form = GeneralForm(request.POST or None)
 
     if form.is_valid():
+        form.save()
+        voucher = get_object_or_404(GeneralVoucher, voucher_number=form.cleaned_data['voucher_number'])
         data = {
-            'general_voucher': form.cleaned_data['voucher_number'],
-            'description': form.cleaned_data['cost_Descriptions'],
-            'debit': form.cleaned_data['cost_amount'],
+            'voucher': voucher,
+            'description': 'General Cost',
+            'type': 'debit'
         }
-        create(data)
+        create_daily_cash(data)
 
     context['form'] = form
     return render(request, 'vouchers/general_voucher_add_form.html', context)
