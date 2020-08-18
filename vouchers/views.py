@@ -81,7 +81,7 @@ def general_voucher_create(request):
     form = GeneralForm(request.POST or None)
 
     if form.is_valid():
-        # form.save()
+        form.save()
         voucher = get_object_or_404(GeneralVoucher, voucher_number=form.cleaned_data['voucher_number'])
         data = {
             'general_voucher': voucher,

@@ -11,5 +11,5 @@ def create_daily_cash(data):
         collection_no=data['collection_no'],
         investment_no=data['investment_no']
     )
-    # daily_cash.save()
+    daily_cash.save()
     print(daily_cash)

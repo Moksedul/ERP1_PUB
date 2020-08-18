@@ -4,6 +4,7 @@ from accounts.models import Accounts
 from collection.models import Collection
 from payments.models import Payment
 from vouchers.models import BuyVoucher, GeneralVoucher, SaleVoucher, Challan
+from daily_cash.models import DailyCash
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from core.views import buy_total_amount
@@ -76,33 +77,31 @@ def account_report_index(request):
 
 @login_required()
 def daily_cash_report(request):
-    account = get_object_or_404(Accounts, account_name='Daily Cash')
-    general_vouchers = GeneralVoucher.objects.filter(from_account=account.id)
-    collections = Collection.objects.filter(collection_to_account=account.id)
-    payments = Payment.objects.filter(payment_from_account=account.id)
-    account_balance = account.remaining_balance
+    daily_cash = DailyCash.objects.all()
+    general_vouchers = []
+    collections = []
+    payments = []
+    account_balance = 0
 
     date1 = request.GET.get('date_from')
     date2 = request.GET.get('date_to')
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
-        payments = payments.filter(payment_date__range=[date1, date2])
-        collections = collections.filter(collection_date__range=[date1, date2])
-        general_vouchers = general_vouchers.filter(date_added__range=[date1, date2])
+        daily_cash = daily_cash.filter(payment_date__range=[date1, date2])
     ledgers = {
         'voucher': []
 
     }
-    for voucher in general_vouchers:
+    for daily_cashes in daily_cash:
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
-            'date': voucher.date_added,
-            'name': voucher.person_name,
-            'voucher_no': voucher.voucher_number,
-            'type': 'General Cost',
-            'descriptions': voucher.cost_Descriptions,
-            'debit_amount': voucher.cost_amount,
+            'date': daily_cashes.date,
+            'name': 'N/A',
+            'voucher_no': daily_cashes. general_voucher,
+            'type': daily_cashes.type,
+            'descriptions': daily_cashes.description,
+            'debit_amount': 0,
             'credit_amount': 0,
             'url1': '/general_voucher_list',
             'url2': '/general_voucher_list'
@@ -171,7 +170,7 @@ def daily_cash_report(request):
 
     context = {
         'ledgers': report['voucher'],
-        'main_balance': account.remaining_balance
+        'main_balance': '000'
     }
 
     return render(request, 'report/daily_cash_report.html', context)
