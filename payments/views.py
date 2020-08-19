@@ -18,6 +18,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
     template_name = 'payments/payment_add_form.html'
 
     def form_valid(self, form):
+        print(form)
         return super().form_valid(form)
 
 

@@ -88,8 +88,8 @@ def general_voucher_create(request):
             'payment_no': None,
             'collection_no': None,
             'investment_no': None,
-            'description': 'General Cost',
-            'type': 'debit'
+            'description': voucher.cost_Descriptions,
+            'type': 'G'
         }
         create_daily_cash(data)
 
@@ -100,6 +100,20 @@ def general_voucher_create(request):
 class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
     form_class = GeneralForm
     template_name = 'vouchers/general_voucher_add_form.html'
+
+    def form_valid(self, form):
+        form.save()
+        voucher = get_object_or_404(GeneralVoucher, voucher_number=form.cleaned_data['voucher_number'])
+        data = {
+            'general_voucher': voucher,
+            'payment_no': None,
+            'collection_no': None,
+            'investment_no': None,
+            'description': voucher.cost_Descriptions,
+            'type': 'G'
+        }
+        create_daily_cash(data)
+        return super().form_valid(form)
 
 
 class GeneralVoucherUpdateView(LoginRequiredMixin, UpdateView):

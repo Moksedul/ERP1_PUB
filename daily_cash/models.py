@@ -12,4 +12,4 @@ class DailyCash(models.Model):
     collection_no = models.ForeignKey(Collection, on_delete=models.CASCADE, null=True, blank=True)
     investment_no = models.ForeignKey(Investment, on_delete=models.CASCADE, null=True, blank=True)
     description = models.TextField(max_length=1000)
-    type = models.CharField(max_length=10)
+    type = models.CharField(max_length=1)
