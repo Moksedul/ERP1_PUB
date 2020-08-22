@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.urls import reverse
 from django.contrib.auth.models import User
+from core.views import *
 
 
 class Accounts(models.Model):
@@ -25,7 +26,9 @@ class Accounts(models.Model):
 class Investment(models.Model):
     source_of_investment = models.CharField(max_length=200)
     investing_amount = models.FloatField()
-    investing_to_account = models.ForeignKey(Accounts, null=True, on_delete=models.CASCADE)
+    investing_to_account = models.ForeignKey(
+        Accounts, default=default_account, null=True, on_delete=models.CASCADE
+    )
     added_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=now, blank=True)
     remarks = models.CharField(max_length=200, null=True, blank=True)
@@ -36,5 +39,3 @@ class Investment(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('investment-list')
-
-

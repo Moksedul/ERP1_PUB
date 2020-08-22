@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Sum
+
+from accounts.models import Investment
 from collection.models import Collection
 from payments.models import Payment
 from vouchers.models import BuyVoucher, GeneralVoucher, SaleVoucher, Challan
@@ -98,7 +100,7 @@ def daily_cash_report(request):
                 'date': daily_cash.date,
                 'name': general_voucher.person_name,
                 'voucher_no': daily_cash.general_voucher,
-                'type': 'Cost',
+                'type': 'Cost for',
                 'descriptions': daily_cash.description,
                 'debit_amount': general_voucher.cost_amount,
                 'credit_amount': 0,
@@ -106,43 +108,60 @@ def daily_cash_report(request):
                 'url2': '/general_voucher_list'
             })
 
-            # for buy payment
-            if daily_cash.type == 'P':
-                payment_voucher = get_object_or_404(Payment, pk=daily_cash.payment_no_id)
-                buy_voucher = get_object_or_404(BuyVoucher, pk=payment_voucher.voucher_no_id)
-                key = "voucher"
-                ledgers.setdefault(key, [])
-                ledgers[key].append({
-                    'date': daily_cash.date,
-                    'name': buy_voucher.seller_name,
-                    'voucher_no': daily_cash.payment_no,
-                    'type': 'payment',
-                    'descriptions': daily_cash.description,
-                    'debit_amount': payment_voucher.payment_amount,
-                    'credit_amount': 0,
-                    'url1': '/payment/' + str(payment_voucher.id) + '/detail',
-                    'url2': '/buy/' + str(buy_voucher.id) + '/detail'
-                })
+        # for buy payment
+        if daily_cash.type == 'P':
+            payment_voucher = get_object_or_404(Payment, pk=daily_cash.payment_no_id)
+            buy_voucher = get_object_or_404(BuyVoucher, pk=payment_voucher.voucher_no_id)
+            key = "voucher"
+            ledgers.setdefault(key, [])
+            ledgers[key].append({
+                'date': daily_cash.date,
+                'name': buy_voucher.seller_name,
+                'voucher_no': daily_cash.payment_no,
+                'type': 'payment for',
+                'descriptions': daily_cash.description,
+                'debit_amount': payment_voucher.payment_amount,
+                'credit_amount': 0,
+                'url1': '/payment/' + str(payment_voucher.id) + '/detail',
+                'url2': '/buy/' + str(buy_voucher.id) + '/detail'
+            })
 
-            # for Collection
-            if daily_cash.type == 'C':
-                collection = get_object_or_404(Collection, pk=daily_cash.collection_no_id)
-                sale_voucher = get_object_or_404(SaleVoucher, pk=collection.sale_voucher_no_id)
-                challan = get_object_or_404(Challan, pk=sale_voucher.challan_no_id)
+        # for investment
+        if daily_cash.type == 'I':
+            investment = get_object_or_404(Investment, pk=daily_cash.investment_no_id)
+            key = "voucher"
+            ledgers.setdefault(key, [])
+            ledgers[key].append({
+                'date': daily_cash.date,
+                'name': investment.added_by,
+                'voucher_no': '',
+                'type': 'Investment from',
+                'descriptions': daily_cash.description,
+                'debit_amount': 0,
+                'credit_amount': investment.investing_amount,
+                'url1': '#',
+                'url2': '#'
+            })
 
-                key = "voucher"
-                ledgers.setdefault(key, [])
-                ledgers[key].append({
-                    'date': daily_cash.date,
-                    'name': challan.buyer_name,
-                    'voucher_no': daily_cash.collection_no,
-                    'type': 'Cost',
-                    'descriptions': daily_cash.description,
-                    'debit_amount': 0,
-                    'credit_amount': collection.collection_amount,
-                    'url1': '#',
-                    'url2': '#'
-                })
+        # for Collection
+        if daily_cash.type == 'C':
+            collection = get_object_or_404(Collection, pk=daily_cash.collection_no_id)
+            sale_voucher = get_object_or_404(SaleVoucher, pk=collection.sale_voucher_no_id)
+            challan = get_object_or_404(Challan, pk=sale_voucher.challan_no_id)
+
+            key = "voucher"
+            ledgers.setdefault(key, [])
+            ledgers[key].append({
+                'date': daily_cash.date,
+                'name': challan.buyer_name,
+                'voucher_no': daily_cash.collection_no,
+                'type': 'Cost',
+                'descriptions': daily_cash.description,
+                'debit_amount': 0,
+                'credit_amount': collection.collection_amount,
+                'url1': '#',
+                'url2': '#'
+            })
 
     if ledgers['voucher']:
         def my_function(e):
