@@ -79,7 +79,6 @@ def account_report_index(request):
 
 @login_required()
 def daily_cash_report(request):
-    print('Start')
     daily_cashes = DailyCash.objects.all()
     account_balance = 0
     date1 = now()
@@ -89,6 +88,8 @@ def daily_cash_report(request):
         date1 = request.POST.get('date_from')
         date2 = request.POST.get('date_to')
     elif 'Today' in request.POST:
+        dd = request.POST.get('date')
+        print('Data:' + str(dd))
         date1 = now()
         date2 = now()
     elif 'Previous Day' in request.POST:
@@ -204,7 +205,6 @@ def daily_cash_report(request):
             'url1': item['url1'],
             'url2': item['url2'],
         })
-    print(date1, date2)
     context = {
         'ledgers': report['voucher'],
         'main_balance': '000'
