@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.shortcuts import render
 from django.db.models import Sum
 from django.utils.timezone import now
@@ -77,17 +79,27 @@ def account_report_index(request):
 
 @login_required()
 def daily_cash_report(request):
+    print('Start')
     daily_cashes = DailyCash.objects.all()
     account_balance = 0
-    date1 = request.POST.get('date_from')
-    date2 = request.POST.get('date_to')
+    date1 = now()
+    date2 = now()
 
-    if request.method == 'POST' and date1 != '' and date2 != '':
+    if 'ALL' in request.POST:
         date1 = request.POST.get('date_from')
         date2 = request.POST.get('date_to')
-    else:
+    elif 'Today' in request.POST:
         date1 = now()
         date2 = now()
+    elif 'Previous Day' in request.POST:
+        date1 = date1 - timedelta(1)
+        date2 = date2 - timedelta(1)
+    elif 'Next Day' in request.POST:
+        date1 = date1 + timedelta(1)
+        date2 = date2 + timedelta(1)
+    elif request.method == 'POST' and date1 != '' and date2 != '':
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
         daily_cashes = daily_cashes.filter(date__range=[date1, date2])
@@ -192,7 +204,7 @@ def daily_cash_report(request):
             'url1': item['url1'],
             'url2': item['url2'],
         })
-
+    print(date1, date2)
     context = {
         'ledgers': report['voucher'],
         'main_balance': '000'

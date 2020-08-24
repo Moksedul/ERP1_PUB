@@ -33,10 +33,27 @@
 		<a class="ml-1" target="_blank" href="{% url 'add-sale' %}"><button class ="btn btn-sm btn-info">NEW SALE</button></a>
 		<a class="ml-1" target="_blank" href="{% url 'add-challan' %}"><button class ="btn btn-sm btn-info">NEW CHALLAN</button></a>
 	</div>
+
+	<form method="POST" >
+		{% csrf_token %}
+		<div id="date">HI</div>
+	<div class="row mb-2">
+		<div class="col-md-4">
+			<button type="submit" class ="btn-info btn-sm" name="Previous Day" >Previous Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="Today" >Today</button>
+			<button type="submit" class ="btn-info btn-sm" name="Next Day" >Next Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="ALL" >ALL</button>
+		</div>
+	</div>
+	</form>
+
 </div>
 
+
+
+
 	<div class=" card card-body">
-			<a class="ml-1 mb-1" target="_blank" href="{% url 'add-challan' %}"><button class ="btn btn-sm btn-info">NEW CHALLAN</button></a>
+
 			<div class="btn btn-secondary btn-sm btn-block bg-steel">
 				DAILY CASH REPORT (Today's Balance : {{ main_balance }})
 			</div>
