@@ -2,7 +2,11 @@ from django.db import models
 from django.utils.timezone import now
 from django.urls import reverse
 from django.contrib.auth.models import User
-from core.views import *
+
+
+def default_account():
+    account = Accounts.objects.get(account_name='Daily Cash')
+    return account
 
 
 class Accounts(models.Model):
@@ -24,7 +28,7 @@ class Accounts(models.Model):
 
 
 class Investment(models.Model):
-    source_of_investment = models.CharField(max_length=200)
+    source_of_investment = models.CharField(max_length=200, default='Daily Cash Invest')
     investing_amount = models.FloatField()
     investing_to_account = models.ForeignKey(
         Accounts, default=default_account, null=True, on_delete=models.CASCADE

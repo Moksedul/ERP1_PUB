@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import *
 

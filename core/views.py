@@ -1,10 +1,4 @@
 from vouchers.models import *
-from accounts.models import *
-
-
-def default_account():
-    account = Accounts.objects.get(account_name='Daily Cash')
-    return account
 
 
 def sale_total_amount(pk):

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Sum
-
+from django.utils.timezone import now
 from accounts.models import Investment
 from collection.models import Collection
 from payments.models import Payment
@@ -79,18 +79,25 @@ def account_report_index(request):
 def daily_cash_report(request):
     daily_cashes = DailyCash.objects.all()
     account_balance = 0
+    date1 = request.POST.get('date_from')
+    date2 = request.POST.get('date_to')
 
-    date1 = request.GET.get('date_from')
-    date2 = request.GET.get('date_to')
+    if request.method == 'POST' and date1 != '' and date2 != '':
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
+    else:
+        date1 = now()
+        date2 = now()
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
-        daily_cashes = daily_cashes.filter(payment_date__range=[date1, date2])
+        daily_cashes = daily_cashes.filter(date__range=[date1, date2])
+
     ledgers = {
         'voucher': []
 
     }
-    for daily_cash in daily_cashes:
 
+    for daily_cash in daily_cashes:
         # for general payment
         if daily_cash.type == 'G':
             general_voucher = get_object_or_404(GeneralVoucher, pk=daily_cash.general_voucher_id)
@@ -107,7 +114,6 @@ def daily_cash_report(request):
                 'url1': '/general_voucher_list',
                 'url2': '/general_voucher_list'
             })
-
         # for buy payment
         if daily_cash.type == 'P':
             payment_voucher = get_object_or_404(Payment, pk=daily_cash.payment_no_id)
@@ -125,7 +131,6 @@ def daily_cash_report(request):
                 'url1': '/payment/' + str(payment_voucher.id) + '/detail',
                 'url2': '/buy/' + str(buy_voucher.id) + '/detail'
             })
-
         # for investment
         if daily_cash.type == 'I':
             investment = get_object_or_404(Investment, pk=daily_cash.investment_no_id)
@@ -142,7 +147,6 @@ def daily_cash_report(request):
                 'url1': '#',
                 'url2': '#'
             })
-
         # for Collection
         if daily_cash.type == 'C':
             collection = get_object_or_404(Collection, pk=daily_cash.collection_no_id)
