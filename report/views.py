@@ -83,7 +83,7 @@ def daily_cash_report(request):
     date2 = now()
     dd = request.POST.get('date')
     if dd is not None and dd != 'None':
-        dd = datetime.strptime(dd, "%Y-%m-%d %H:%M:%S")
+        dd = datetime.strptime(dd, "%d-%m-%Y")
         date1 = dd
         date2 = dd
     daily_cashes = DailyCash.objects.all()
@@ -105,7 +105,10 @@ def daily_cash_report(request):
     elif request.method == 'POST' and date1 != '' and date2 != '':
         date1 = request.POST.get('date_from')
         date2 = request.POST.get('date_to')
-        date1 = datetime.strptime(date1, "%Y-%m-%d")
+        if date1 is not None and date1 !='':
+            print('data:' + date1)
+            date1 = datetime.strptime(date1, "%d-%m-%Y")
+            date2 = datetime.strptime(date2, "%d-%m-%Y")
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
         daily_cashes = daily_cashes.filter(date__range=[date1, date2])
@@ -212,11 +215,15 @@ def daily_cash_report(request):
             'url2': item['url2'],
         })
 
-    if date1 is not None:
-        date1 = date1.strftime("%Y-%m-%d %H:%M:%S")
+    date_criteria = 'ALL'
+    if date1 is not None and date2 is not None and date1 != '':
+        date1 = date1.strftime("%d-%m-%Y")
+        date2 = date2.strftime("%d-%m-%Y")
+        date_criteria = date1 + ' to ' + date2
 
     context = {
         'date1': date1,
+        'date_criteria': date_criteria,
         'ledgers': report['voucher'],
         'main_balance': current_day_balance
     }
