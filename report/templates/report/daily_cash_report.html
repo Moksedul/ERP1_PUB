@@ -36,7 +36,7 @@
 
 	<form method="POST" >
 		{% csrf_token %}
-		<input id="date" value="Hello">
+		<input id="date" value="{{date1}}" name="date" >
 	<div class="row mb-2">
 		<div class="col-md-4">
 			<button type="submit" class ="btn-info btn-sm" name="Previous Day" >Previous Day</button>

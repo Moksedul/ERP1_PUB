@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.shortcuts import render
 from django.db.models import Sum
@@ -79,17 +79,18 @@ def account_report_index(request):
 
 @login_required()
 def daily_cash_report(request):
+    dd = request.POST.get('date')
+    if dd is not None and dd != 'None':
+        dd = datetime.strptime(dd, "%Y-%m-%d %H:%M:%S")
     daily_cashes = DailyCash.objects.all()
     account_balance = 0
-    date1 = now()
-    date2 = now()
+    date1 = dd
+    date2 = dd
 
     if 'ALL' in request.POST:
         date1 = request.POST.get('date_from')
         date2 = request.POST.get('date_to')
     elif 'Today' in request.POST:
-        dd = request.POST.get('date')
-        print('Data:' + str(dd))
         date1 = now()
         date2 = now()
     elif 'Previous Day' in request.POST:
@@ -205,7 +206,12 @@ def daily_cash_report(request):
             'url1': item['url1'],
             'url2': item['url2'],
         })
+
+    if date1 is not None:
+        date1 = date1.strftime("%Y-%m-%d %H:%M:%S")
+
     context = {
+        'date1': date1,
         'ledgers': report['voucher'],
         'main_balance': '000'
     }
