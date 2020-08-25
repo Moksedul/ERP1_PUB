@@ -82,7 +82,7 @@ def daily_cash_report(request):
     date1 = now()
     date2 = now()
     dd = request.POST.get('date')
-    if dd is not None and dd != 'None':
+    if dd is not None and dd != 'None' and dd != '':
         dd = datetime.strptime(dd, "%d-%m-%Y")
         date1 = dd
         date2 = dd
