@@ -79,13 +79,16 @@ def account_report_index(request):
 
 @login_required()
 def daily_cash_report(request):
+    date1 = now()
+    date2 = now()
     dd = request.POST.get('date')
     if dd is not None and dd != 'None':
         dd = datetime.strptime(dd, "%Y-%m-%d %H:%M:%S")
+        date1 = dd
+        date2 = dd
     daily_cashes = DailyCash.objects.all()
     account_balance = 0
-    date1 = dd
-    date2 = dd
+    current_day_balance = 0
 
     if 'ALL' in request.POST:
         date1 = request.POST.get('date_from')
@@ -192,6 +195,7 @@ def daily_cash_report(request):
 
     for item in ledgers['voucher']:
         account_balance = account_balance - item['debit_amount'] + item['credit_amount']
+        current_day_balance = current_day_balance + item['credit_amount']
         key = "voucher"
         report.setdefault(key, [])
         report[key].append({
@@ -213,7 +217,7 @@ def daily_cash_report(request):
     context = {
         'date1': date1,
         'ledgers': report['voucher'],
-        'main_balance': '000'
+        'main_balance': current_day_balance
     }
 
     return render(request, 'report/daily_cash_report.html', context)
