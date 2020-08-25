@@ -105,6 +105,7 @@ def daily_cash_report(request):
     elif request.method == 'POST' and date1 != '' and date2 != '':
         date1 = request.POST.get('date_from')
         date2 = request.POST.get('date_to')
+        date1 = datetime.strptime(date1, "%Y-%m-%d")
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
         daily_cashes = daily_cashes.filter(date__range=[date1, date2])
