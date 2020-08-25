@@ -122,7 +122,7 @@ def daily_cash_report(request):
                 'name': general_voucher.person_name,
                 'voucher_no': daily_cash.general_voucher,
                 'type': 'Cost for',
-                'descriptions': daily_cash.description,
+                'descriptions': general_voucher.cost_Descriptions,
                 'debit_amount': general_voucher.cost_amount,
                 'credit_amount': 0,
                 'url1': '/general_voucher_list',
