@@ -7,6 +7,7 @@ class PaymentForm(ModelForm):
     class Meta:
         model = Payment
         fields = '__all__'
+        exclude = ('payed_by',)
         widgets = {
             'payment_date': AdminDateWidget(),
             'cheque_date': AdminDateWidget(),
