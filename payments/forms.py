@@ -19,3 +19,5 @@ class PaymentForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['payment_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
+        self.fields['payment_no'].widget.attrs['readonly'] = True
+

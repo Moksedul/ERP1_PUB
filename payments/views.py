@@ -21,9 +21,10 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
     success_url = '/payment_list'
 
     def form_valid(self, form):
+        form.instance.payed_by = self.request.user
         super().form_valid(form=form)
         voucher = get_object_or_404(Payment, payment_no=form.cleaned_data['payment_no'])
-
+        print(form.cleaned_data['payment_no'])
         if str(voucher.payment_from_account) == 'Daily Cash':
             data = {
                 'general_voucher': None,
