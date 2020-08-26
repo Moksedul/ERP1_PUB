@@ -5,22 +5,19 @@
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-4 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.payment_no|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-4 mb-0" >
+                   {{ form.payment_for_person|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.voucher_no|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-4 mb-0" >
-                   {{ form.payed_by|as_crispy_field }}
-                </div>
-                 <div class="form-group col-md-12 mb-0" >
-                   {{ form.payed_to|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.payment_date|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.payment_mode|as_crispy_field }}
                 </div>
 
@@ -37,13 +34,16 @@
                         </div>
                       </div>
                   </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.payment_amount|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.payed_to|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.payment_from_account|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-12 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
             </div>

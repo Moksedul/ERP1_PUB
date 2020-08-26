@@ -2,8 +2,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+
+from organizations.models import Persons
 from vouchers.models import BuyVoucher
-from accounts.models import Accounts
+from accounts.models import Accounts, default_account
 
 PAYMENT_MODE_CHOICES = [
     ('CQ', 'Cheque'),
@@ -34,16 +36,17 @@ def increment_payment_number():
 
 class Payment(models.Model):
     payment_no = models.CharField(max_length=50, unique=True, default=increment_payment_number)
+    payment_for_person = models.ForeignKey(Persons, null=True, blank=True, on_delete=models.CASCADE)
     voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE)
     payed_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     payed_to = models.CharField(max_length=50, null=True)
     payment_date = models.DateField(default=now)
-    payment_mode = models.CharField(choices=PAYMENT_MODE_CHOICES, max_length=10)
+    payment_mode = models.CharField(choices=PAYMENT_MODE_CHOICES, default=PAYMENT_MODE_CHOICES[1], max_length=10)
     cheque_PO_ONL_no = models.IntegerField(null=True, blank=True)
     cheque_date = models.DateField(default=now, null=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     payment_amount = models.FloatField()
-    payment_from_account = models.ForeignKey(Accounts, null=True, on_delete=models.CASCADE)
+    payment_from_account = models.ForeignKey(Accounts, default=default_account, null=True, on_delete=models.CASCADE)
     remarks = models.CharField(max_length=50, blank=True)
 
     def __str__(self):

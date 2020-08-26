@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 def default_account():
-    account = Accounts.objects.get(account_name='Daily Cash')
+    account = Accounts.objects.get(account_name='Daily Cash').pk
     return account
 
 
