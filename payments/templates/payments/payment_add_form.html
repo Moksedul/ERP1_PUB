@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <form method="post" >
+        <form method="post" id="paymentForm" data-vouchers-url="{% url 'load-buy-vouchers' %}" novalidate>
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-2 mb-0" >
@@ -52,7 +52,7 @@
     </div>
 
 
-
+<!-- for payment mode options -->
 <script>
 function showChequeDetails() {
   var x = document.getElementById("id_payment_mode").value;
@@ -64,4 +64,23 @@ function showChequeDetails() {
 }
 </script>
 
+<!-- for voucher option load by seller name -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_payment_for_person").change(function () {
+      var url = $("#paymentForm").attr("data-vouchers-url");
+      var nameId = $(this).val();
+        console.log(url);
+      $.ajax({
+        url: url,
+        data: {
+          'name': nameId
+        },
+        success: function (data) {
+          $("#id_voucher_no").html(data);
+        }
+      });
+
+    });
+  </script>
 {% endblock content %}

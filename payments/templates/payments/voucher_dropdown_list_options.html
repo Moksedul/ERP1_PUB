@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for voucher in vouchers %}
+<option value="{{ voucher.pk }}">{{ voucher.voucher_number }}</option>
+{% endfor %}

@@ -15,6 +15,12 @@ from .forms import PaymentForm
 from core.views import buy_total_amount
 
 
+def load_buy_vouchers(request):
+    name = request.GET.get('name')
+    vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('voucher_number')
+    return render(request, 'payments/voucher_dropdown_list_options.html', {'vouchers': vouchers})
+
+
 class PaymentCreate(LoginRequiredMixin, CreateView):
     form_class = PaymentForm
     template_name = 'payments/payment_add_form.html'
@@ -31,7 +37,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
                 'payment_no': voucher,
                 'collection_no': None,
                 'investment_no': None,
-                'description': voucher.voucher_no,
+                'description': 'for buy',
                 'type': 'P'
             }
             create_daily_cash(data)

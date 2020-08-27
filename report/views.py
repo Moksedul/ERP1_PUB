@@ -145,7 +145,7 @@ def daily_cash_report(request):
                 'name': buy_voucher.seller_name,
                 'voucher_no': daily_cash.payment_no,
                 'type': 'payment for',
-                'descriptions': daily_cash.description,
+                'descriptions': daily_cash.description + ' ' + buy_voucher.voucher_number,
                 'debit_amount': payment_voucher.payment_amount,
                 'credit_amount': 0,
                 'url1': '/payment/' + str(payment_voucher.id) + '/detail',
