@@ -20,7 +20,7 @@ class Persons(models.Model):
     company_name = models.ForeignKey(Companies, null=True, blank=True, on_delete=models.CASCADE)
     address = models.CharField(max_length=500, blank=True)
     nid = models.CharField(max_length=20, blank=True, unique=True, null=True)
-    contact_number = models.CharField(max_length=17, unique=True, null=True)
+    contact_number = models.CharField(max_length=17, unique=True, null=True, blank=True)
     email = models.EmailField(max_length=50, blank=True)
     nid_photo = models.ImageField(upload_to='nid_photo', blank=True)
 

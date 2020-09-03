@@ -70,7 +70,7 @@ function showChequeDetails() {
     $("#id_payment_for_person").change(function () {
       var url = $("#paymentForm").attr("data-vouchers-url");
       var nameId = $(this).val();
-        console.log(url);
+
       $.ajax({
         url: url,
         data: {

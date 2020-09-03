@@ -44,16 +44,18 @@
 					<th>Seller Name</th>
                     <th>Weight</th>
                     <th>Rate</th>
+                    <th>Total Amount</th>
                     <th>Date</th>
 				</tr>
 
 				{% for voucher in buy_voucher %}
 					<tr>
-						<td><a target="_new" href="{% url 'buy-detail' voucher.id%}">{{ voucher.voucher_number }} </a></td>
-						<td>{{ voucher.seller_name }}</td>
+						<td><a target="_new" href="{% url 'buy-detail' voucher.id%}">{{ voucher.voucher_no }} </a></td>
+						<td>{{ voucher.name }}</td>
                         <td>{{ voucher.weight }}</td>
                         <td>{{ voucher.rate }}</td>
-						<td>{{ voucher.date_added }}</td>
+                        <td>{{ voucher.total_amount }}</td>
+						<td>{{ voucher.date }}</td>
 					</tr>
 				{% endfor %}
 			</table>

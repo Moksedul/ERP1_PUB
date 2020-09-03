@@ -1,3 +1,19 @@
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   margin:auto;
+   width: 100%;
+   height: auto;
+   background-color: #005266;
+   color: white;
+   text-align: center;
+
+}
+.centered{
+padding: 5px 0;
+}
+
 #tableta {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;

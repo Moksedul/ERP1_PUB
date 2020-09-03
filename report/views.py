@@ -61,12 +61,30 @@ def payment_search(request):
     if total_payed is not None:
         remaining_amount = voucher_total_price - total_payed
 
+    voucher_list = {
+        'voucher': []
+
+    }
+
+    for item in buy_voucher:
+        key = "voucher"
+        voucher_list.setdefault(key, [])
+        voucher_list[key].append({
+            'date': item.date_added,
+            'name': item.seller_name,
+            'voucher_no': item.voucher_number,
+            'weight': item.weight,
+            'rate': item.rate,
+            'total_amount': buy_total_amount(item.id),
+            'id': item.id
+        })
+
     context = {
         'page_obj': payments,
         'total_payed': total_payed,
         'voucher_total_price': voucher_total_price,
         'remaining_amount': remaining_amount,
-        'buy_voucher': buy_voucher,
+        'buy_voucher': voucher_list['voucher'],
         'buy_vouchers': buy_vouchers
     }
     return render(request, "report/buy_report.html", context)

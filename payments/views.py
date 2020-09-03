@@ -18,7 +18,10 @@ from core.views import buy_total_amount
 def load_buy_vouchers(request):
     name = request.GET.get('name')
     vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('voucher_number')
-    return render(request, 'payments/voucher_dropdown_list_options.html', {'vouchers': vouchers})
+    context = {
+        'vouchers': vouchers,
+    }
+    return render(request, 'payments/voucher_dropdown_list_options.html', context)
 
 
 class PaymentCreate(LoginRequiredMixin, CreateView):
