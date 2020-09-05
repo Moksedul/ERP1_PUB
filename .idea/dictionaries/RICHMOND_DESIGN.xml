@@ -1,8 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="RICHMOND-DESIGN">
     <words>
+      <w>asgiref</w>
+      <w>docopt</w>
       <w>endfor</w>
       <w>morich</w>
+      <w>pytz</w>
+      <w>sqlparse</w>
       <w>yyyy</w>
     </words>
   </dictionary>
