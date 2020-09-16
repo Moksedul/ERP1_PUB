@@ -38,6 +38,7 @@ class Challan(models.Model):
     name_of_driver = models.CharField(max_length=200, blank=True, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateTimeField(default=now)
+    challan_date = models.DateField(default=now)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     remarks = models.CharField(max_length=500, blank=True)
 

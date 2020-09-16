@@ -1,15 +1,22 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from organizations.models import Persons
 from .models import Challan
+from .forms import ChallanForm
+
+
+# person creation from buy form
+class PersonCreateChallan(LoginRequiredMixin, CreateView):
+    model = Persons
+    fields = '__all__'
+    template_name = 'organizations/person_add.html'
+    success_url = '/add_challan'
 
 
 class ChallanCreateView(LoginRequiredMixin, CreateView):
-    model = Challan
+    form_class = ChallanForm
     template_name = 'challan/challan_add_form.html'
-    fields = ('challan_no', 'buyer_name', 'company_name',
-              'product_name', 'weight', 'number_of_bag', 'number_of_vehicle', 'name_of_driver',
-              'vehicle_plate_number', 'date_added', 'remarks',)
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user

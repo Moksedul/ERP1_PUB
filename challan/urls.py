@@ -3,11 +3,13 @@ from .views import (
     ChallanCreateView,
     ChallanUpdateView,
     ChallanListView,
-    ChallanDeleteView
+    ChallanDeleteView,
+    PersonCreateChallan
     )
 
 urlpatterns = [
     path('add_challan', ChallanCreateView.as_view(), name='add-challan'),
+    path('challan/add_person', PersonCreateChallan.as_view(), name='add-person-challan'),
     path('challan_list', ChallanListView.as_view(), name='challan-list'),
     path('challan/<int:pk>/update', ChallanUpdateView.as_view(), name='challan-update'),
     path('challan/<int:pk>/delete', ChallanDeleteView.as_view(), name='challan-delete'),

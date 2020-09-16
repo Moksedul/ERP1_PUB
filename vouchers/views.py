@@ -12,7 +12,7 @@ from daily_cash.views import create_daily_cash
 class PersonCreateBuy(LoginRequiredMixin, CreateView):
     model = Persons
     fields = '__all__'
-    template_name = 'vouchers/person_add.html'
+    template_name = 'organizations/person_add.html'
     success_url = '/add_buy_voucher'
 
 
