@@ -2,8 +2,10 @@
   <dictionary name="RICHMOND-DESIGN">
     <words>
       <w>asgiref</w>
+      <w>bkash</w>
       <w>docopt</w>
       <w>endfor</w>
+      <w>febk</w>
       <w>morich</w>
       <w>pytz</w>
       <w>sqlparse</w>
