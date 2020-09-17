@@ -1,12 +1,20 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from organizations.models import Persons
+from organizations.models import Persons, Companies
 from .models import Challan
 from .forms import ChallanForm
 
 
-# person creation from buy form
+# company creation from Challan form
+class CompanyCreateChallan(LoginRequiredMixin, CreateView):
+    model = Companies
+    fields = '__all__'
+    template_name = 'organizations/companies_form.html'
+    success_url = '/add_challan'
+
+
+# person creation from Challan form
 class PersonCreateChallan(LoginRequiredMixin, CreateView):
     model = Persons
     fields = '__all__'
@@ -23,17 +31,17 @@ class ChallanCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+class ChallanUpdateView(LoginRequiredMixin, UpdateView):
+    model = Challan
+    form_class = ChallanForm
+    template_name = 'challan/challan_update_form.html'
+
+
 class ChallanListView(LoginRequiredMixin, ListView):
     model = Challan
     template_name = 'challan/challan_list.html'
     context_object_name = 'challan'
     paginate_by = 20
-
-
-class ChallanUpdateView(LoginRequiredMixin, UpdateView):
-    model = Challan
-    template_name = 'challan/challan_update_form.html'
-    fields = '__all__'
 
 
 class ChallanDeleteView(LoginRequiredMixin, DeleteView):
