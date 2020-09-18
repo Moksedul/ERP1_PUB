@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<!--<div class="card card-body">-->
+<div>
+
+</div>
+<a class="btn btn-sm btn-info" href="#">Search</a>
+	<div class=" card card-body">
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-agent'%}">Add Agent</a>
+			<table class="table table-sm table-striped table-bordered">
+				<tr>
+					<th>Agent Name</th>
+					<th>Agent Number</th>
+					<th>Address</th>
+					<th>Contact No</th>
+					<th>Update</th>
+					<th>Delete</th>
+				</tr>
+
+				{% for agent in agents %}
+					<tr>
+						<td>{{ agent.agent_name }}</td>
+						<td>{{ agent.agent_number }}</td>
+						<td>{{ agent.address }}</td>
+						<td>{{ agent.contact_no }}</td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'agent-update' agent.id%}">Edit</a></td>
+						<td><a class="btn btn-sm btn-danger" href="{% url 'agent-delete' agent.id%}">Delete</a></td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+		</div>
+		<div class="mt-3 float-right">
+		        {% if is_paginated %}
+
+					{% if page_obj.has_previous %}
+						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
+						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+					{% endif %}
+
+					{% for num in page_obj.paginator.page_range %}
+						{% if page_obj.number == num %}
+							<a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+							<a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+						{% endif %}
+					{% endfor %}
+
+					{% if page_obj.has_next %}
+						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
+						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+					{% endif %}
+
+        		{% endif %}
+		</div>
+
+
+
+{% endblock content %}

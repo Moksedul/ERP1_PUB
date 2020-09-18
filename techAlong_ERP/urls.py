@@ -36,7 +36,8 @@ urlpatterns = [
     path('', include('payments.urls')),
     path('', include('collection.urls')),
     path('', include('ledger.urls')),
-    path('', include('report.urls'))
+    path('', include('report.urls')),
+    path('', include('bkash.urls'))
 
 ]
 
