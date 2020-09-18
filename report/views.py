@@ -30,12 +30,15 @@ def payment_search(request):
     # filter payments by name
     if name_contains_query != '' and name_contains_query is not None:
         persons = persons.filter(person_name__contains=name_contains_query)
+        print(persons)
         v_id = []
         for person in persons:
             buy_voucher = buy_vouchers.filter(seller_name=person.id)
+            payments = payments_all.filter(payment_for_person_id=person.id)
         for voucher in buy_voucher:
             v_id.append(voucher.id)
-        payments = payments_all.filter(voucher_no_id__in=v_id)
+        if v_id:
+            payments = payments_all.filter(voucher_no_id__in=v_id)
 
     elif phone_number_query != '' and phone_number_query is not None:
         v_id = []
