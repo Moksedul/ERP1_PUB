@@ -5,6 +5,7 @@ from django.views.i18n import JavaScriptCatalog
 
 urlpatterns = [
     path('add_payment', PaymentCreate.as_view(), name='add-payment'),
+    path('payment/add_person', PersonCreatePayment.as_view(), name='add-person-payment'),
     path('load_buy_vouchers/', load_buy_vouchers, name='load-buy-vouchers'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('payment_list', PaymentListView.as_view(), name='payment-list'),

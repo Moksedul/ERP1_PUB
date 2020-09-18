@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
+from organizations.models import Persons
 
 # Create your models here.
 from django.urls import reverse
@@ -44,7 +44,7 @@ def increment_invoice_number():
 
 class BkashTransaction(models.Model):
     invoice_no = models.CharField(max_length=10, default=increment_invoice_number, unique=True)
-    payed_to = models.CharField(max_length=50)
+    payed_to = models.ForeignKey(Persons, on_delete=models.CASCADE)
     agent_name = models.ForeignKey(BkashAgents, on_delete=models.CASCADE)
     transaction_phone_no = models.CharField(max_length=11)
     transaction_amount = models.FloatField()
@@ -76,11 +76,12 @@ def increment_payment_number():
 
 class PaymentBkashAgent(models.Model):
     payment_no = models.CharField(max_length=10, default=increment_payment_number)
-    transaction_invoice_no = models.ForeignKey(BkashTransaction, on_delete=models.SET_NULL, null=True)
+    transaction_invoice_no = models.ForeignKey(BkashTransaction, on_delete=models.SET_NULL, null=True, blank=True)
     agent_name = models.ForeignKey(BkashAgents, on_delete=models.SET_NULL, null=True)
     amount = models.FloatField()
     description = models.TextField(max_length=200, null=True, blank=True)
-    payment_date = models.DateField(auto_now=True)
-    date_time_stamp = models.DateTimeField(auto_now=True)
+    payment_date = models.DateField(default=now)
+    date_time_stamp = models.DateTimeField(default=now)
+    posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 

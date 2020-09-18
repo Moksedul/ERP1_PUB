@@ -24,6 +24,14 @@ def load_buy_vouchers(request):
     return render(request, 'payments/voucher_dropdown_list_options.html', context)
 
 
+# person creation from Payment form
+class PersonCreatePayment(LoginRequiredMixin, CreateView):
+    model = Persons
+    fields = '__all__'
+    template_name = 'organizations/person_add.html'
+    success_url = '/add_payment'
+
+
 class PaymentCreate(LoginRequiredMixin, CreateView):
     form_class = PaymentForm
     template_name = 'payments/payment_add_form.html'

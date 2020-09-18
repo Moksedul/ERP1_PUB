@@ -18,3 +18,20 @@ class TransactionForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['invoice_no'].widget.attrs['readonly'] = True
+
+
+class PaymentBkashAgentForm(ModelForm):
+    class Meta:
+        model = PaymentBkashAgent
+        fields = '__all__'
+        exclude = ('posted_by', 'date_time_stamp',)
+        widgets = {
+            'payment_date': AdminDateWidget(),
+        }
+        # labels = {
+        #     'date': 'Transaction Date',
+        # }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['payment_no'].widget.attrs['readonly'] = True

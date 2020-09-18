@@ -1,0 +1,32 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <form method="post" id="TransactionForm">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-2 mb-0" >
+                   {{ form.payment_no|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-5 mb-0" >
+                   {{ form.agent_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-5 mb-0" >
+                   {{ form.transaction_invoice_no|as_crispy_field }}
+                </div>
+
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.amount|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.payment_date|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.description|as_crispy_field }}
+                </div>
+            </div>
+                <button class="btn btn-outline-info" type="submit">Save</button>
+        </form>
+    </div>
+
+{% endblock content %}
