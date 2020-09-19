@@ -158,20 +158,36 @@ def daily_cash_report(request):
         # for buy payment
         if daily_cash.type == 'P':
             payment_voucher = get_object_or_404(Payment, pk=daily_cash.payment_no_id)
-            buy_voucher = get_object_or_404(BuyVoucher, pk=payment_voucher.voucher_no_id)
-            key = "voucher"
-            ledgers.setdefault(key, [])
-            ledgers[key].append({
-                'date': daily_cash.date,
-                'name': buy_voucher.seller_name,
-                'voucher_no': daily_cash.payment_no,
-                'type': 'payment for',
-                'descriptions': daily_cash.description + ' ' + buy_voucher.voucher_number,
-                'debit_amount': payment_voucher.payment_amount,
-                'credit_amount': 0,
-                'url1': '/payment/' + str(payment_voucher.id) + '/detail',
-                'url2': '/buy/' + str(buy_voucher.id) + '/detail'
-            })
+            print(payment_voucher.voucher_no_id)
+            if payment_voucher.voucher_no_id is not None:
+                buy_voucher = get_object_or_404(BuyVoucher, pk=payment_voucher.voucher_no_id)
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'date': daily_cash.date,
+                    'name': buy_voucher.seller_name,
+                    'voucher_no': daily_cash.payment_no,
+                    'type': 'payment for',
+                    'descriptions': daily_cash.description + ' ' + buy_voucher.voucher_number,
+                    'debit_amount': payment_voucher.payment_amount,
+                    'credit_amount': 0,
+                    'url1': '/payment/' + str(payment_voucher.id) + '/detail',
+                    'url2': '/buy/' + str(buy_voucher.id) + '/detail'
+                })
+            else:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'date': daily_cash.date,
+                    'name': payment_voucher.payment_for_person,
+                    'voucher_no': daily_cash.payment_no,
+                    'type': 'payment for',
+                    'descriptions': daily_cash.description + '',
+                    'debit_amount': payment_voucher.payment_amount,
+                    'credit_amount': 0,
+                    'url1': '/payment/' + str(payment_voucher.id) + '/detail',
+                    'url2': '#'
+                })
         # for investment
         if daily_cash.type == 'I':
             investment = get_object_or_404(Investment, pk=daily_cash.investment_no_id)
