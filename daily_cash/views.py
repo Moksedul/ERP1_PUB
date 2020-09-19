@@ -9,7 +9,8 @@ def create_daily_cash(data):
         type=data['type'],
         payment_no=data['payment_no'],
         collection_no=data['collection_no'],
-        investment_no=data['investment_no']
+        investment_no=data['investment_no'],
+        bk_payment_no=data['bk_payment_no']
     )
     daily_cash.save()
     print(daily_cash)

@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
+from daily_cash.views import create_daily_cash
 from organizations.models import Persons
 from .forms import TransactionForm, PaymentBkashAgentForm
 from .models import BkashAgents, BkashTransaction, PaymentBkashAgent
@@ -87,6 +88,18 @@ class AgentPaymentCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.posted_by = self.request.user
         super().form_valid(form=form)
+        voucher = get_object_or_404(PaymentBkashAgent, payment_no=form.cleaned_data['payment_no'])
+        print(form.cleaned_data['payment_no'])
+        data = {
+            'general_voucher': None,
+            'payment_no': None,
+            'collection_no': None,
+            'investment_no': None,
+            'description': 'for Bkash Agent Payment',
+            'type': 'BK',
+            'bk_payment_no': voucher
+        }
+        create_daily_cash(data)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -95,6 +108,7 @@ class AgentPaymentUpdate(LoginRequiredMixin, UpdateView):
     form_class = PaymentBkashAgentForm
     template_name = 'bkash/agent_payment_form.html'
     success_url = '/agent_payment_list'
+
 
 
 class AgentPaymentList(LoginRequiredMixin, ListView):

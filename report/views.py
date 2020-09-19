@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.db.models import Sum
 from django.utils.timezone import now
 from accounts.models import Investment
+from bkash.models import PaymentBkashAgent
 from collection.models import Collection
 from payments.models import Payment
 from vouchers.models import BuyVoucher, GeneralVoucher, SaleVoucher, Challan
@@ -139,6 +140,22 @@ def daily_cash_report(request):
     }
 
     for daily_cash in daily_cashes:
+        # for agent payment
+        if daily_cash.type == 'BK':
+            bkash_payment = get_object_or_404(PaymentBkashAgent, pk=daily_cash.bk_payment_no_id)
+            key = "voucher"
+            ledgers.setdefault(key, [])
+            ledgers[key].append({
+                'date': daily_cash.date,
+                'name': bkash_payment.agent_name,
+                'voucher_no': daily_cash.bk_payment_no,
+                'type': 'Payed for',
+                'descriptions': bkash_payment.transaction_invoice_no,
+                'debit_amount': bkash_payment.amount,
+                'credit_amount': 0,
+                'url1': '/agent_payment_list',
+                'url2': '/agent_payment_list'
+            })
         # for general payment
         if daily_cash.type == 'G':
             general_voucher = get_object_or_404(GeneralVoucher, pk=daily_cash.general_voucher_id)
