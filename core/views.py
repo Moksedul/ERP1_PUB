@@ -50,3 +50,22 @@ def buy_total_amount(pk):
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
     grand_total_amount = amount_after_deduction + buy.previous_amount
     return grand_total_amount
+
+
+def serial_no(initial, model_name):
+    last_serial = model_name.objects.all().order_by('id').last()
+    if not last_serial:
+        return initial + '0001'
+    serial_number = last_serial.voucher_number
+    serial_int = int(serial_number.split(initial)[-1])
+    new_serial_int = serial_int + 1
+    new_serial_no = ''
+    if new_serial_int < 10:
+        new_serial_no = initial + '000' + str(new_serial_int)
+    if 100 > new_serial_int >= 10:
+        new_serial_no = initial + '00' + str(new_serial_int)
+    if 100 <= new_serial_int < 1000:
+        new_serial_no = initial + '0' + str(new_serial_int)
+    if new_serial_int >= 1000:
+        new_serial_no = initial + str(new_serial_int)
+    return new_serial_no
