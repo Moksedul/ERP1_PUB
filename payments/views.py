@@ -48,6 +48,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
                 'payment_no': voucher,
                 'collection_no': None,
                 'investment_no': None,
+                'bk_payment_no': None,
                 'description': 'for buy',
                 'type': 'P'
             }

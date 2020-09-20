@@ -101,6 +101,7 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
                 'general_voucher': None,
                 'payment_no': None,
                 'collection_no': None,
+                'bk_payment_no': None,
                 'investment_no': investment_save,
                 'description': description,
                 'type': 'I'

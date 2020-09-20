@@ -89,6 +89,7 @@ def general_voucher_create(request):
                 'payment_no': None,
                 'collection_no': None,
                 'investment_no': None,
+                'bk_payment_no': None,
                 'description': voucher.cost_Descriptions,
                 'type': 'G'
             }
@@ -110,6 +111,7 @@ class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
             'payment_no': None,
             'collection_no': None,
             'investment_no': None,
+            'bk_payment_no': None,
             'description': voucher.cost_Descriptions,
             'type': 'G'
         }
