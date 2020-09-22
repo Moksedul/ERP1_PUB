@@ -32,7 +32,7 @@ def index(request):
             general_vouchers = general_vouchers.filter(person_name_id__in=p_id)
             collections = Collection.objects.none()
         else:
-            payments = payments.objects.none()
+            payments = Payment.objects.none()
             general_vouchers = GeneralVoucher.objects.none()
             collections = Collection.objects.none()
 
@@ -58,7 +58,8 @@ def index(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.payment_date,
-            'voucher_no': voucher.payment_no + ' Agent Payment to ' + str(voucher.agent_name),
+            'name': voucher.agent_name,
+            'voucher_no': voucher.payment_no + ' Agent Payment ',
             'descriptions': voucher.description,
             'debit_amount': voucher.amount
         })
@@ -68,7 +69,8 @@ def index(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.date_added,
-            'voucher_no': voucher.voucher_number + ' General Cost to ' + str(voucher.person_name),
+            'name': voucher.person_name,
+            'voucher_no': voucher.voucher_number + ' General Cost',
             'descriptions': voucher.cost_Descriptions,
             'debit_amount': voucher.cost_amount
         })
@@ -78,6 +80,7 @@ def index(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.collection_date,
+            'name': 'N/A',
             'voucher_no': voucher.collection_no + ' Collection',
             'descriptions': voucher.sale_voucher_no,
             'credit_amount': voucher.collection_amount
@@ -88,6 +91,7 @@ def index(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.payment_date,
+            'name': voucher.payment_for_person,
             'voucher_no': voucher.payment_no + ' Payment',
             'descriptions': voucher.voucher_no,
             'debit_amount': voucher.payment_amount

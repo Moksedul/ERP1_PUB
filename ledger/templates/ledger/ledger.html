@@ -1,7 +1,9 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+
     <div class="container mt-5">
+        <h5 class="text-center">LEDGER(খতিয়ান)</h5>
         <form method="GET" >
             <div class="form-row">
                 <div class="form-group col-md-4">
@@ -70,9 +72,10 @@
 </div>
 	<div class=" card card-body">
 			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="#">Ledger</a>
-			<table class="table table-sm table-striped">
+			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Date</th>
+                    <th>Name</th>
 					<th>Descriptions</th>
 					<th>Debit</th>
 					<th>Credit</th>
@@ -82,7 +85,8 @@
 				{% for item in ledgers %}
 					<tr>
 						<td>{{ item.date }}</td>
-						<td>Voucher No: {{ item.voucher_no }} For: {{ item.descriptions }}</td>
+                        <td>{{ item.name }}</td>
+						<td>{{ item.voucher_no }} For: {{ item.descriptions }}</td>
 						<td>{{ item.debit_amount }}</td>
 						<td>{{ item.credit_amount }}</td>
 						<td>n/a</td>
