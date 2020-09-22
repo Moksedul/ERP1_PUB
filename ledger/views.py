@@ -61,7 +61,9 @@ def index(request):
             'name': voucher.agent_name,
             'voucher_no': voucher.payment_no + ' Agent Payment ',
             'descriptions': voucher.description,
-            'debit_amount': voucher.amount
+            'debit_amount': voucher.amount,
+            'url1': '#',
+            'url2': '#'
         })
 
     for voucher in general_vouchers:
@@ -72,7 +74,9 @@ def index(request):
             'name': voucher.person_name,
             'voucher_no': voucher.voucher_number + ' General Cost',
             'descriptions': voucher.cost_Descriptions,
-            'debit_amount': voucher.cost_amount
+            'debit_amount': voucher.cost_amount,
+            'url1': '#',
+            'url2': '#'
         })
 
     for voucher in collections:
@@ -83,7 +87,9 @@ def index(request):
             'name': 'N/A',
             'voucher_no': voucher.collection_no + ' Collection',
             'descriptions': voucher.sale_voucher_no,
-            'credit_amount': voucher.collection_amount
+            'credit_amount': voucher.collection_amount,
+            'url1': '#',
+            'url2': '#'
         })
 
     for voucher in payments:
@@ -94,7 +100,9 @@ def index(request):
             'name': voucher.payment_for_person,
             'voucher_no': voucher.payment_no + ' Payment',
             'descriptions': voucher.voucher_no,
-            'debit_amount': voucher.payment_amount
+            'debit_amount': voucher.payment_amount,
+            'url1': 'payment/' + str(voucher.id) + '/detail',
+            'url2': 'buy/' + str(voucher.voucher_no_id) + '/detail'
         })
 
     if ledgers['voucher']:

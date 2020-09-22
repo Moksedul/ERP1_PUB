@@ -86,7 +86,7 @@
 					<tr>
 						<td>{{ item.date }}</td>
                         <td>{{ item.name }}</td>
-						<td>{{ item.voucher_no }} For: {{ item.descriptions }}</td>
+						<td><a href="{{ item.url1 }}">{{ item.voucher_no }}</a> For: {{ item.descriptions }}</td>
 						<td>{{ item.debit_amount }}</td>
 						<td>{{ item.credit_amount }}</td>
 						<td>n/a</td>
@@ -105,5 +105,12 @@ function advanceSearch() {
     x.style.display = "none";
   }
 }
+
+function newWindow() {
+  var myWindow = window.open("", "", "width=200,height=100");
+}
+
 </script>
+
+
 {% endblock content %}
