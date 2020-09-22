@@ -21,12 +21,12 @@ def increment_local_sale_no():
     return new_voucher_no
 
 
-class LocalSaleProduct(models.Model):
-    product_name = models.CharField(max_length=50)
-    rate = models.FloatField()
-
-
-class LocalSale(models.Model):
-    local_sale_no = models.CharField(max_length=10, default=increment_local_sale_no)
-    buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
-    company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
+# class Product(models.Model):
+#     product_name = models.CharField(max_length=50)
+#     rate = models.FloatField()
+#
+#
+# class LocalSale(models.Model):
+#     local_sale_no = models.CharField(max_length=10, default=increment_local_sale_no)
+#     buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
+#     company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
