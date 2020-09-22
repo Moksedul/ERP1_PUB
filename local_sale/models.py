@@ -1,7 +1,4 @@
 from django.db import models
-
-
-# Create your models here.
 from organizations.models import Persons, Companies
 
 
@@ -23,7 +20,10 @@ def increment_local_sale_no():
         new_voucher_no = 'FELS-' + str(new_voucher_int)
     return new_voucher_no
 
+
 class LocalSaleProduct(models.Model):
+    product_name = models.CharField(max_length=50)
+    rate = models.FloatField()
 
 
 class LocalSale(models.Model):
