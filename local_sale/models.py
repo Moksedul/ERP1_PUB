@@ -2,6 +2,9 @@ from django.db import models
 
 
 # Create your models here.
+from organizations.models import Persons, Companies
+
+
 def increment_local_sale_no():
     last_voucher = LocalSale.objects.all().order_by('id').last()
     if not last_voucher:
@@ -20,6 +23,10 @@ def increment_local_sale_no():
         new_voucher_no = 'FELS-' + str(new_voucher_int)
     return new_voucher_no
 
+class LocalSaleProduct(models.Model):
+
 
 class LocalSale(models.Model):
     local_sale_no = models.CharField(max_length=10, default=increment_local_sale_no)
+    buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
+    company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
