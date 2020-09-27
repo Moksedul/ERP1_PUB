@@ -1,5 +1,8 @@
 from django.db import models
+from django.utils.timezone import now
+
 from organizations.models import Persons, Companies
+from products.models import Products
 
 
 def increment_local_sale_no():
@@ -21,12 +24,19 @@ def increment_local_sale_no():
     return new_voucher_no
 
 
-# class Product(models.Model):
-#     product_name = models.CharField(max_length=50)
-#     rate = models.FloatField()
-#
-#
-# class LocalSale(models.Model):
-#     local_sale_no = models.CharField(max_length=10, default=increment_local_sale_no)
-#     buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
-#     company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
+class LocalSale(models.Model):
+    sale_no = models.CharField(max_length=10, default=increment_local_sale_no)
+    buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
+    company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
+    date = models.DateField(default=now)
+    date_time_stamp = models.DateTimeField(default=now)
+
+
+class Product(models.Model):
+    product_name = models.ForeignKey(Products, on_delete=models.CASCADE)
+    sale_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE)
+    rate = models.FloatField()
+    weight = models.FloatField()
+
+
+
