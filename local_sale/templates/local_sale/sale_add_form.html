@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h5 class="text-center">Add Bank Account</h5>
+        <hr>
+        <form method="post" >
+            {% csrf_token %}
+            <div class="form-row">
+            <div class="form-group col-md-12 mb-0" >
+                {{ form.sale_no|as_crispy_field }}
+            </div>
+            </div>
+                <button class="btn btn-outline-info" type="submit">Save</button>
+        </form>
+    </div>
+{% endblock content %}
