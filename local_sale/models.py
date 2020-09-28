@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
@@ -31,7 +32,7 @@ class LocalSale(models.Model):
     company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
     date = models.DateField(default=now)
     date_time_stamp = models.DateTimeField(default=now)
-    posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     remarks = models.CharField(max_length=200, default='N/A')
 
 
@@ -40,6 +41,9 @@ class Product(models.Model):
     sale_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE)
     rate = models.FloatField()
     weight = models.FloatField()
+
+    def __str__(self):
+        return str(self.name)
 
 
 

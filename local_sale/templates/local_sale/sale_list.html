@@ -32,7 +32,7 @@
 						<td>{{ sale.posted_by }}</td>
 						<td><a class="btn btn-sm btn-info" href="#">Detail</a></td>
 						<td><a class="btn btn-sm btn-info" href="#">Edit</a></td>
-						<td><a class="btn btn-sm btn-danger" href="#">Cancel</a></td>
+						<td><a class="btn btn-sm btn-danger" href="{% url 'delete-local-sale' sale.id %}">Cancel</a></td>
 
 					</tr>
 				{% endfor %}

@@ -1,6 +1,6 @@
 from django.contrib.admin.widgets import AdminDateWidget
 from django.forms import ModelForm
-from local_sale.models import LocalSale
+from local_sale.models import LocalSale, Product
 
 
 class SaleForm(ModelForm):
@@ -15,3 +15,13 @@ class SaleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sale_no'].widget.attrs['readonly'] = True
+
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+        exclude = ('sale_no',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
