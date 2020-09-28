@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, ListView
@@ -22,12 +23,13 @@ class SaleCreate(LoginRequiredMixin, CreateView):
 
 def sale_create(request):
     if request.method == 'POST':
+        user = User.objects.get(pk=request.session['id'])
         form = SaleForm(request.POST)
         if form.is_valid():
+            form.posted_by = user
             form.save()
-            username = form.cleaned_data.get('username')
             messages.success(request, f'Your Account Has Been Created ! You can now log in.')
-            return redirect('#')
+            return redirect('/local_sale_list')
     else:
         form = SaleForm()
     return render(request, 'local_sale/sale_add_form.html', {'form': form})
