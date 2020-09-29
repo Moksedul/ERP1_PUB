@@ -1,10 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, ListView, DeleteView
 from django.forms import formset_factory
 from .forms import SaleForm, ProductForm
-from .models import LocalSale
+from .models import LocalSale, Product
 
 
 class SaleCreate(LoginRequiredMixin, CreateView):
@@ -19,6 +20,7 @@ class SaleCreate(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+@login_required
 def sale_create(request):
     form1 = SaleForm(request.POST or None)
     product_set = formset_factory(ProductForm)
@@ -26,12 +28,35 @@ def sale_create(request):
     if request.method == 'POST':
         if form1.is_valid():
             sale = form1.save(commit=False)
-            # product = form2.save(commit=False)
             sale.posted_by = request.user
-            # sale.save()
-            # product.sale_no = sale
-            # product.save()
-            # print(product.id)
+            sale.save()
+            for form in form2set:
+                product = form.save(commit=False)
+                product.sale_no = sale
+                product.save()
+            return redirect('/local_sale_list')
+    else:
+        form1 = SaleForm
+        form2set = product_set
+
+    return render(request, 'local_sale/sale_add_form.html', {'form1': form1, 'form2set': form2set})
+
+
+@login_required
+def sale_update(request, pk):
+    sale = LocalSale.objects.get(pk=pk)
+    form1 = SaleForm(prefix='sale', instance=sale)
+    product_set = formset_factory(ProductForm)
+    form2set = product_set(request.POST or None, request.FILES)
+    if request.method == 'POST':
+        if form1.is_valid():
+            sale = form1.save(commit=False)
+            sale.posted_by = request.user
+            sale.save()
+            for form in form2set:
+                product = form.save(commit=False)
+                product.sale_no = sale
+                product.save()
             return redirect('/local_sale_list')
     else:
         form1 = SaleForm

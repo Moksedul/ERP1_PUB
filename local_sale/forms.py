@@ -22,6 +22,9 @@ class ProductForm(ModelForm):
         model = Product
         fields = '__all__'
         exclude = ('sale_no',)
+        labels = {
+            'name': 'Product Name',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

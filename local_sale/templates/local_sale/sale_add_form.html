@@ -10,20 +10,32 @@
                 <div class="form-group col-md-2 mb-0" >
                     {{ form1.sale_no|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-3 mb-0" >
+                <div class="form-group col-md-5 mb-0" >
                     {{ form1.buyer_name|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-3 mb-0" >
+                <div class="form-group col-md-5 mb-0" >
                     {{ form1.company_name|as_crispy_field }}
                 </div>
-                <div class="form-row">
+
+
+                <div class="col-12 border border-info text-center">
+                    <input type="button" value="Add Product" id="add_more" class="m-2">
                     {{ form2set.management_form }}
-                    <table>
-                        {% for form in form2set %}
-                        {{ form }}
+                    <div id="form_set">
+                        {% for form in form2set.forms %}
+                            <div class='no_error'>
+                                {{ form.as_table }}
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
+                    <div id="empty_form" style="display:none">
+                        <div class='no_error'>
+                            {{ form2set.empty_form.as_table }}
+                        </div>
+                    </div>
                 </div>
+
+
                 <div class="form-group col-md-3 mb-0" >
                     {{ form1.date|as_crispy_field }}
                 </div>
@@ -31,7 +43,17 @@
                     {{ form1.remarks|as_crispy_field }}
                 </div>
             </div>
+
                 <button class="btn btn-outline-info" type="submit">Save</button>
         </form>
     </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $('#add_more').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+</script>
 {% endblock content %}
