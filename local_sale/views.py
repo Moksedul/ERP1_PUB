@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, ListView, DeleteView
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from .forms import SaleForm, ProductForm
 from .models import LocalSale, Product
 
@@ -45,9 +45,9 @@ def sale_create(request):
 @login_required
 def sale_update(request, pk):
     sale = LocalSale.objects.get(pk=pk)
-    form1 = SaleForm(prefix='sale', instance=sale)
-    product_set = formset_factory(ProductForm)
-    form2set = product_set(request.POST or None, request.FILES)
+    form1 = SaleForm(instance=sale)
+    product_set = inlineformset_factory(LocalSale, Product, fields=('name',))
+    form2set = product_set(instance=sale)
     if request.method == 'POST':
         if form1.is_valid():
             sale = form1.save(commit=False)
