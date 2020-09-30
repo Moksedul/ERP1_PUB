@@ -32,35 +32,59 @@ def sale_create(request):
 @login_required
 def sale_update(request, pk):
     sale = LocalSale.objects.get(pk=pk)
-    product = Product.objects.filter(sale_no_id=sale.id)
     form1 = SaleForm(instance=sale)
-    product_set = inlineformset_factory(LocalSale, Product, fields=('name', 'rate', 'weight'))
-    form2set = product_set(instance=sale)
+    ProductFormSet = inlineformset_factory(LocalSale, Product, fields=('name', 'rate', 'weight'), extra=1)
+    form2set = ProductFormSet(instance=sale)
     if request.method == 'POST':
         print('in post')
         form1 = SaleForm(request.POST or None, instance=sale)
-        product_set = inlineformset_factory(LocalSale, Product, fields=('name', 'rate', 'weight'))
-        form2set = product_set(request.POST or None, request.FILES or None)
+        form2set = ProductFormSet(request.POST, instance=sale)
         if form1.is_valid():
             print('valid')
             sale = form1.save(commit=False)
             sale.posted_by = request.user
             sale.save()
-            for form in form2set:
-                product = form.save(commit=False)
-                product.sale_no = sale
-                product.save()
+            if form2set.is_valid():
+                form2set.save()
             return redirect('/local_sale_list')
     else:
         form1 = form1
         form2set = form2set
 
-    return render(request, 'local_sale/sale_add_form.html', {'form1': form1, 'form2set': form2set})
+    return render(request, 'local_sale/sale_update_form.html', {'form1': form1, 'form2set': form2set})
 
 
-def local_sale_detail(request, pk):
-    sale = LocalSale.object.get(id=pk)
-    products = Product.objects.filter()
+@login_required()
+def sale_detail(request, pk):
+    sale = LocalSale.objects.get(id=pk)
+    products = Product.objects.filter(sale_no_id=sale.id)
+    grand_total_amount = 0
+    product_list = {
+        'products': []
+
+    }
+
+    for product in products:
+        amount = product.rate * product.weight
+        grand_total_amount += amount
+        print(amount)
+        key = "products"
+        product_list.setdefault(key, [])
+        product_list[key].append({
+            'name': product.name,
+            'rate': product.rate,
+            'weight': product.weight,
+            'amount': amount,
+        })
+
+    context = {
+        'sale': sale,
+        'products': product_list['products'],
+        'grand_total': grand_total_amount
+    }
+
+    return render(request, 'local_sale/sale_detail.html', context)
+
 
 class LocalSaleList(LoginRequiredMixin, ListView):
     model = LocalSale

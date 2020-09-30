@@ -1,0 +1,76 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row ">
+        <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
+    </div>
+    <hr>
+    <div class="row mb-3">
+        <div class="col-3"><strong>Voucher Number</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ sale.sale_no }}</div>
+        <div class="col-2"><strong>Sale Date</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ sale.date }}</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3"><strong>Buyer Name</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ sale.buyer_name }}</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3"><strong>Company Name</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ sale.company_name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-12 border border-info text-center">
+            <h5>Product Details</h5>
+            <table class="table table-sm table-striped table-bordered">
+				<tr>
+					<th>Product Name</th>
+					<th>Rate (৳)</th>
+					<th>Weight (KG)</th>
+                    <th>Total Amount (৳)</th>
+				</tr>
+
+				{% for product in products %}
+					<tr>
+						<td>{{ product.name }}</td>
+						<td>{{ product.rate }}</td>
+						<td>{{ product.weight }}</td>
+                        <td>{{ product.amount }}</td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+        </div>
+    </div>
+
+
+<hr>
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Grand Total Amount </strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ grand_total }} BDT.</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-3"><strong>Remarks</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-3">{{ sale.remarks }}</div>
+    </div>
+
+</div>
+<script>
+    function printPage() {
+        var printButton = document.getElementById("print");
+        printButton.style.visibility = 'hidden';
+        window.print()
+        printButton.style.visibility = 'visible';
+    }
+</script>
+{% endblock content %}

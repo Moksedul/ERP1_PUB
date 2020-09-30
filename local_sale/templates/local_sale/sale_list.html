@@ -28,7 +28,7 @@
 						<td>{{ sale.company_name }}</td>
 						<td>{{ sale.date }}</td>
 						<td>{{ sale.posted_by }}</td>
-						<td><a class="btn btn-sm btn-info" href="#">Detail</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'detail-local-sale' sale.id %}">Detail</a></td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'update-local-sale' sale.id %}">Edit</a></td>
 						<td><a class="btn btn-sm btn-danger" href="{% url 'delete-local-sale' sale.id %}">Cancel</a></td>
 
