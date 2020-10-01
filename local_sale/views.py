@@ -63,7 +63,12 @@ def sale_detail(request, pk):
     grand_total_amount = 0
     product_total = 0
     voucher_total = 0
-    sign_charge = '+'
+
+    if sale.transport_charge_payee == 'CUSTOMER':
+        sign_charge = '+'
+    else:
+        sign_charge = '-'
+
     product_list = {
         'products': []
 
@@ -81,6 +86,15 @@ def sale_detail(request, pk):
             'weight': product.weight,
             'amount': amount,
         })
+
+    if sale.transport_charge_payee == 'CUSTOMER':
+        sign_charge = '+'
+        voucher_total = product_total + sale.transport_charge
+    else:
+        sign_charge = '-'
+        voucher_total = product_total - sale.transport_charge
+
+    grand_total_amount = voucher_total + sale.previous_due
 
     context = {
         'sale': sale,
