@@ -61,6 +61,9 @@ def sale_detail(request, pk):
     sale = LocalSale.objects.get(id=pk)
     products = Product.objects.filter(sale_no_id=sale.id)
     grand_total_amount = 0
+    product_total = 0
+    voucher_total = 0
+    sign_charge = '+'
     product_list = {
         'products': []
 
@@ -68,7 +71,7 @@ def sale_detail(request, pk):
 
     for product in products:
         amount = product.rate * product.weight
-        grand_total_amount += amount
+        product_total += amount
         print(amount)
         key = "products"
         product_list.setdefault(key, [])
@@ -82,7 +85,10 @@ def sale_detail(request, pk):
     context = {
         'sale': sale,
         'products': product_list['products'],
-        'grand_total': grand_total_amount
+        'grand_total': grand_total_amount,
+        'product_total': product_total,
+        'sign_charge': sign_charge,
+        'voucher_total': voucher_total
     }
 
     return render(request, 'local_sale/sale_detail.html', context)

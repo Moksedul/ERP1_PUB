@@ -24,6 +24,8 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ sale.company_name }}</div>
     </div>
+
+
     <div class="row">
         <div class="col-12 border border-info text-center">
             <h5>Product Details</h5>
@@ -50,7 +52,38 @@
     </div>
 
 
+    <div class="row mb-3"></div>
+    <div class="row mb-3">
+            <div class="col-3"><strong>Transport Charge</strong></div>
+            <div class="col-1"><strong>:</strong></div>
+            <div class="col-3">{{ sale.transport_charge }} BDT.</div>
+    </div>
+    <div class="row mb-3">
+            <div class="col-3"><strong>Transport Charge Payee:</strong></div>
+            <div class="col-1"><strong>:</strong></div>
+            <div class="col-3">{{ sale.transport_charge_payee }}</div>
+    </div>
+
 <hr>
+    </div>
+        <div class="row mb-3">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Product Total </strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">(+) {{ product_total }} BDT.</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Transport Charge </strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">({{ sign_charge }}) {{ sale.transport_charge }} BDT.</div>
+    </div>
+        <div class="row mb-3">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Previous Due </strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">(+) {{ sale.previous_due }} BDT.</div>
+    </div>
     <div class="row mb-3">
         <div class="col-6"></div>
         <div class="col-3"><strong>Grand Total Amount </strong></div>
