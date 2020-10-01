@@ -33,7 +33,8 @@ class LocalSale(models.Model):
     date = models.DateField(default=now)
     date_time_stamp = models.DateTimeField(default=now)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    remarks = models.CharField(max_length=200, default='N/A')
+    description = models.TextField(max_length=1000, null=True, blank=True)
+    remarks = models.CharField(max_length=200, default='N/A', null=True, blank=True)
 
 
 class Product(models.Model):
@@ -41,9 +42,7 @@ class Product(models.Model):
     sale_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE)
     rate = models.FloatField()
     weight = models.FloatField()
+    number_of_bag = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.name)
-
-
-

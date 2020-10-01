@@ -33,7 +33,9 @@ def sale_create(request):
 def sale_update(request, pk):
     sale = LocalSale.objects.get(pk=pk)
     form1 = SaleForm(instance=sale)
-    ProductFormSet = inlineformset_factory(LocalSale, Product, fields=('name', 'rate', 'weight'), extra=1)
+    ProductFormSet = inlineformset_factory(
+                    LocalSale, Product, fields=('name', 'rate', 'weight', 'number_of_bag'), extra=1
+                    )
     form2set = ProductFormSet(instance=sale)
     if request.method == 'POST':
         print('in post')
