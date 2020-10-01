@@ -1,0 +1,95 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <form method="POST" >
+			{% csrf_token %}
+			<div class="form-row">
+                <div class="form-group col-md-4">
+				<label >Date From</label>
+                <div class="input-group">
+                <input id="date_from" class="form-control py-2 border-right-0 border" name="date_from" type="search" placeholder="dd-mm-yyyy">
+                </div>
+            	</div>
+				<div class="form-group col-md-4">
+					<label >Date to</label>
+                <div class="input-group">
+                <input id="date_to" class="form-control py-2 border-right-0 border" name="date_to" type="search" placeholder="dd-mm-yyyy">
+                </div>
+            	</div>
+
+            </div>
+<div class="d-flex justify-content-end"><a href="">Refresh</a></div>
+            <button type="submit" class="btn btn-sm btn-info">Search</button>
+        </form>
+
+    </div>
+
+<div class="container">
+	<div class="row mb-1">
+		<a class="ml-1" target="_blank" href="{% url 'add-general-voucher' %}"><button class ="btn btn-sm btn-info">ADD GENERAL VOUCHER</button></a>
+		<a class="ml-1" target="_blank" href="{% url 'add-payment' %}"><button class ="btn btn-sm btn-info">ADD PAYMENT</button></a>
+		<a class="ml-1" target="_blank" href="{% url 'add-collection' %}"><button class ="btn btn-sm btn-info">ADD COLLECTION</button></a>
+		<a class="ml-1" target="_blank" href="{% url 'add-buy-voucher' %}"><button class ="btn btn-sm btn-info">NEW BUY</button></a>
+		<a class="ml-1" target="_blank" href="{% url 'add-sale' %}"><button class ="btn btn-sm btn-info">NEW SALE</button></a>
+		<a class="ml-1" target="_blank" href="{% url 'add-challan' %}"><button class ="btn btn-sm btn-info">NEW CHALLAN</button></a>
+		<a class="ml-1" target="_blank" href="{% url 'add-investment' %}"><button class ="btn btn-sm btn-info">ADD INVESTMENT</button></a>
+	</div>
+
+	<form method="POST" >
+		{% csrf_token %}
+		<input id="date" value="{{date1}}" name="date" type="hidden">
+
+	<div class="row mb-2">
+		<div class="col-md-12">
+			<div class="d-flex justify-content-end">
+			<button type="submit" class ="btn-info btn-sm" name="Previous Day" >Previous Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="Today" >Today</button>
+			<button type="submit" class ="btn-info btn-sm" name="Next Day" >Next Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="ALL" >ALL</button>
+			</div>
+		</div>
+	</div>
+
+	</form>
+
+</div>
+
+
+
+
+	<div class=" card card-body">
+			<div class="d-flex justify-content-center"><h4>Daily Cash Report</h4></div>
+			<div class="d-flex justify-content-center">Date: {{date_criteria}}</div>
+			<div class="btn btn-secondary btn-sm btn-block bg-steel">
+				Main Balance : {{ main_balance }}
+			</div>
+			<table class="table table-sm table-striped table-bordered">
+				<tr>
+					<th>Date</th>
+					<th>Name</th>
+					<th>Descriptions</th>
+					<th>Debit</th>
+					<th>Credit</th>
+					<th>Balance</th>
+				</tr>
+
+				{% for item in ledgers %}
+					<tr>
+						<td>{{ item.date }}</td>
+						<td>{{ item.name }}</td>
+						<td>
+							<a target="_blank" href="{{ item.url1 }}">{{ item.voucher_no }}</a>
+							 {{ item.type }} <a target="_blank" href="{{ item.url2 }}">{{ item.descriptions }}</a>
+						</td>
+						<td>{{ item.debit_amount }}</td>
+						<td>{{ item.credit_amount }}</td>
+						<td>{{ item.balance }}</td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+		</div>
+
+{% endblock content %}
