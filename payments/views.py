@@ -7,6 +7,7 @@ from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from daily_cash.views import create_daily_cash
+from ledger.views import create_account_ledger
 from .models import Payment
 from vouchers.models import BuyVoucher
 from organizations.models import Persons
@@ -41,18 +42,16 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
         form.instance.payed_by = self.request.user
         super().form_valid(form=form)
         voucher = get_object_or_404(Payment, payment_no=form.cleaned_data['payment_no'])
-        print(form.cleaned_data['payment_no'])
-        if str(voucher.payment_from_account) == 'Daily Cash':
-            data = {
-                'general_voucher': None,
-                'payment_no': voucher,
-                'collection_no': None,
-                'investment_no': None,
-                'bk_payment_no': None,
-                'description': 'for buy',
-                'type': 'P'
-            }
-            create_daily_cash(data)
+        data = {
+            'general_voucher': None,
+            'payment_no': voucher,
+            'collection_no': None,
+            'investment_no': None,
+            'bk_payment_no': None,
+            'description': 'for buy',
+            'type': 'P'
+        }
+        create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
 

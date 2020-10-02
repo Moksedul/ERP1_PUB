@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
+from ledger.views import create_account_ledger
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
@@ -115,7 +117,7 @@ class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
             'description': voucher.cost_Descriptions,
             'type': 'G'
         }
-        create_daily_cash(data)
+        create_account_ledger(data)
         return super().form_valid(form)
 
 

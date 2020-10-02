@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Sum
 import string
 from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
+from ledger.views import create_account_ledger
 from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
@@ -15,6 +18,22 @@ from core.views import sale_total_amount
 class CollectionCreate(LoginRequiredMixin, CreateView):
     form_class = CollectionForm
     template_name = 'collections/collection_add_form.html'
+
+    def form_valid(self, form):
+        form.instance.collected_by = self.request.user
+        super().form_valid(form=form)
+        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+        data = {
+            'general_voucher': None,
+            'payment_no': None,
+            'collection_no': voucher,
+            'investment_no': None,
+            'bk_payment_no': None,
+            'description': 'From sae',
+            'type': 'C'
+        }
+        create_account_ledger(data)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CollectionListView(LoginRequiredMixin, ListView):

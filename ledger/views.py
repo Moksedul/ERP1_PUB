@@ -1,10 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.timezone import now
 from datetime import timedelta, datetime
+
+from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
+from challan.models import Challan
+from daily_cash.models import DailyCash
+# from ledger.models import AccountLedger
 from ledger.models import AccountLedger
-from vouchers.models import GeneralVoucher
+from vouchers.models import GeneralVoucher, BuyVoucher, SaleVoucher
 from collection.models import Collection
 from payments.models import Payment
 from organizations.models import Companies, Persons
@@ -125,13 +130,16 @@ def create_account_ledger(data):
         general_voucher=data['general_voucher'],
         description=data['description'],
         type=data['type'],
+        payment_no=data['payment_no'],
+        collection_no=data['collection_no'],
+        investment_no=data['investment_no'],
+        bk_payment_no=data['bk_payment_no']
     )
     account_ledger.save()
-    print(account_ledger)
 
 
 @login_required()
-def account_ledger_report(request):
+def account_ledger_report(request, selected_account):
     date1 = now()
     date2 = now()
     dd = request.POST.get('date')
@@ -140,6 +148,7 @@ def account_ledger_report(request):
         date1 = dd
         date2 = dd
     account_ledgers = AccountLedger.objects.all()
+    account = get_object_or_404(Accounts, pk=selected_account)
     account_balance = 0
     current_day_balance = 0
 
@@ -173,13 +182,16 @@ def account_ledger_report(request):
     for ledger in account_ledgers:
         # for agent payment
         if ledger.type == 'BK':
-            bkash_payment = get_object_or_404(PaymentBkashAgent, pk=daily_cash.bk_payment_no_id)
+            bkash_payment = PaymentBkashAgent.objects.filter(payment_from_account_id=selected_account)
+            bkash_payment = bkash_payment.filter(id=ledger.bk_payment_no_id)
+            for bkash_payment in bkash_payment:
+                pass
             key = "voucher"
             ledgers.setdefault(key, [])
             ledgers[key].append({
-                'date': daily_cash.date,
+                'date': ledger.date,
                 'name': bkash_payment.agent_name,
-                'voucher_no': daily_cash.bk_payment_no,
+                'voucher_no': bkash_payment.payment_no,
                 'type': 'Payed for',
                 'descriptions': bkash_payment.transaction_invoice_no,
                 'debit_amount': bkash_payment.amount,
@@ -188,14 +200,14 @@ def account_ledger_report(request):
                 'url2': '/agent_payment_list'
             })
         # for general payment
-        if daily_cash.type == 'G':
-            general_voucher = get_object_or_404(GeneralVoucher, pk=daily_cash.general_voucher_id)
+        if ledger.type == 'G':
+            general_voucher = get_object_or_404(GeneralVoucher, pk=ledger.general_voucher_id)
             key = "voucher"
             ledgers.setdefault(key, [])
             ledgers[key].append({
-                'date': daily_cash.date,
+                'date': ledger.date,
                 'name': general_voucher.person_name,
-                'voucher_no': daily_cash.general_voucher,
+                'voucher_no': general_voucher.voucher_number,
                 'type': 'Cost for',
                 'descriptions': general_voucher.cost_Descriptions,
                 'debit_amount': general_voucher.cost_amount,
@@ -204,19 +216,18 @@ def account_ledger_report(request):
                 'url2': '/general_voucher_list'
             })
         # for buy payment
-        if daily_cash.type == 'P':
-            payment_voucher = get_object_or_404(Payment, pk=daily_cash.payment_no_id)
-            print(payment_voucher.voucher_no_id)
+        if ledger.type == 'P':
+            payment_voucher = get_object_or_404(Payment, pk=ledger.payment_no_id)
             if payment_voucher.voucher_no_id is not None:
                 buy_voucher = get_object_or_404(BuyVoucher, pk=payment_voucher.voucher_no_id)
                 key = "voucher"
                 ledgers.setdefault(key, [])
                 ledgers[key].append({
-                    'date': daily_cash.date,
+                    'date': ledger.date,
                     'name': buy_voucher.seller_name,
-                    'voucher_no': daily_cash.payment_no,
+                    'voucher_no': payment_voucher.payment_no,
                     'type': 'payment for',
-                    'descriptions': daily_cash.description + ' ' + buy_voucher.voucher_number,
+                    'descriptions': ledger.description + ' ' + buy_voucher.voucher_number,
                     'debit_amount': payment_voucher.payment_amount,
                     'credit_amount': 0,
                     'url1': '/payment/' + str(payment_voucher.id) + '/detail',
@@ -226,46 +237,51 @@ def account_ledger_report(request):
                 key = "voucher"
                 ledgers.setdefault(key, [])
                 ledgers[key].append({
-                    'date': daily_cash.date,
+                    'date': ledger.date,
                     'name': payment_voucher.payment_for_person,
-                    'voucher_no': daily_cash.payment_no,
+                    'voucher_no': payment_voucher.payment_no,
                     'type': 'payment for',
-                    'descriptions': daily_cash.description + '',
+                    'descriptions': ledger.description + '',
                     'debit_amount': payment_voucher.payment_amount,
                     'credit_amount': 0,
                     'url1': '/payment/' + str(payment_voucher.id) + '/detail',
                     'url2': '#'
                 })
         # for investment
-        if daily_cash.type == 'I':
-            investment = get_object_or_404(Investment, pk=daily_cash.investment_no_id)
+        if ledger.type == 'I':
+            investment = get_object_or_404(Investment, pk=ledger.investment_no_id)
             key = "voucher"
             ledgers.setdefault(key, [])
             ledgers[key].append({
-                'date': daily_cash.date,
+                'date': ledger.date,
                 'name': investment.added_by,
                 'voucher_no': '',
                 'type': 'Investment from',
-                'descriptions': daily_cash.description,
+                'descriptions': ledger.description,
                 'debit_amount': 0,
                 'credit_amount': investment.investing_amount,
                 'url1': '#',
                 'url2': '#'
             })
         # for Collection
-        if daily_cash.type == 'C':
-            collection = get_object_or_404(Collection, pk=daily_cash.collection_no_id)
+        if ledger.type == 'C':
+            collection = Collection.objects.filter(collection_to_account_id=selected_account)
+            collection = collection.filter(pk=ledger.collection_no_id)
+
+            for collection in collection:
+                print(collection)
+
             sale_voucher = get_object_or_404(SaleVoucher, pk=collection.sale_voucher_no_id)
             challan = get_object_or_404(Challan, pk=sale_voucher.challan_no_id)
 
             key = "voucher"
             ledgers.setdefault(key, [])
             ledgers[key].append({
-                'date': daily_cash.date,
+                'date': ledger.date,
                 'name': challan.buyer_name,
-                'voucher_no': daily_cash.collection_no,
+                'voucher_no': collection.collection_no,
                 'type': 'Cost',
-                'descriptions': daily_cash.description,
+                'descriptions': ledger.description,
                 'debit_amount': 0,
                 'credit_amount': collection.collection_amount,
                 'url1': '#',
@@ -305,11 +321,17 @@ def account_ledger_report(request):
         date2 = date2.strftime("%d-%m-%Y")
         date_criteria = date1 + ' to ' + date2
 
+    if account.bank_name is not None:
+        account_name = str(account.account_name) + str(account.bank_name) + str(account.bank_branch)
+    else:
+        account_name = account.account_name
+
     context = {
         'date1': date1,
         'date_criteria': date_criteria,
         'ledgers': report['voucher'],
-        'main_balance': current_day_balance
+        'main_balance': current_day_balance,
+        'account_name': account_name
     }
 
-    return render(request, 'report/daily_cash_report.html', context)
+    return render(request, 'ledger/account_ledger.html', context)

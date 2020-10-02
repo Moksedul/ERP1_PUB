@@ -21,7 +21,11 @@
                    {{ form.amount|as_crispy_field }}
                 </div>
 
-                <div class="form-group col-md-3 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.payment_from_account|as_crispy_field }}
+                </div>
+
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.payment_date|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-4 mb-0" >

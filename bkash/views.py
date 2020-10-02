@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
 from daily_cash.views import create_daily_cash
+from ledger.views import create_account_ledger
 from organizations.models import Persons
 from .forms import TransactionForm, PaymentBkashAgentForm
 from .models import BkashAgents, BkashTransaction, PaymentBkashAgent
@@ -89,7 +90,6 @@ class AgentPaymentCreate(LoginRequiredMixin, CreateView):
         form.instance.posted_by = self.request.user
         super().form_valid(form=form)
         voucher = get_object_or_404(PaymentBkashAgent, payment_no=form.cleaned_data['payment_no'])
-        print(form.cleaned_data['payment_no'])
         data = {
             'general_voucher': None,
             'payment_no': None,
@@ -99,7 +99,7 @@ class AgentPaymentCreate(LoginRequiredMixin, CreateView):
             'type': 'BK',
             'bk_payment_no': voucher
         }
-        create_daily_cash(data)
+        create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
 

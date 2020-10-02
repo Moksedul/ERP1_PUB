@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from daily_cash.views import create_daily_cash
+from ledger.views import create_account_ledger
 from .models import *
 from django.contrib.auth.decorators import login_required
 
@@ -77,6 +78,14 @@ class OtherAccountDelete(LoginRequiredMixin, DeleteView):
     success_url = '/other_account_list'
 
 
+def remaining_balance_update(account_id, amount):
+    account = Accounts.objects.get(pk=account_id)
+    remaining_balance = account.remaining_balance
+    new_remaining_balance = amount + remaining_balance
+    account.remaining_balance = new_remaining_balance
+    account.save()
+
+
 class InvestmentCreateView(LoginRequiredMixin, CreateView):
     model = Investment
     template_name = 'accounts/investment_add_form.html'
@@ -85,29 +94,24 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user
-        account = Accounts.objects.get(pk=form.cleaned_data['investing_to_account'].id)
+        account_id = form.cleaned_data['investing_to_account'].id
         amount = form.cleaned_data['investing_amount']
-        remaining_balance = account.remaining_balance
-        new_remaining_balance = amount + remaining_balance
-        account.remaining_balance = new_remaining_balance
-        account.save()
+        remaining_balance_update(account_id, amount)
+
         super().form_valid(form=form)  # saving the form
         investment_save = form.save()  # for getting the id of investment just saved
-        investing_to_account = str(form.cleaned_data['investing_to_account'])
-
-        if investing_to_account == 'Daily Cash':
-            description = form.cleaned_data['source_of_investment']
-            data = {
-                'general_voucher': None,
-                'payment_no': None,
-                'collection_no': None,
-                'bk_payment_no': None,
-                'investment_no': investment_save,
-                'description': description,
-                'type': 'I'
-            }
-            print(data)
-            create_daily_cash(data)
+        description = form.cleaned_data['source_of_investment']
+        data = {
+            'general_voucher': None,
+            'payment_no': None,
+            'collection_no': None,
+            'bk_payment_no': None,
+            'investment_no': investment_save,
+            'description': description,
+            'type': 'I'
+        }
+        print(data)
+        create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
 

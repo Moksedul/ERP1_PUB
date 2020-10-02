@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+
+from accounts.models import Accounts, default_account
 from organizations.models import Persons
 from django.urls import reverse
 from django.utils.timezone import now
@@ -80,6 +82,7 @@ class PaymentBkashAgent(models.Model):
     amount = models.FloatField()
     description = models.TextField(max_length=200, null=True, blank=True)
     payment_date = models.DateField(default=now)
+    payment_from_account = models.ForeignKey(Accounts, on_delete=models.CASCADE, default=default_account)
     date_time_stamp = models.DateTimeField(default=now)
     posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
