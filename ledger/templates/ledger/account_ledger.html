@@ -5,22 +5,34 @@
         <form method="POST" >
 			{% csrf_token %}
 			<div class="form-row">
-                <div class="form-group col-md-4">
-				<label >Date From</label>
+                <div class="form-group col-md-2">
                 <div class="input-group">
-                <input id="date_from" class="form-control py-2 border-right-0 border" name="date_from" type="search" placeholder="dd-mm-yyyy">
+                <input id="date_from" class="form-control py-2 border-right-0 border" name="date_from" type="search" placeholder="From: dd-mm-yyyy">
                 </div>
             	</div>
-				<div class="form-group col-md-4">
-					<label >Date to</label>
+				<div class="form-group col-md-2">
                 <div class="input-group">
-                <input id="date_to" class="form-control py-2 border-right-0 border" name="date_to" type="search" placeholder="dd-mm-yyyy">
+                <input id="date_to" class="form-control py-2 border-right-0 border" name="date_to" type="search" placeholder="To: dd-mm-yyyy">
                 </div>
             	</div>
 
+				<div class="form-group col-md-4">
+                  <select id="account_name" class="form-control" name="account_name">
+                    <option selected>Select Account</option>
+					  {% for account in accounts %}
+                    <option>{{ account }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+
+				<div class="form-group col-md-1">
+ 					<button type="submit" class="btn btn-sm btn-info">Search</button>
+                </div>
+				<div class="form-group col-md-1">
+ 					<div class="d-flex justify-content-end"><a href="">Refresh</a></div>
+                </div>
+
             </div>
-<div class="d-flex justify-content-end"><a href="">Refresh</a></div>
-            <button type="submit" class="btn btn-sm btn-info">Search</button>
         </form>
 
     </div>

@@ -31,5 +31,5 @@ class PaymentForm(ModelForm):
 
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty Voucher queryset
-        elif self.instance.pk:
-            self.fields['voucher_no'].queryset = self.instance.voucher_number.voucher_no_set.order_by('voucher_number')
+        # elif self.instance.pk:
+        #     self.fields['voucher_no'].queryset = self.instance.voucher_number.voucher_no_set.order_by('voucher_number')
