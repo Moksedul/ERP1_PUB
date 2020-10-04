@@ -3,9 +3,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
-from daily_cash.views import create_daily_cash
+from accounts.models import Accounts
 from ledger.views import create_account_ledger
 from organizations.models import Persons
+from vouchers.models import GeneralVoucher
 from .forms import TransactionForm, PaymentBkashAgentForm
 from .models import BkashAgents, BkashTransaction, PaymentBkashAgent
 
@@ -59,6 +60,29 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.posted_by = self.request.user
         super().form_valid(form=form)
+        transaction = get_object_or_404(BkashTransaction, invoice_no=form.cleaned_data['invoice_no'])
+        account = Accounts.objects.get(account_name='BKASH')
+        t_type = form.cleaned_data['transaction_type']
+
+        if t_type == 'GENERAL':
+            general_voucher = GeneralVoucher(
+                person_name=transaction.payed_to,
+                cost_Descriptions=form.cleaned_data['description'],
+                cost_amount=form.cleaned_data['transaction_amount'],
+                from_account=account,
+                transaction=transaction,
+            )
+            general_voucher.save()
+            data = {
+                'general_voucher': general_voucher,
+                'payment_no': None,
+                'collection_no': None,
+                'investment_no': None,
+                'bk_payment_no': None,
+                'description': general_voucher.cost_Descriptions,
+                'type': 'G'
+            }
+            create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
 

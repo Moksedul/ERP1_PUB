@@ -42,8 +42,15 @@ def increment_invoice_number():
     return new_payment_no
 
 
+TRANSACTION_AGAINST = [
+    ('GENERAL', 'GENERAL'),
+    ('PAYMENT', 'PAYMENT'),
+]
+
+
 class BkashTransaction(models.Model):
     invoice_no = models.CharField(max_length=10, default=increment_invoice_number, unique=True)
+    transaction_type = models.CharField(max_length=10, choices=TRANSACTION_AGAINST, default=TRANSACTION_AGAINST[0])
     payed_to = models.ForeignKey(Persons, on_delete=models.CASCADE)
     ordered_by = models.CharField(max_length=50, null=True, blank=True)
     agent_name = models.ForeignKey(BkashAgents, on_delete=models.CASCADE)

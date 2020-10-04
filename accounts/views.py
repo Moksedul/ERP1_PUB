@@ -110,7 +110,6 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
             'description': description,
             'type': 'I'
         }
-        print(data)
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 

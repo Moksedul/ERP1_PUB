@@ -134,6 +134,7 @@ def create_account_ledger(data):
         bk_payment_no=data['bk_payment_no']
     )
     account_ledger.save()
+    print(account_ledger)
 
 
 @login_required()
@@ -143,7 +144,6 @@ def account_ledger_report(request):
     dd = request.POST.get('date')
     selected_account = 14
     account_name_search = request.POST.get('account_name')
-    print(account_name_search)
     account_ledgers = AccountLedger.objects.all()
     accounts = Accounts.objects.all()
     if account_name_search is not None:
@@ -259,8 +259,9 @@ def account_ledger_report(request):
         # for investment
         if account_ledger.type == 'I':
             investment = Investment.objects.filter(investing_to_account_id=selected_account)
-            investment = investment.filter(pk=account_ledger.collection_no_id)
-            if investment in investment:
+            investment = investment.filter(pk=account_ledger.investment_no_id)
+            print(account_ledger.date)
+            for investment in investment:
                 key = "voucher"
                 ledgers.setdefault(key, [])
                 ledgers[key].append({

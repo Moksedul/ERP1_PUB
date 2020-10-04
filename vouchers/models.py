@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 from django.urls import reverse
+
+from bkash.models import BkashTransaction
 from products.models import Products
 from organizations.models import Persons, Companies
 from challan.models import Challan
@@ -117,6 +119,7 @@ class GeneralVoucher(models.Model):
     cost_Descriptions = models.TextField(max_length=500, blank=True, null=True)
     cost_amount = models.FloatField()
     date_added = models.DateField(default=now)
+    transaction = models.ForeignKey(BkashTransaction, null=True, blank=True, on_delete=models.CASCADE)
     from_account = models.ForeignKey(
         Accounts, default=default_account(),
         null=True, blank=True, on_delete=models.CASCADE

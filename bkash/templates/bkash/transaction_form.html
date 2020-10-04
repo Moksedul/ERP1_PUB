@@ -10,13 +10,16 @@
                 <div class="form-group col-md-2 mb-0" >
                    {{ form.invoice_no|as_crispy_field }}
                 </div>
+                <div class="form-group col-md-2 mb-0" >
+                   {{ form.transaction_type|as_crispy_field }}
+                </div>
                 <div class="col-md-4 mb-0" >
                     <div class="row">
                         <div class="form-group col-10 pr-0" >{{ form.payed_to|as_crispy_field }}</div>
                         <div class="col-2 mt-3 pt-3 pl-1"><a class="btn btn-sm btn-info" href="{% url 'add-person-bkash' %}">Add</a></div>
                     </div>
                 </div>
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.transaction_phone_no|as_crispy_field }}
                 </div>
                 <div class="col-md-4 mb-0" >
@@ -32,15 +35,16 @@
                 <div class="form-group col-md-3 mb-0" >
                    {{ form.ordered_by|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.transaction_ID|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-2 mb-0" >
-                   {{ form.transaction_date|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-3 mb-0" >
                    {{ form.description|as_crispy_field }}
                 </div>
+                <div class="form-group col-md-2 mb-0" >
+                   {{ form.transaction_date|as_crispy_field }}
+                </div>
+
 
             </div>
                 <button class="btn btn-outline-info" type="submit">Save</button>
