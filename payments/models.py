@@ -13,6 +13,7 @@ PAYMENT_MODE_CHOICES = [
     ('CA', 'Cash'),
     ('ONL', 'Online'),
     ('PO', 'Pay Order'),
+    ('BK', 'Bkash')
 ]
 
 
