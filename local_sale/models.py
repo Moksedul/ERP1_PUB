@@ -45,6 +45,9 @@ class LocalSale(models.Model):
     description = models.TextField(max_length=1000, null=True, blank=True)
     remarks = models.CharField(max_length=200, default='N/A', null=True, blank=True)
 
+    def __str__(self):
+        return str(self.sale_no)
+
 
 class Product(models.Model):
     name = models.ForeignKey(Products, on_delete=models.CASCADE)

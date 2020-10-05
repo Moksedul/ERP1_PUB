@@ -9,12 +9,19 @@
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.collection_no|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-4 mb-0" >
-                   {{ form.sale_voucher_no|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-4 mb-0" >
-                   {{ form.collected_by|as_crispy_field }}
-                </div>
+
+                {% if form.sale_voucher_no %}
+                    <div class="form-group col-md-4 mb-0" >
+                       {{ form.sale_voucher_no|as_crispy_field }}
+                    </div>
+                {% endif %}
+
+                {% if form.local_sale_voucher_no %}
+                    <div class="form-group col-md-4 mb-0" >
+                       {{ form.local_sale_voucher_no|as_crispy_field }}
+                    </div>
+                {% endif %}
+
                 <div class="form-group col-md-6 mb-0" >
                    {{ form.collection_date|as_crispy_field }}
                 </div>

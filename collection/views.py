@@ -11,16 +11,17 @@ from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
 from challan.models import *
-from .forms import CollectionForm
+from .forms import CollectionFormSale
 from core.views import sale_total_amount
 
 
-class CollectionCreate(LoginRequiredMixin, CreateView):
-    form_class = CollectionForm
+class CollectionCreateSale(LoginRequiredMixin, CreateView):
+    form_class = CollectionFormSale
     template_name = 'collections/collection_add_form.html'
 
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
+        form.instance.sale_type = 'SALE'
         super().form_valid(form=form)
         voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
         data = {
@@ -29,7 +30,7 @@ class CollectionCreate(LoginRequiredMixin, CreateView):
             'collection_no': voucher,
             'investment_no': None,
             'bk_payment_no': None,
-            'description': 'From sae',
+            'description': 'From Sale',
             'type': 'C'
         }
         create_account_ledger(data)
@@ -51,7 +52,7 @@ class CollectionDeleteView(LoginRequiredMixin, DeleteView):
 
 class CollectionUpdateView(LoginRequiredMixin, UpdateView):
     model = Collection
-    form_class = CollectionForm
+    form_class = CollectionFormSale
     template_name = 'collections/collection_update_form.html'
 
 
