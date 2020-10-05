@@ -123,8 +123,8 @@ class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
 
 class GeneralVoucherUpdateView(LoginRequiredMixin, UpdateView):
     model = GeneralVoucher
+    form_class = GeneralForm
     template_name = 'vouchers/general_voucher_update_form.html'
-    fields = '__all__'
 
 
 class GeneralVoucherListView(LoginRequiredMixin, ListView):

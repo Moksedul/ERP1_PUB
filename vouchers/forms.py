@@ -28,6 +28,7 @@ class GeneralForm(ModelForm):
     class Meta:
         model = GeneralVoucher
         fields = '__all__'
+        exclude = ('transaction',)
         widgets = {
             'date_added': AdminDateWidget(),
         }

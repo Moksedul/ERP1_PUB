@@ -31,8 +31,14 @@
 						<td>{{ payment.payment_date }}</td>
 						<td>{{ payment.remarks }} </td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'payment-detail' payment.id%}">Detail</a></td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'payment-update' payment.id%}">Edit</a></td>
-						<td><a class="btn btn-sm btn-danger" href="{% url 'payment-delete' payment.id%}">Cancel</a></td>
+
+						{% if payment.transaction  %}
+								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
+								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+						{% else %}
+								<td><a class="btn btn-sm btn-info" href="{% url 'payment-update' payment.id%}">Edit</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'payment-delete' payment.id%}">Delete</a></td>
+						{%endif%}
 
 					</tr>
 				{% endfor %}
@@ -65,5 +71,13 @@
 		</div>
 
 
+<script>
+function alertEdit() {
+  alert("Payment With Bkash Transaction Can't be edited");
+}
 
+function alertDelete() {
+  alert("Payment With Bkash Transaction Can't be canceled");
+}
+</script>
 {% endblock content %}

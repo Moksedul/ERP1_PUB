@@ -22,10 +22,14 @@
 						<td>{{ voucher.cost_Descriptions }}</td>
 						<td>{{ voucher.cost_amount }}</td>
 						<td>{{ voucher.date_added }}</td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'general-voucher-update' voucher.id%}">Edit</a></td>
 
-						<td><a class="btn btn-sm btn-danger" href="{% url 'general-voucher-delete' voucher.id%}">Delete</a></td>
-
+						{% if voucher.transaction  %}
+								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
+								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+						{% else %}
+								<td><a class="btn btn-sm btn-info" href="{% url 'general-voucher-update' voucher.id%}">Edit</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'general-voucher-delete' voucher.id%}">Delete</a></td>
+						{%endif%}
 					</tr>
 				{% endfor %}
 
@@ -57,5 +61,13 @@
 		</div>
 
 
+<script>
+function alertEdit() {
+  alert("General Voucher With Bkash Transaction Can't be edited");
+}
 
+function alertDelete() {
+  alert("General Voucher With Bkash Transaction Can't be deleted");
+}
+</script>
 {% endblock content %}
