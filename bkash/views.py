@@ -6,6 +6,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from accounts.models import Accounts
 from ledger.views import create_account_ledger
 from organizations.models import Persons
+from payments.models import Payment
 from vouchers.models import GeneralVoucher
 from .forms import TransactionForm, PaymentBkashAgentForm
 from .models import BkashAgents, BkashTransaction, PaymentBkashAgent
@@ -64,6 +65,7 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
         account = Accounts.objects.get(account_name='BKASH')
         t_type = form.cleaned_data['transaction_type']
 
+        # creating general voucher for transaction
         if t_type == 'GENERAL':
             general_voucher = GeneralVoucher(
                 person_name=transaction.payed_to,
@@ -73,6 +75,8 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
                 transaction=transaction,
             )
             general_voucher.save()
+
+            # creating ledger for corresponding general voucher
             data = {
                 'general_voucher': general_voucher,
                 'payment_no': None,
@@ -83,6 +87,32 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
                 'type': 'G'
             }
             create_account_ledger(data)
+
+            # creating payment voucher for transaction
+            if t_type == 'PAYMENT':
+                payment_voucher = Payment(
+                    payment_for_person=transaction.payed_to,
+                    payed_by=transaction.posted_by,
+                    payment_mode='Bkash',
+                    payment_amount=form.cleaned_data['transaction_amount'],
+                    payment_from_account=account,
+                    transaction=transaction,
+                    remarks=form.cleaned_data['description']
+                )
+                payment_voucher.save()
+
+                # creating ledger for corresponding payment voucher
+                data = {
+                    'general_voucher': None,
+                    'payment_no': payment_voucher,
+                    'collection_no': None,
+                    'investment_no': None,
+                    'bk_payment_no': None,
+                    'description': 'N/A',
+                    'type': 'P'
+                }
+                create_account_ledger(data)
+
         return HttpResponseRedirect(self.get_success_url())
 
 

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 
+from bkash.models import BkashTransaction
 from organizations.models import Persons
 from vouchers.models import BuyVoucher
 from accounts.models import Accounts, default_account
@@ -47,6 +48,7 @@ class Payment(models.Model):
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     payment_amount = models.FloatField()
     payment_from_account = models.ForeignKey(Accounts, default=default_account, null=True, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(BkashTransaction, on_delete=models.CASCADE, null=True)
     remarks = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
