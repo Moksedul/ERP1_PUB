@@ -11,7 +11,7 @@ from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
 from challan.models import *
-from .forms import CollectionFormSale
+from .forms import CollectionFormSale, CollectionFormLocalSale
 from core.views import sale_total_amount
 
 
@@ -22,6 +22,28 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
         form.instance.sale_type = 'SALE'
+        super().form_valid(form=form)
+        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+        data = {
+            'general_voucher': None,
+            'payment_no': None,
+            'collection_no': voucher,
+            'investment_no': None,
+            'bk_payment_no': None,
+            'description': 'From Sale',
+            'type': 'C'
+        }
+        create_account_ledger(data)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
+    form_class = CollectionFormLocalSale
+    template_name = 'collections/collection_add_form.html'
+
+    def form_valid(self, form):
+        form.instance.collected_by = self.request.user
+        form.instance.sale_type = 'LOCAL SALE'
         super().form_valid(form=form)
         voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
         data = {
@@ -80,7 +102,7 @@ def collection_report(request):
     collection_due = 0
     collection = []
 
-    if voucher_contains_query != '' and voucher_contains_query is not 'Choose...':
+    if voucher_contains_query != '' and voucher_contains_query != 'Choose...':
         sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains_query)
 
         for voucher in sale_voucher:
@@ -150,7 +172,7 @@ def collection_search(request):
         collections = collections.filter(sale_voucher_no_id__in=v_id)
 
     # filter collection by sale voucher
-    elif voucher_contains_query != '' and voucher_contains_query is not 'Select Voucher No':
+    elif voucher_contains_query != '' and voucher_contains_query != 'Select Voucher No':
         sales = sale_vouchers.filter(voucher_number=voucher_contains_query)
         for sale in sales:
             collections = collections.filter(sale_voucher_no_id=sale.id)

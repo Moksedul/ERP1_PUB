@@ -7,6 +7,7 @@ from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
 from ledger.models import AccountLedger
+from local_sale.models import LocalSale
 from vouchers.models import GeneralVoucher, BuyVoucher, SaleVoucher
 from collection.models import Collection
 from payments.models import Payment
@@ -281,21 +282,37 @@ def account_ledger_report(request):
             collection = collection.filter(pk=account_ledger.collection_no_id)
 
             for collection in collection:
-                sale_voucher = get_object_or_404(SaleVoucher, pk=collection.sale_voucher_no_id)
-                challan = get_object_or_404(Challan, pk=sale_voucher.challan_no_id)
-                key = "voucher"
-                ledgers.setdefault(key, [])
-                ledgers[key].append({
-                    'date': account_ledger.date,
-                    'name': challan.buyer_name,
-                    'voucher_no': collection.collection_no,
-                    'type': 'Cost',
-                    'descriptions': account_ledger.description,
-                    'debit_amount': 0,
-                    'credit_amount': collection.collection_amount,
-                    'url1': '#',
-                    'url2': '#'
-                })
+                if collection.sale_type == 'SALE':
+                    sale_voucher = get_object_or_404(SaleVoucher, pk=collection.sale_voucher_no_id)
+                    challan = get_object_or_404(Challan, pk=sale_voucher.challan_no_id)
+                    key = "voucher"
+                    ledgers.setdefault(key, [])
+                    ledgers[key].append({
+                        'date': account_ledger.date,
+                        'name': challan.buyer_name,
+                        'voucher_no': collection.collection_no,
+                        'type': 'Cost',
+                        'descriptions': account_ledger.description,
+                        'debit_amount': 0,
+                        'credit_amount': collection.collection_amount,
+                        'url1': '#',
+                        'url2': '#'
+                    })
+                else:
+                    sale_voucher = get_object_or_404(LocalSale, pk=collection.local_sale_voucher_no_id)
+                    key = "voucher"
+                    ledgers.setdefault(key, [])
+                    ledgers[key].append({
+                        'date': account_ledger.date,
+                        'name': sale_voucher.buyer_name,
+                        'voucher_no': collection.collection_no,
+                        'type': 'Cost',
+                        'descriptions': 'From Local Sale',
+                        'debit_amount': 0,
+                        'credit_amount': collection.collection_amount,
+                        'url1': '#',
+                        'url2': '#'
+                    })
 
     if ledgers['voucher']:
         def my_function(e):
