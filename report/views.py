@@ -4,6 +4,7 @@ from django.db.models import Sum
 
 from challan.models import Challan
 from collection.models import Collection
+from local_sale.models import LocalSale
 from payments.models import Payment
 from vouchers.models import BuyVoucher, SaleVoucher
 from organizations.models import Persons
@@ -93,54 +94,74 @@ def payment_report(request):
 @login_required()
 def collection_report(request):
     sale_vouchers = SaleVoucher.objects.all()
+    local_sale_vouchers = LocalSale.objects.all()
     collections = Collection.objects.all()
-    voucher_contains_query = request.GET.get('voucher_no')
+    voucher_contains = request.GET.get('voucher_no')
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
     total_collected = 0
     total_receivable = 0
     collection_due = 0
-    collection = []
 
-    if voucher_contains_query != '' and voucher_contains_query != 'Choose...':
-        sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains_query)
-
+    if voucher_contains != '' and voucher_contains != 'Select Sale No' and voucher_contains is not None:
+        sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains)
         for voucher in sale_voucher:
-            collection = collections.filter(sale_voucher_no_id=voucher.id)
-            total_collected = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
-            rate = voucher.rate
-            challan = Challan.objects.filter(challan_no=voucher.challan_no)
+            collections = collections.filter(sale_voucher_no_id=voucher.id)
+    else:
+        sale_voucher = sale_vouchers
 
-            for challan in challan:
-                pass
+    for voucher in sale_voucher:
+        total_collected = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
+        rate = voucher.rate
+        challan = Challan.objects.filter(challan_no=voucher.challan_no)
 
-            total_weight = challan.weight
-            total_amount = rate*total_weight
+        for challan in challan:
+            pass
 
-            if voucher.weight_of_each_bag is not None:
-                total_self_weight_of_bag = voucher.weight_of_each_bag * challan.number_of_bag
+        total_weight = challan.weight
+        total_amount = rate*total_weight
 
-            if voucher.per_bag_unloading_cost is not None:
-                total_unloading_cost = voucher.per_bag_unloading_cost * challan.number_of_bag
+        if voucher.weight_of_each_bag is not None:
+            total_self_weight_of_bag = voucher.weight_of_each_bag * challan.number_of_bag
 
-            if voucher.measuring_cost_per_kg is not None:
-                total_measuring_cost = voucher.measuring_cost_per_kg * total_weight
+        if voucher.per_bag_unloading_cost is not None:
+            total_unloading_cost = voucher.per_bag_unloading_cost * challan.number_of_bag
 
-            weight_after_deduction = total_weight - total_self_weight_of_bag
-            total_amount = rate*weight_after_deduction
-            total_receivable = total_amount - total_unloading_cost - total_measuring_cost
+        if voucher.measuring_cost_per_kg is not None:
+            total_measuring_cost = voucher.measuring_cost_per_kg * total_weight
 
-        if total_collected != 0 and total_collected['collection_amount__sum'] is not None:
-            print(total_collected['collection_amount__sum'])
-            collection_due = total_receivable-total_collected['collection_amount__sum']
+        weight_after_deduction = total_weight - total_self_weight_of_bag
+        total_amount = rate*weight_after_deduction
+        total_receivable = total_amount - total_unloading_cost - total_measuring_cost
+
+    if total_collected != 0 and total_collected['collection_amount__sum'] is not None:
+        print(total_collected['collection_amount__sum'])
+        collection_due = total_receivable-total_collected['collection_amount__sum']
+
+    voucher_list = {
+        'voucher': []
+
+    }
+
+    for item in sale_voucher:
+        challan = Challan.objects.get(challan_no=item.challan_no)
+        key = "voucher"
+        voucher_list.setdefault(key, [])
+        voucher_list[key].append({
+            'date': item.date_added,
+            'name': challan.buyer_name,
+            'voucher_no': item.voucher_number,
+            'total_amount': 'buy_total_amount(item.id)',
+            'id': item.id
+        })
 
     context = {
-        'page_obj': collection,
-        'vouchers': sale_vouchers,
+        'collections': collections,
+        'vouchers': voucher_list['voucher'],
         'total_collected': total_collected,
         'total_receivable': total_receivable,
         'collection_due': collection_due,
-        'sale_voucher': voucher_contains_query
+        'sale_voucher': voucher_contains
     }
     return render(request, "report/collection_report.html", context)

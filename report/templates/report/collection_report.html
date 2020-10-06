@@ -25,7 +25,7 @@
             </div>
                 <div class="form-group col-md-4">
                   <select id="voucher_no" class="form-control" name="voucher_no">
-                    <option selected>Select Voucher No</option>
+                    <option selected>Select Sale No</option>
 					  {% for voucher in buy_vouchers %}
                     <option>{{ voucher.voucher_number }}</option>
 					  {% endfor %}
@@ -43,20 +43,16 @@
 
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Voucher No</th>
+					<th>Sale No</th>
 					<th>Buyer Name</th>
-                    <th>Weight</th>
-                    <th>Rate</th>
                     <th>Total Amount</th>
                     <th>Date</th>
 				</tr>
 
-				{% for voucher in buy_voucher %}
+				{% for voucher in vouchers %}
 					<tr>
 						<td><a target="_new" href="{% url 'buy-detail' voucher.id%}">{{ voucher.voucher_no }} </a></td>
 						<td>{{ voucher.name }}</td>
-                        <td>{{ voucher.weight }}</td>
-                        <td>{{ voucher.rate }}</td>
                         <td>{{ voucher.total_amount }}</td>
 						<td>{{ voucher.date }}</td>
 					</tr>
@@ -68,18 +64,22 @@
 
                     <table class="table table-sm table-striped table-bordered">
                         <tr>
-                            <th>Payment No</th>
-                            <th>Voucher No</th>
+                            <th>Collection No</th>
+                            <th>Sale No</th>
                             <th>Amount</th>
                             <th>Date</th>
                         </tr>
 
-                        {% for payment in page_obj %}
+                        {% for collection in collections %}
                             <tr>
-                                <td><a target="_new" href="{% url 'payment-detail' payment.id%}">{{ payment.payment_no }}</a></td>
-                                <td>{{ payment.voucher_no }}</td>
-                                <td>{{ payment.payment_amount }} TK</td>
-                                <td>{{ payment.payment_date }}</td>
+                                <td><a target="_new" href="{% url 'collection-detail' collection.id%}">{{ collection.collection_no }}</a></td>
+                                {% if collection.sale_voucher_no %}
+                                    <td>{{ collection.sale_voucher_no }}</td>
+                                {% else %}
+                                    <td>{{ collection.local_sale_voucher_no }}</td>
+                                {% endif %}
+                                <td>{{ collection.collection_amount }} TK</td>
+                                <td>{{ collection.collection_date }}</td>
                             </tr>
                         {% endfor %}
 
