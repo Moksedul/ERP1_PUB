@@ -3,29 +3,34 @@
 {% block content %}
     <div class="container">
         <h5 class="text-center">Add Collection</h5>
-        <form method="post" >
+        <form method="post" id="collectionForm" data-vouchers-url1="{% url 'load-sale-vouchers' %}"
+              data-vouchers-url2="{% url 'load-local-sale-vouchers' %}" novalidate>
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-4 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.collection_no|as_crispy_field }}
                 </div>
 
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.collected_from|as_crispy_field }}
+                </div>
+
                 {% if form.sale_voucher_no %}
-                    <div class="form-group col-md-4 mb-0" >
+                    <div class="form-group col-md-2 mb-0" >
                        {{ form.sale_voucher_no|as_crispy_field }}
                     </div>
                 {% endif %}
 
                 {% if form.local_sale_voucher_no %}
-                    <div class="form-group col-md-4 mb-0" >
+                    <div class="form-group col-md-2 mb-0" >
                        {{ form.local_sale_voucher_no|as_crispy_field }}
                     </div>
                 {% endif %}
 
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.collection_date|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.collection_mode|as_crispy_field }}
                 </div>
 
@@ -42,18 +47,19 @@
                         </div>
                       </div>
                   </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.collection_amount|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.collection_to_account|as_crispy_field }}
+                </div>
+
+                <div class="form-group col-md-2 mb-0" >
+                    <h7>Collection Status</h7>
+                   {{ form.collection_status|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-6 mb-0" >
                    {{ form.remarks|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0" >
-                    <h7>Collection Status</h7>
-                   {{ form.collection_status|as_crispy_field }}
                 </div>
             </div>
                 <button class="btn btn-outline-info" type="submit">Save</button>
@@ -73,4 +79,41 @@ function showChequeDetails() {
 }
 </script>
 
+<!-- for voucher option load by buyer name -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_collected_from").change(function () {
+      var url = $("#collectionForm").attr("data-vouchers-url1");
+      var nameId = $(this).val();
+
+      $.ajax({
+        url: url,
+        data: {
+          'name': nameId
+        },
+        success: function (data) {
+          $("#id_sale_voucher_no").html(data);
+        }
+      });
+
+    });
+  </script>
+
+<script>
+    $("#id_collected_from").change(function () {
+      var url = $("#collectionForm").attr("data-vouchers-url2");
+      var nameId = $(this).val();
+
+      $.ajax({
+        url: url,
+        data: {
+          'name': nameId
+        },
+        success: function (data) {
+          $("#id_local_sale_voucher_no").html(data);
+        }
+      });
+
+    });
+  </script>
 {% endblock content %}

@@ -46,7 +46,11 @@
 								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
 								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
 						{% else %}
-								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update' collection.id%}">Edit</a></td>
+							{% if collection.sale_voucher_no %}
+								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-sale' collection.id%}">Edit</a></td>
+							{% else %}
+								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-local-sale' collection.id%}">Edit</a></td>
+							{%endif%}
 								<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">Delete</a></td>
 						{%endif%}
 					</tr>

@@ -7,12 +7,36 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from ledger.views import create_account_ledger
+from local_sale.models import LocalSale
 from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
 from challan.models import *
 from .forms import CollectionFormSale, CollectionFormLocalSale
 from core.views import sale_total_amount
+
+
+def load_sale_vouchers(request):
+    name = request.GET.get('name')
+    challan = Challan.objects.filter(buyer_name=name)
+    v_id = []
+    for challan in challan:
+        sale = SaleVoucher.objects.get(challan_no_id=challan.id)
+        v_id.append(sale.voucher_number)
+    vouchers = SaleVoucher.objects.filter(voucher_number__in=v_id).order_by('voucher_number')
+    context = {
+        'vouchers': vouchers,
+    }
+    return render(request, 'collections/voucher_dropdown_list_options.html', context)
+
+
+def load_local_sale_vouchers(request):
+    name = request.GET.get('name')
+    vouchers = LocalSale.objects.filter(buyer_name=name).order_by('sale_no')
+    context = {
+        'vouchers': vouchers,
+    }
+    return render(request, 'collections/voucher_dropdown_list_options.html', context)
 
 
 class CollectionCreateSale(LoginRequiredMixin, CreateView):
@@ -72,9 +96,15 @@ class CollectionDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/collection_list'
 
 
-class CollectionUpdateView(LoginRequiredMixin, UpdateView):
+class CollectionUpdateViewSale(LoginRequiredMixin, UpdateView):
     model = Collection
     form_class = CollectionFormSale
+    template_name = 'collections/collection_update_form.html'
+
+
+class CollectionUpdateViewLocalSale(LoginRequiredMixin, UpdateView):
+    model = Collection
+    form_class = CollectionFormLocalSale
     template_name = 'collections/collection_update_form.html'
 
 

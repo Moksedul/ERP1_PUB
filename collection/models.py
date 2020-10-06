@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from local_sale.models import LocalSale
+from organizations.models import Persons
 from vouchers.models import SaleVoucher
 from django.contrib.auth.models import User
 from accounts.models import Accounts
@@ -43,9 +44,10 @@ def increment_collection_number():
 # Create your models here.
 class Collection(models.Model):
     collection_no = models.CharField(max_length=10, unique=True, default=increment_collection_number)
+    collected_from = models.ForeignKey(Persons, on_delete=models.CASCADE)
     sale_type = models.CharField(max_length=10, choices=SALE_TYPES, default=SALE_TYPES[1])
-    sale_voucher_no = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE, null=True)
-    local_sale_voucher_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE, null=True)
+    sale_voucher_no = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE, null=True, blank=True)
+    local_sale_voucher_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE, null=True, blank=True)
     collected_by = models.ForeignKey(User, on_delete=models.CASCADE)
     collection_date = models.DateField(default=now)
     collection_mode = models.CharField(choices=COLLECTION_MODE_CHOICES, max_length=10)
