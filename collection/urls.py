@@ -14,6 +14,5 @@ urlpatterns = [
     path('collection/<int:pk>/update_sale', CollectionUpdateViewSale.as_view(), name='collection-update-sale'),
     path('collection/<int:pk>/update_local_sale', CollectionUpdateViewLocalSale.as_view(), name='collection-update-local-sale'),
     path('collection/<int:pk>/delete', CollectionDeleteView.as_view(), name='collection-delete'),
-    path('collection/report', collection_report, name='collection-report'),
     path('collection_search/', collection_search, name='collection-search'),
 ]

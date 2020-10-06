@@ -61,7 +61,7 @@
 						<td>{{ collection.collection_date }}</td>
 						<td>{{ collection.remarks }} </td>
 						<td><a class="btn btn-sm btn-info" href="{% url 'collection-detail' collection.id%}">Detail</a></td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'collection-update' collection.id%}">Edit</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-sale' collection.id%}">Edit</a></td>
 						<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">Cancel</a></td>
 
 					</tr>
