@@ -10,7 +10,7 @@ from core.views import buy_total_amount
 
 
 @login_required()
-def payment_search(request):
+def payment_report(request):
     persons = Persons.objects.all()
     buy_vouchers = BuyVoucher.objects.all()
     buy_voucher = buy_vouchers
@@ -85,9 +85,4 @@ def payment_search(request):
         'buy_voucher': voucher_list['voucher'],
         'buy_vouchers': buy_vouchers
     }
-    return render(request, "report/buy_report.html", context)
-
-
-@login_required()
-def account_report_index(request):
-    return render(request, 'report/accounts_report.html')
+    return render(request, "report/payment_report.html", context)

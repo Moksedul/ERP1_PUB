@@ -62,7 +62,7 @@ class CollectionFormLocalSale(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['local_sale_voucher_no'].queryset = LocalSale.objects.none()
+        # self.fields['local_sale_voucher_no'].queryset = LocalSale.objects.none()
         self.fields['collection_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
         self.fields['collection_no'].widget.attrs['readonly'] = True
 

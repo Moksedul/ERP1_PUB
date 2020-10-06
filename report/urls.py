@@ -1,8 +1,7 @@
 from django.urls import path
-from ledger.views import account_ledger_report
-from .views import *
+from .views import payment_report
 
 
 urlpatterns = [
-    path('report_buy/', payment_search, name='report-buy'),
+    path('payment_report/', payment_report, name='payment-report'),
 ]
