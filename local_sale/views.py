@@ -60,14 +60,7 @@ def sale_update(request, pk):
 def sale_detail(request, pk):
     sale = LocalSale.objects.get(id=pk)
     products = Product.objects.filter(sale_no_id=sale.id)
-    grand_total_amount = 0
     product_total = 0
-    voucher_total = 0
-
-    if sale.transport_charge_payee == 'CUSTOMER':
-        sign_charge = '+'
-    else:
-        sign_charge = '-'
 
     product_list = {
         'products': []

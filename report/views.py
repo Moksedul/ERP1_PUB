@@ -9,7 +9,7 @@ from payments.models import Payment
 from vouchers.models import BuyVoucher, SaleVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
-from core.views import buy_total_amount
+from core.views import buy_total_amount, sale_total_amount, local_sale_total_amount
 
 
 @login_required()
@@ -93,72 +93,70 @@ def payment_report(request):
 
 @login_required()
 def collection_report(request):
+    sale_vouchers_selection = SaleVoucher.objects.all()
     sale_vouchers = SaleVoucher.objects.all()
     local_sale_vouchers = LocalSale.objects.all()
     collections = Collection.objects.all()
     voucher_contains = request.GET.get('voucher_no')
-    total_unloading_cost = 0
-    total_self_weight_of_bag = 0
-    total_measuring_cost = 0
-    total_collected = 0
     total_receivable = 0
     collection_due = 0
-    voucher_list = {
+    sale_list = {
         'voucher': []
 
     }
 
     # checking voucher number from input
-    if voucher_contains != '' and voucher_contains != 'Select Sale No' and voucher_contains is not None:
-        sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains)
-        for voucher in sale_voucher:
+    if voucher_contains != '' and voucher_contains is not None:
+        sale_vouchers = sale_vouchers.filter(voucher_number=voucher_contains)
+        for voucher in sale_vouchers:
             collections = collections.filter(sale_voucher_no_id=voucher.id)
-    else:
-        sale_voucher = sale_vouchers
 
-    for voucher in sale_voucher:
-        total_collected = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
-        total_collected = total_collected['collection_amount__sum']
-        rate = voucher.rate
+    # sale voucher list
+    for voucher in sale_vouchers:
         challan = Challan.objects.get(challan_no=voucher.challan_no)
-
-        total_weight = challan.weight
-
-        if voucher.weight_of_each_bag is not None:
-            total_self_weight_of_bag = voucher.weight_of_each_bag * challan.number_of_bag
-
-        if voucher.per_bag_unloading_cost is not None:
-            total_unloading_cost = voucher.per_bag_unloading_cost * challan.number_of_bag
-
-        if voucher.measuring_cost_per_kg is not None:
-            total_measuring_cost = voucher.measuring_cost_per_kg * total_weight
-
-        weight_after_deduction = total_weight - total_self_weight_of_bag
-        total_amount = rate*weight_after_deduction
-        total_receivable = total_amount - total_unloading_cost - total_measuring_cost
-
-        amount = weight_after_deduction * voucher.rate
+        total_amount = sale_total_amount(voucher.id)
+        total_receivable += total_amount
 
         key = "voucher"
-        voucher_list.setdefault(key, [])
-        voucher_list[key].append({
+        sale_list.setdefault(key, [])
+        sale_list[key].append({
             'date': voucher.date_added,
             'name': challan.buyer_name,
             'voucher_no': voucher.voucher_number,
-            'total_amount': amount,
+            'total_amount': total_amount,
+            'sale_type': 'Sale',
             'id': voucher.id
         })
 
-    if total_collected != 0 and total_collected is not None:
-        print()
-        collection_due = total_receivable-total_collected['collection_amount__sum']
+    # local sale voucher list
+    for voucher in local_sale_vouchers:
+        total_amount = local_sale_total_amount(voucher.id)
+        total_receivable += total_amount
+
+        key = "voucher"
+        sale_list.setdefault(key, [])
+        sale_list[key].append({
+            'date': voucher.date,
+            'name': voucher.buyer_name,
+            'voucher_no': voucher.sale_no,
+            'total_amount': total_amount,
+            'sale_type': 'Local Sale',
+            'id': voucher.id
+        })
+
+    total_collected = collections.aggregate(Sum('collection_amount'))
+    total_collected = total_collected['collection_amount__sum']
+
+    if total_collected is not None:
+        collection_due = total_receivable-total_collected
 
     context = {
         'collections': collections,
-        'vouchers': voucher_list['voucher'],
+        'vouchers': sale_list['voucher'],
         'total_collected': total_collected,
         'total_receivable': total_receivable,
         'collection_due': collection_due,
-        'sale_voucher': voucher_contains
+        'sale_voucher_selection': sale_vouchers_selection,
+        'voucher_selected': voucher_contains
     }
     return render(request, "report/collection_report.html", context)

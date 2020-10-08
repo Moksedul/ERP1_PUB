@@ -1,15 +1,13 @@
+from local_sale.models import LocalSale, Product
 from vouchers.models import *
 
 
 def sale_total_amount(pk):
     sale = SaleVoucher.objects.get(id=pk)
-    challan = Challan.objects.filter(challan_no=sale.challan_no)
+    challan = Challan.objects.get(challan_no=sale.challan_no)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
-
-    for challan in challan:
-        pass
 
     total_weight = challan.weight
 
@@ -26,6 +24,25 @@ def sale_total_amount(pk):
     total_amount_without_bag = sale.rate*weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
     return amount_after_deduction
+
+
+def local_sale_total_amount(pk):
+    sale = LocalSale.objects.get(id=pk)
+    products = Product.objects.filter(sale_no_id=sale.id)
+    product_total = 0
+
+    for product in products:
+        amount = product.rate * product.weight
+        product_total += amount
+
+    if sale.transport_charge_payee == 'CUSTOMER':
+        voucher_total = product_total + sale.transport_charge
+    else:
+        voucher_total = product_total - sale.transport_charge
+
+    grand_total_amount = voucher_total + sale.previous_due
+
+    return grand_total_amount
 
 
 def buy_total_amount(pk):
