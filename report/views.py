@@ -156,6 +156,23 @@ def collection_report(request):
             'id': item.id
         })
 
+    voucher_list = {
+        'voucher': []
+
+    }
+
+    for item in sale_voucher:
+        challan = Challan.objects.get(challan_no=item.challan_no)
+        key = "voucher"
+        voucher_list.setdefault(key, [])
+        voucher_list[key].append({
+            'date': item.date_added,
+            'name': challan.buyer_name,
+            'voucher_no': item.voucher_number,
+            'total_amount': 'buy_total_amount(item.id)',
+            'id': item.id
+        })
+
     context = {
         'collections': collections,
         'vouchers': voucher_list['voucher'],
