@@ -89,7 +89,7 @@ def remaining_balance_update(account_id, amount):
 class InvestmentCreateView(LoginRequiredMixin, CreateView):
     model = Investment
     template_name = 'accounts/investment_add_form.html'
-    fields = ('source_of_investment', 'investing_amount', 'investing_to_account', 'remarks',)
+    fields = ('source_of_investment', 'investing_amount', 'investing_from_account', 'investing_to_account', 'remarks',)
     success_url = '/investment_list'
 
     def form_valid(self, form):

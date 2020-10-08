@@ -31,8 +31,10 @@ class Investment(models.Model):
     source_of_investment = models.CharField(max_length=200, default='Daily Cash Invest')
     investing_amount = models.FloatField()
     investing_to_account = models.ForeignKey(
-        Accounts, default=default_account, null=True, on_delete=models.CASCADE
+        Accounts, default=default_account, null=True, on_delete=models.CASCADE, related_name='investing_to_account'
     )
+    investing_from_account = models.ForeignKey(Accounts, on_delete=models.CASCADE,
+                                               null=True, blank=True, related_name='investing_from_account')
     added_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=now, blank=True)
     remarks = models.CharField(max_length=200, null=True, blank=True)
