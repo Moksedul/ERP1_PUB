@@ -103,7 +103,12 @@ def collection_report(request):
     total_collected = 0
     total_receivable = 0
     collection_due = 0
+    voucher_list = {
+        'voucher': []
 
+    }
+
+    # checking voucher number from input
     if voucher_contains != '' and voucher_contains != 'Select Sale No' and voucher_contains is not None:
         sale_voucher = sale_vouchers.filter(voucher_number=voucher_contains)
         for voucher in sale_voucher:
@@ -113,14 +118,11 @@ def collection_report(request):
 
     for voucher in sale_voucher:
         total_collected = collections.filter(sale_voucher_no_id=voucher.id).aggregate(Sum('collection_amount'))
+        total_collected = total_collected['collection_amount__sum']
         rate = voucher.rate
-        challan = Challan.objects.filter(challan_no=voucher.challan_no)
-
-        for challan in challan:
-            pass
+        challan = Challan.objects.get(challan_no=voucher.challan_no)
 
         total_weight = challan.weight
-        total_amount = rate*total_weight
 
         if voucher.weight_of_each_bag is not None:
             total_self_weight_of_bag = voucher.weight_of_each_bag * challan.number_of_bag
@@ -135,43 +137,21 @@ def collection_report(request):
         total_amount = rate*weight_after_deduction
         total_receivable = total_amount - total_unloading_cost - total_measuring_cost
 
-    if total_collected != 0 and total_collected['collection_amount__sum'] is not None:
-        print(total_collected['collection_amount__sum'])
+        amount = weight_after_deduction * voucher.rate
+
+        key = "voucher"
+        voucher_list.setdefault(key, [])
+        voucher_list[key].append({
+            'date': voucher.date_added,
+            'name': challan.buyer_name,
+            'voucher_no': voucher.voucher_number,
+            'total_amount': amount,
+            'id': voucher.id
+        })
+
+    if total_collected != 0 and total_collected is not None:
+        print()
         collection_due = total_receivable-total_collected['collection_amount__sum']
-
-    voucher_list = {
-        'voucher': []
-
-    }
-
-    for item in sale_voucher:
-        challan = Challan.objects.get(challan_no=item.challan_no)
-        key = "voucher"
-        voucher_list.setdefault(key, [])
-        voucher_list[key].append({
-            'date': item.date_added,
-            'name': challan.buyer_name,
-            'voucher_no': item.voucher_number,
-            'total_amount': 'buy_total_amount(item.id)',
-            'id': item.id
-        })
-
-    voucher_list = {
-        'voucher': []
-
-    }
-
-    for item in sale_voucher:
-        challan = Challan.objects.get(challan_no=item.challan_no)
-        key = "voucher"
-        voucher_list.setdefault(key, [])
-        voucher_list[key].append({
-            'date': item.date_added,
-            'name': challan.buyer_name,
-            'voucher_no': item.voucher_number,
-            'total_amount': 'buy_total_amount(item.id)',
-            'id': item.id
-        })
 
     context = {
         'collections': collections,

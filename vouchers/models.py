@@ -76,7 +76,7 @@ def increment_sale_number():
 
 class SaleVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_sale_number)
-    challan_no = models.ForeignKey(Challan, on_delete=models.CASCADE, null=True)
+    challan_no = models.OneToOneField(Challan, on_delete=models.CASCADE, null=True)
     per_bag_unloading_cost = models.FloatField(blank=True, null=True, default=0)
     measuring_cost_per_kg = models.FloatField(blank=True, null=True, default=0)
     weight_of_each_bag = models.FloatField(blank=True, null=True, default=0)
