@@ -114,6 +114,7 @@ def ledger(request):
     if ledgers['voucher']:
         def my_function(e):
             return e['date']
+
         ledgers['voucher'].sort(key=my_function, reverse=True)
 
     context = {
@@ -259,51 +260,39 @@ def account_ledger_report(request):
                     })
         # for investment
         if account_ledger.type == 'I':
-            investment = Investment.objects.filter(investing_to_account_id=selected_account)
-            investment = investment.filter(pk=account_ledger.investment_no_id)
-            print(account_ledger.date)
-            for investment in investment:
-                if investment.investing_from_account is not None:
-                    key = "voucher"
-                    ledgers.setdefault(key, [])
-                    ledgers[key].append({
-                        'date': account_ledger.date,
-                        'name': investment.added_by,
-                        'voucher_no': '',
-                        'type': 'Investment from',
-                        'descriptions': account_ledger.description,
-                        'debit_amount': 0,
-                        'credit_amount': investment.investing_amount,
-                        'url1': '#',
-                        'url2': '#'
-                    })
-                    key = "voucher"
-                    ledgers.setdefault(key, [])
-                    ledgers[key].append({
-                        'date': account_ledger.date,
-                        'name': investment.added_by,
-                        'voucher_no': '',
-                        'type': 'Investment from',
-                        'descriptions': account_ledger.description,
-                        'debit_amount': investment.investing_amount,
-                        'credit_amount': 0,
-                        'url1': '#',
-                        'url2': '#'
-                    })
-                else:
-                    key = "voucher"
-                    ledgers.setdefault(key, [])
-                    ledgers[key].append({
-                        'date': account_ledger.date,
-                        'name': investment.added_by,
-                        'voucher_no': '',
-                        'type': 'Investment from',
-                        'descriptions': account_ledger.description,
-                        'debit_amount': 0,
-                        'credit_amount': investment.investing_amount,
-                        'url1': '#',
-                        'url2': '#'
-                    })
+            investment_credit = Investment.objects.filter(investing_to_account_id=selected_account)
+            investment_credit = investment_credit.filter(pk=account_ledger.investment_no_id)
+            investment_debit = Investment.objects.filter(investing_from_account_id=selected_account)
+            investment_debit = investment_debit.filter(pk=account_ledger.investment_no_id)
+
+            for investment in investment_credit:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'date': account_ledger.date,
+                    'name': investment.added_by,
+                    'voucher_no': '',
+                    'type': 'Investment from',
+                    'descriptions': account_ledger.description,
+                    'debit_amount': 0,
+                    'credit_amount': investment.investing_amount,
+                    'url1': '#',
+                    'url2': '#'
+                })
+            for investment_debit in investment_debit:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'date': account_ledger.date,
+                    'name': investment_debit.added_by,
+                    'voucher_no': '',
+                    'type': 'Withdraw from',
+                    'descriptions': investment_debit.investing_from_account,
+                    'debit_amount': investment_debit.investing_amount,
+                    'credit_amount': 0,
+                    'url1': '#',
+                    'url2': '#'
+                })
 
         # for Collection
         if account_ledger.type == 'C':
@@ -377,6 +366,7 @@ def account_ledger_report(request):
     if ledgers['voucher']:
         def my_function(e):
             return e['date']
+
         ledgers['voucher'].sort(key=my_function, reverse=False)
 
     report = {
