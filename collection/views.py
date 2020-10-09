@@ -61,6 +61,14 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+# person creation from Payment form
+class PersonCreateCollection(LoginRequiredMixin, CreateView):
+    model = Persons
+    fields = '__all__'
+    template_name = 'organizations/person_add.html'
+    success_url = '/collection_list'
+
+
 class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
     form_class = CollectionFormLocalSale
     template_name = 'collections/collection_add_form.html'

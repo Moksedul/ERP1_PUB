@@ -6,6 +6,7 @@ from django.views.i18n import JavaScriptCatalog
 urlpatterns = [
     path('add_collection_sale', CollectionCreateSale.as_view(), name='add-collection-sale'),
     path('add_collection_local_sale', CollectionCreateLocalSale.as_view(), name='add-collection-local-sale'),
+    path('collection/add_person', PersonCreateCollection.as_view(), name='add-person-collection'),
     path('load_sale_vouchers/', load_sale_vouchers, name='load-sale-vouchers'),
     path('load_local_sale_vouchers/', load_local_sale_vouchers, name='load-local-sale-vouchers'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
