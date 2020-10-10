@@ -14,8 +14,6 @@ class Accounts(models.Model):
     account_no = models.CharField(max_length=50, null=True, unique=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     bank_branch = models.CharField(max_length=50, null=True, blank=True)
-    # opening_balance = models.FloatField(null=True, default=0)
-    # remaining_balance = models.FloatField(null=True, blank=True, default=0)
     date_added = models.DateTimeField(default=now, blank=True)
     remarks = models.CharField(max_length=200, null=True, blank=True)
 

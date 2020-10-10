@@ -93,23 +93,83 @@ def payment_report(request):
 
 @login_required()
 def collection_report(request):
+    names = Persons.objects.all()
     sale_vouchers_selection = SaleVoucher.objects.all()
+    local_sale_voucher_selection = LocalSale.objects.all()
     sale_vouchers = SaleVoucher.objects.all()
     local_sale_vouchers = LocalSale.objects.all()
     collections = Collection.objects.all()
     voucher_contains = request.GET.get('voucher_no')
+    if voucher_contains is None:
+        voucher_contains = 'Select Voucher'
+    name_contains = request.GET.get('name')
+    if name_contains is None:
+        name_contains = 'Select Name'
+    phone_no_contains = request.GET.get('phone_no')
+    if phone_no_contains is None or phone_no_contains == '':
+        phone_no_contains = 'Type Phone No'
+    print(phone_no_contains)
     total_receivable = 0
-    collection_due = 0
-    sale_list = {
+    voucher_list = {
         'voucher': []
 
     }
+    for sale in sale_vouchers_selection:
+        key = "voucher"
+        voucher_list.setdefault(key, [])
+        voucher_list[key].append({
+            'voucher_no': sale.voucher_number
+        })
+    for local_sale in local_sale_voucher_selection:
+        key = "voucher"
+        voucher_list.setdefault(key, [])
+        voucher_list[key].append({
+            'voucher_no': local_sale.sale_no
+        })
+
+    sale_list = {
+        'voucher': []
+    }
+
+    # checking name from input
+    if name_contains != 'Select Name':
+        person = Persons.objects.get(person_name=name_contains)
+        challans = Challan.objects.filter(buyer_name=person.id)
+        v_id = []
+        for challan in challans:
+            v_id.append(challan.id)
+        sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
+        local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
+        collections = collections.filter(collected_from=person.id)
+
+    # checking phone no from input
+    if phone_no_contains != 'Type Phone No':
+        print(phone_no_contains)
+        person = Persons.objects.get(contact_number=phone_no_contains)
+        challans = Challan.objects.filter(buyer_name=person.id)
+        v_id = []
+        for challan in challans:
+            v_id.append(challan.id)
+        sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
+        local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
+        collections = collections.filter(collected_from=person.id)
 
     # checking voucher number from input
-    if voucher_contains != '' and voucher_contains is not None:
+    if voucher_contains != '' and voucher_contains != 'Select Voucher':
         sale_vouchers = sale_vouchers.filter(voucher_number=voucher_contains)
-        for voucher in sale_vouchers:
-            collections = collections.filter(sale_voucher_no_id=voucher.id)
+        if sale_vouchers:
+            local_sale_vouchers = LocalSale.objects.none()
+            v_id = []
+            for voucher in sale_vouchers:
+                v_id.append(voucher.id)
+            collections = collections.filter(sale_voucher_no_id__in=v_id)
+        else:
+            sale_vouchers = SaleVoucher.objects.none()
+            local_sale_vouchers = local_sale_vouchers.filter(sale_no=voucher_contains)
+            v_id = []
+            for voucher in local_sale_vouchers:
+                v_id.append(voucher.id)
+            collections = collections.filter(local_sale_voucher_no_id__in=v_id)
 
     # sale voucher list
     for voucher in sale_vouchers:
@@ -149,14 +209,19 @@ def collection_report(request):
 
     if total_collected is not None:
         collection_due = total_receivable-total_collected
-
+    else:
+        collection_due = total_receivable
+        total_collected = 0
     context = {
         'collections': collections,
         'vouchers': sale_list['voucher'],
         'total_collected': total_collected,
         'total_receivable': total_receivable,
         'collection_due': collection_due,
-        'sale_voucher_selection': sale_vouchers_selection,
-        'voucher_selected': voucher_contains
+        'sale_voucher_selection': voucher_list['voucher'],
+        'voucher_selected': voucher_contains,
+        'names': names,
+        'name_selected': name_contains,
+        'phone_no_typed': phone_no_contains
     }
     return render(request, "report/collection_report.html", context)
