@@ -1,10 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib import messages
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from daily_cash.views import create_daily_cash
+from core.views import account_balance_calc
 from ledger.views import create_account_ledger
 from .models import *
 from django.contrib.auth.decorators import login_required
@@ -26,12 +25,31 @@ class BankAccountCreate(LoginRequiredMixin, CreateView):
         return context
 
 
-class BankAccountList(LoginRequiredMixin, ListView):
-    model = Accounts
-    template_name = 'accounts/bank_account_list.html'
-    context_object_name = 'accounts'
-    ordering = ['-date_added']
-    paginate_by = 20
+def bank_account_list(request):
+    accounts = Accounts.objects.all()
+
+    account_list = {
+        'account': []
+
+    }
+
+    for account in accounts:
+        balance = account_balance_calc(account.id)
+        key = "account"
+        account_list.setdefault(key, [])
+        account_list[key].append({
+            'account_name': account.account_name,
+            'account_no': account.account_no,
+            'bank_branch': str(account.bank_name) + ': ' + str(account.bank_branch),
+            'remaining_balance': balance,
+            'id': account.id,
+        })
+
+    context = {
+        'accounts': account_list['account']
+    }
+
+    return render(request, 'accounts/bank_account_list.html', context)
 
 
 class BankAccountUpdate(LoginRequiredMixin, UpdateView):

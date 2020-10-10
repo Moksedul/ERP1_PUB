@@ -1,4 +1,9 @@
+from accounts.models import Investment
+from bkash.models import PaymentBkashAgent
+from collection.models import Collection
+from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
+from payments.models import Payment
 from vouchers.models import *
 
 
@@ -86,3 +91,114 @@ def serial_no(initial, model_name):
     if new_serial_int >= 1000:
         new_serial_no = initial + str(new_serial_int)
     return new_serial_no
+
+
+def account_balance_calc(pk):
+    selected_account = pk
+    account_ledgers = AccountLedger.objects.all()
+    account_balance = 0
+
+    ledgers = {
+        'voucher': []
+
+    }
+
+    for account_ledger in account_ledgers:
+        # for agent payment
+        if account_ledger.type == 'BK':
+            bkash_payment = PaymentBkashAgent.objects.filter(payment_from_account_id=selected_account)
+            bkash_payment = bkash_payment.filter(id=account_ledger.bk_payment_no_id)
+            for bkash_payment in bkash_payment:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'debit_amount': bkash_payment.amount,
+                    'credit_amount': 0,
+                })
+        # for general payment
+        if account_ledger.type == 'G':
+            general_voucher = GeneralVoucher.objects.filter(from_account_id=selected_account)
+            general_voucher = general_voucher.filter(id=account_ledger.general_voucher_id)
+            for general_voucher in general_voucher:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'debit_amount': general_voucher.cost_amount,
+                    'credit_amount': 0,
+                })
+        # for buy payment
+        if account_ledger.type == 'P':
+            payment = Payment.objects.filter(payment_from_account_id=selected_account)
+            payment = payment.filter(pk=account_ledger.payment_no_id)
+            for payment in payment:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'debit_amount': payment.payment_amount,
+                    'credit_amount': 0,
+                })
+
+        # for investment
+        if account_ledger.type == 'I':
+            investment_credit = Investment.objects.filter(investing_to_account_id=selected_account)
+            investment_credit = investment_credit.filter(pk=account_ledger.investment_no_id)
+            investment_debit = Investment.objects.filter(investing_from_account_id=selected_account)
+            investment_debit = investment_debit.filter(pk=account_ledger.investment_no_id)
+
+            for investment in investment_credit:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'debit_amount': 0,
+                    'credit_amount': investment.investing_amount,
+                })
+            for investment_debit in investment_debit:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'debit_amount': investment_debit.investing_amount,
+                    'credit_amount': 0,
+                })
+
+        # for Collection
+        if account_ledger.type == 'C':
+            collection = Collection.objects.filter(collection_to_account_id=selected_account)
+            collection = collection.filter(pk=account_ledger.collection_no_id)
+
+            for collection in collection:
+                if collection.sale_type == 'SALE':
+                    if collection.sale_voucher_no_id is not None:
+                        key = "voucher"
+                        ledgers.setdefault(key, [])
+                        ledgers[key].append({
+                            'debit_amount': 0,
+                            'credit_amount': collection.collection_amount,
+                        })
+                    else:
+                        key = "voucher"
+                        ledgers.setdefault(key, [])
+                        ledgers[key].append({
+                            'debit_amount': 0,
+                            'credit_amount': collection.collection_amount,
+                        })
+
+                else:
+                    if collection.local_sale_voucher_no is not None:
+                        key = "voucher"
+                        ledgers.setdefault(key, [])
+                        ledgers[key].append({
+                            'debit_amount': 0,
+                            'credit_amount': collection.collection_amount,
+                        })
+                    else:
+                        key = "voucher"
+                        ledgers.setdefault(key, [])
+                        ledgers[key].append({
+                            'debit_amount': 0,
+                            'credit_amount': collection.collection_amount,
+                        })
+
+    for item in ledgers['voucher']:
+        account_balance = account_balance - item['debit_amount'] + item['credit_amount']
+
+    return account_balance
