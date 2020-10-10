@@ -17,12 +17,13 @@ def home(request):
 
 class BankAccountCreate(LoginRequiredMixin, CreateView):
     model = Accounts
-    template_name = 'accounts/bank_account_add_form.html'
+    template_name = 'accounts/account_form.html'
     fields = '__all__'
 
-    def form_valid(self, form):
-        form.instance.remaining_balance = form.cleaned_data['opening_balance']
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Add Bank Account'
+        return context
 
 
 class BankAccountList(LoginRequiredMixin, ListView):
@@ -35,26 +36,36 @@ class BankAccountList(LoginRequiredMixin, ListView):
 
 class BankAccountUpdate(LoginRequiredMixin, UpdateView):
     model = Accounts
-    template_name = 'accounts/bank_account_update_form.html'
+    template_name = 'accounts/account_form.html'
     fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Bank Account'
+        return context
 
 
 class BankAccountDelete(LoginRequiredMixin, DeleteView):
     model = Accounts
-    template_name = 'accounts/bank_account_delete.html'
+    template_name = 'accounts/account_delete.html'
     success_url = '/bank_account_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Delete Bank Account'
+        return context
 
 
 class OtherAccountCreate(LoginRequiredMixin, CreateView):
     model = Accounts
-    template_name = 'accounts/other_account_add_form.html'
-    fields = ('account_name', 'opening_balance', 'remarks')
-
-    def form_valid(self, form):
-        form.instance.remaining_balance = form.cleaned_data['opening_balance']
-        return super().form_valid(form)
-
+    template_name = 'accounts/account_form.html'
+    fields = ('account_name', 'remarks')
     success_url = '/other_account_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Add Other Account'
+        return context
 
 
 class OtherAccountList(LoginRequiredMixin, ListView):
@@ -67,23 +78,25 @@ class OtherAccountList(LoginRequiredMixin, ListView):
 
 class OtherAccountUpdate(LoginRequiredMixin, UpdateView):
     model = Accounts
-    template_name = 'accounts/other_account_update_form.html'
-    fields = '__all__'
+    template_name = 'accounts/account_form.html'
+    fields = ('account_name', 'remarks')
     success_url = '/other_account_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Other Account'
+        return context
 
 
 class OtherAccountDelete(LoginRequiredMixin, DeleteView):
     model = Accounts
-    template_name = 'accounts/other_account_delete.html'
+    template_name = 'accounts/account_delete.html'
     success_url = '/other_account_list'
 
-
-def remaining_balance_update(account_id, amount):
-    account = Accounts.objects.get(pk=account_id)
-    remaining_balance = account.remaining_balance
-    new_remaining_balance = amount + remaining_balance
-    account.remaining_balance = new_remaining_balance
-    account.save()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Delete Other Account'
+        return context
 
 
 class InvestmentCreateView(LoginRequiredMixin, CreateView):
@@ -94,9 +107,6 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user
-        account_id = form.cleaned_data['investing_to_account'].id
-        amount = form.cleaned_data['investing_amount']
-        remaining_balance_update(account_id, amount)
 
         super().form_valid(form=form)  # saving the form
         investment_save = form.save()  # for getting the id of investment just saved
@@ -125,18 +135,13 @@ class InvestmentList(LoginRequiredMixin, ListView):
 @login_required()
 def delete_investment(request, pk):
     investment = Investment.objects.get(id=pk)
-    account_selected = investment.investing_to_account
-    account_db = Accounts.objects.get(id=account_selected.id)
-    investment_amount = investment.investing_amount
-    remaining_balance_db = account_db.remaining_balance
-    account_db.remaining_balance = remaining_balance_db - investment_amount
     if request.method == "POST":
         url = investment.get_absolute_url()
         investment.delete()
-        account_db.save()
+
         return HttpResponseRedirect(url)
     context = {
         'investment': investment,
-        'account': account_selected
+        'account': 'n/a'
     }
     return render(request, "accounts/investment_delete.html", context)

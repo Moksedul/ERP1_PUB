@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h5 class="text-center">Add Bank Account</h5>
+        <h5 class="text-center">{{ form_name }}</h5>
         <hr>
         <form method="post" >
             {% csrf_token %}
@@ -10,18 +10,17 @@
             <div class="form-group col-md-12 mb-0" >
                 {{ form.account_name|as_crispy_field }}
             </div>
-                <div class="form-group col-md-6 mb-0">
-                {{ form.bank_name|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0">
-                {{ form.bank_branch|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0">
-                {{ form.account_no|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0">
-                {{ form.opening_balance|as_crispy_field }}
-                </div>
+                {% if form.bank_name %}
+                    <div class="form-group col-md-6 mb-0">
+                    {{ form.bank_name|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                    {{ form.bank_branch|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                    {{ form.account_no|as_crispy_field }}
+                    </div>
+                {% endif %}
                 <div class="form-group col-md-12 mb-0">
                 {{ form.remarks|as_crispy_field }}
                 </div>
