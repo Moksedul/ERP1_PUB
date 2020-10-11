@@ -1,37 +1,44 @@
 {% extends 'main/base.html' %}
-
 {% block content %}
 <div class="row">
-{% include 'main/settings_sidebar.html' %}
-	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-person'%}">Add Person</a>
-			<table class="table table-sm table-striped">
-				<tr>
-					<th>Person Name</th>
-					<th>Company Name</th>
-					<th>Address</th>
-					<th>Contact Number</th>
-
-					<th>Update</th>
-					<th>Remove</th>
-				</tr>
-
-				{% for person in persons %}
+	<div class="col-2">
+		{% include 'main/settings_sidebar.html' %}
+	</div>
+	<div class="col-10">
+		<div class="card card-body">
+				<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-person'%}">Add Person</a>
+				<table class="table table-sm table-striped table-bordered">
 					<tr>
-						<td>{{ person.person_name }}</td>
-						<td>{{ person.company_name }}</td>
-						<td>{{ person.address }}</td>
-						<td>{{ person.contact_number }}</td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'person-update' person.id %}">Edit</a></td>
+						<th>Person Name</th>
+						<th>Company Name</th>
+						<th>Address</th>
+						<th>Contact Number</th>
+						<th>Photo</th>
 
-						<td><a class="btn btn-sm btn-danger" href="{% url 'person-delete' person.id %}">Delete</a></td>
-
+						<th>Update</th>
+						<th>Remove</th>
 					</tr>
-				{% endfor %}
+
+					{% for person in persons %}
+						<tr>
+							<td>{{ person.person_name }}</td>
+							<td>{{ person.company_name }}</td>
+							<td>{{ person.address }}</td>
+							<td>{{ person.contact_number }}</td>
+							{% if person.person_photo %}
+							<td><img class="rounded-circle article-img" src="{{ person.person_photo.url }}" alt=""></td>
+							{% endif %}
+							<td><a class="btn btn-sm btn-info" href="{% url 'person-update' person.id %}">Edit</a></td>
+
+							<td><a class="btn btn-sm btn-danger" href="{% url 'person-delete' person.id %}">Delete</a></td>
+
+						</tr>
+					{% endfor %}
 
 
-			</table>
+				</table>
 		</div>
+	</div>
 </div>
 
 {% endblock content %}

@@ -18,8 +18,6 @@ class PersonListView(LoginRequiredMixin, ListView):
     model = Persons
     template_name = 'organizations/person_list.html'
     context_object_name = 'persons'
-    # products = Products.objects.all()
-    # return render(request, 'products/buy_list.html', {'products': products})
 
 
 class PersonUpdateView(LoginRequiredMixin, UpdateView):
