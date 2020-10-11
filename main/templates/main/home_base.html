@@ -13,6 +13,32 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main/main.css'%}">
     <link rel="shortcut icon" href="{%  static 'main/favicon.png' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}"/>
+    <style>
+
+
+.side-menu {
+  float: left;
+  width: 15%;
+  height: 100%;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+  background-color: #111;
+
+
+}
+.main-content {
+  float: left;
+  width: 85%;
+
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
         <title>techAlong Business</title>
 </head>
 
