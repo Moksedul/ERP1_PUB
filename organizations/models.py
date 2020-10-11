@@ -23,6 +23,7 @@ class Persons(models.Model):
     contact_number = models.CharField(max_length=17, unique=True, null=True, blank=True)
     email = models.EmailField(max_length=50, blank=True)
     nid_photo = models.ImageField(upload_to='nid_photo', blank=True)
+    person_photo = models.ImageField(upload_to='person_photo', blank=True)
 
     def __str__(self):
         return str(self.person_name)
