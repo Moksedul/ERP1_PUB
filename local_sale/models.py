@@ -35,7 +35,7 @@ PAYEE = [
 class LocalSale(models.Model):
     sale_no = models.CharField(max_length=10, default=increment_local_sale_no, unique=True)
     buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
-    company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True)
+    company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(default=now)
     transport_charge = models.FloatField(default=0, blank=True)
     transport_charge_payee = models.CharField(choices=PAYEE, default=PAYEE[1], max_length=8, blank=True)
@@ -43,6 +43,7 @@ class LocalSale(models.Model):
     date_time_stamp = models.DateTimeField(default=now)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
+    discount = models.FloatField(default=0, blank=True)
     remarks = models.CharField(max_length=200, default='N/A', null=True, blank=True)
 
     def __str__(self):

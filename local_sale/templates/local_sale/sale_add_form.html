@@ -52,9 +52,12 @@
                         {{ form1.previous_due|as_crispy_field }}
                     </div>
                     <div class="form-group col-md-3 mb-0" >
+                        {{ form1.discount|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0" >
                         {{ form1.date|as_crispy_field }}
                     </div>
-                    <div class="form-group col-md-9 mb-0" >
+                    <div class="form-group col-md-6 mb-0" >
                         {{ form1.remarks|as_crispy_field }}
                     </div>
                 </div>

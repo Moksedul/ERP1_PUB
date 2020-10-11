@@ -45,7 +45,7 @@ def local_sale_total_amount(pk):
     else:
         voucher_total = product_total - sale.transport_charge
 
-    grand_total_amount = voucher_total + sale.previous_due
+    grand_total_amount = voucher_total + sale.previous_due - sale.discount
 
     return grand_total_amount
 

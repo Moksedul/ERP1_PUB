@@ -62,6 +62,9 @@ class BkashTransaction(models.Model):
     description = models.TextField(max_length=200, null=True, blank=True)
     posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return str(self.invoice_no)
+
 
 def increment_payment_number():
     last_payment = PaymentBkashAgent.objects.all().order_by('id').last()

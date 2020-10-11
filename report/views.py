@@ -1,7 +1,9 @@
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.db.models import Sum
 
+from bkash.models import BkashTransaction, PaymentBkashAgent, BkashAgents
 from challan.models import Challan
 from collection.models import Collection
 from local_sale.models import LocalSale
@@ -108,7 +110,7 @@ def collection_report(request):
     phone_no_contains = request.GET.get('phone_no')
     if phone_no_contains is None or phone_no_contains == '':
         phone_no_contains = 'Type Phone No'
-    print(phone_no_contains)
+
     total_receivable = 0
     voucher_list = {
         'voucher': []
@@ -225,3 +227,90 @@ def collection_report(request):
         'phone_no_typed': phone_no_contains
     }
     return render(request, "report/collection_report.html", context)
+
+
+@login_required()
+def bkash_report(request):
+    agent_names = BkashAgents.objects.all()
+    bkash_transactions = BkashTransaction.objects.all()
+    transaction_selection = bkash_transactions
+    agent_payments = PaymentBkashAgent.objects.all()
+    voucher_contains = request.GET.get('voucher_no')
+    if voucher_contains is None:
+        voucher_contains = 'Select Voucher'
+    name_contains = request.GET.get('name')
+    if name_contains is None or name_contains == '':
+        name_contains = 'Select Agent Name'
+    phone_no_contains = request.GET.get('phone_no')
+    if phone_no_contains is None or phone_no_contains == '':
+        phone_no_contains = 'Type Agent Phone No'
+    total_payable = 0
+
+    transaction_list = {
+        'voucher': []
+    }
+
+    # checking name from input
+    if name_contains != 'Select Agent Name':
+        agent = BkashAgents.objects.get(agent_name=name_contains)
+        bkash_transactions = bkash_transactions.filter(agent_name=agent)
+        agent_payments = agent_payments.filter(agent_name=agent)
+
+    # checking phone no from input
+    if phone_no_contains != 'Type Agent Phone No':
+        try:
+            agent = BkashAgents.objects.get(agent_number=phone_no_contains)
+        except BkashAgents.DoesNotExist:
+            context = {
+                'transaction_selection': transaction_selection,
+                'voucher_selected': voucher_contains,
+                'name_typed': name_contains,
+                'phone_no_typed': phone_no_contains,
+                'message': 'No Data Found with This Phone No'
+            }
+            return render(request, "report/bkash_report.html", context)
+
+        bkash_transactions = bkash_transactions.filter(agent_name=agent.id)
+        agent_payments = agent_payments.filter(agent_name=agent.id)
+
+    # checking voucher number from input
+    if voucher_contains != '' and voucher_contains != 'Select Voucher':
+        bkash_transactions = BkashTransaction.objects.filter(invoice_no=voucher_contains)
+        for bkash_transaction in bkash_transactions:
+            agent_payments = agent_payments.filter(transaction_invoice_no=bkash_transaction.id)
+
+    # sale voucher list
+    for voucher in bkash_transactions:
+        total_payable += voucher.transaction_amount
+
+        key = "voucher"
+        transaction_list.setdefault(key, [])
+        transaction_list[key].append({
+            'date': voucher.transaction_date,
+            'name': voucher.agent_name,
+            'voucher_no': voucher.invoice_no,
+            'total_amount': voucher.transaction_amount,
+            'id': voucher.id
+        })
+
+    total_payed = agent_payments.aggregate(Sum('amount'))
+    total_payed = total_payed['amount__sum']
+
+    if total_payed is not None:
+        payment_due = total_payable-total_payed
+    else:
+        payment_due = total_payable
+        total_payed = 0
+    context = {
+        'payments': agent_payments,
+        'vouchers': transaction_list['voucher'],
+        'total_payed': total_payed,
+        'total_payable': total_payable,
+        'payment_due': payment_due,
+        'transaction_selection': transaction_selection,
+        'voucher_selected': voucher_contains,
+        'name_selected': name_contains,
+        'phone_no_typed': phone_no_contains,
+        'agent_names': agent_names
+    }
+    return render(request, "report/bkash_report.html", context)
