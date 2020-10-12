@@ -3,13 +3,16 @@
 
 {% block home %}
 <div class="side-menu">
-    <div class="container text-center bg-steel text-white" >SHORT MENU</div>
+    <div class="container text-center align-middle bg-steel text-white" style="height: 35px;">
+        <h6 class="p-2">SHORT MENU</h6>
+    </div>
 
     <div class="container">
         <div class="mt-2">
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'account-ledger'%}">ACCOUNT LEDGER</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'investment-list'%}">INVESTMENT</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'transaction-list'%}">BKASH TRANSACTION</a>
+            <a class="btn btn-info  btn-sm btn-block" href="{% url 'agent-payment-list'%}">AGENT PAYMENT</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'general-voucher-list'%}">GENERAL VOUCHER</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'collection-list'%}">COLLECTION</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'payment-list'%}">PAYMENT</a>
