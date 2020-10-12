@@ -37,7 +37,8 @@ def home(request):
         'orders': orders,
         'total_ordered': total_ordered,
         'stocks': stocks,
-        'total_stocked': total_stocked
+        'total_stocked': total_stocked,
+        'tittle': 'techAlong Business | Home'
     }
     return render(request, 'main/home.html', context)
 
