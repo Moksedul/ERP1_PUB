@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from orders.models import Orders
+from organizations.models import Persons
 from vouchers.models import SaleVoucher, BuyVoucher
 from stocks.models import Stocks
 
@@ -12,6 +13,8 @@ from stocks.models import Stocks
 def home(request):
     orders = Orders.objects.all()
     stocks = Stocks.objects.all()
+    persons = Persons.objects.all()
+    persons = persons.count()
     order_count = orders.count()
     sale_count = SaleVoucher.objects.all().count()
     buy_count = BuyVoucher.objects.all().count()
@@ -38,6 +41,7 @@ def home(request):
         'total_ordered': total_ordered,
         'stocks': stocks,
         'total_stocked': total_stocked,
+        'persons': persons,
         'tittle': 'techAlong Business | Home'
     }
     return render(request, 'main/home.html', context)
