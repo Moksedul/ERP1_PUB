@@ -2,6 +2,9 @@
 
 
 {% block home %}
+<div class="container-fluid">
+<div class="row">
+<div class="col-2">
 <div class="side-menu">
     <div class="container text-center align-middle bg-steel text-white" style="height: 35px;">
         <h6 class="p-2">SHORT MENU</h6>
@@ -21,35 +24,60 @@
         </div>
     </div>
 </div>
+</div>
+<div class="col-10 pl-0">
 <div class="main-content">
     <div class="text-center text-white">
         <h1>WELCOME</h1>
         <h1>M/S FATEMA ENTERPRISE</h1>
     </div>
-<div class="container-fluid">
-<div class="row">
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body">
-          <img src="" alt="Person">
-        <h5 class="card-title">Total Persons</h5>
-        <p class="card-text">{{ persons }}</p>
-      </div>
-    </div>
-  </div>
-<div class="col-md-3">
-    <div class="card">
-      <div class="card-body">
-          <img src="" alt="ok">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
 
+<div class="col-9">
+    <div class="row m-2">
+
+            <div class="card mr-2" style="width: 10rem;">
+              <div class="card-body">
+                <div class="persons"></div>
+                <div class="card-title">Total Persons</div>
+                <p class="card-text">{{ persons }}</p>
+              </div>
+            </div>
+
+
+
+            <div class="card mr-2" style="width: 10rem;">
+              <div class="card-body">
+                  <div class="buy"></div>
+                <div class="card-title">Total Buy</div>
+                <p class="card-text">{{ persons }}</p>
+              </div>
+            </div>
+
+
+
+            <div class="card mr-2" style="width: 10rem;">
+              <div class="card-body">
+                  <div class="sale"></div>
+                <div class="card-title">Total Sale</div>
+                <p class="card-text">{{ persons }}</p>
+              </div>
+            </div>
+
+
+            <div class="card mr-2" style="width: 10rem;">
+              <div class="card-body">
+                  <div class="sale"></div>
+                <div class="card-title">Total Sale</div>
+                <p class="card-text">{{ persons }}</p>
+              </div>
+            </div>
+
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
 {% endblock home %}
