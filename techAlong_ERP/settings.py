@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '192.168.0.160']
 # Application definition
 
 INSTALLED_APPS = [
+    'payroll',
     'local_sale',
     'bkash',
     'daily_cash',

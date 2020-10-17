@@ -39,7 +39,8 @@ urlpatterns = [
     path('', include('ledger.urls')),
     path('', include('report.urls')),
     path('', include('bkash.urls')),
-    path('', include('local_sale.urls'))
+    path('', include('local_sale.urls')),
+    path('', include('payroll.urls'))
 
 ]
 
