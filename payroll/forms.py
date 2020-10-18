@@ -36,8 +36,7 @@ class EmployeeForm(ModelForm):
             ),
 
             Submit('submit', 'Save'),
-            Button('name', 'value'),
-            HTML("<span class='ok'>✓ Saved data</span>"),
+            Submit('submit', 'Save & Add Another'),
         )
 
         # self.fields['payment_no'].widget.attrs['readonly'] = True
