@@ -3,14 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col card">
-        <h5 class="text-center">Add Person</h5>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <div class="form-group">
-                {{ form|crispy }}
-                <button class="btn btn-outline-info" type="submit">Add</button>
-            </div>
-        </form>
+        <h5 class="text-center">{{form_name}}</h5>
+         {% crispy form %}
     </div> </div>
 {% endblock content %}
