@@ -1,0 +1,25 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h6 class="text-center">{{form_name}}</h6>
+        <hr>
+        <form method="post" >
+            {% csrf_token %}
+                <div class="col-12 border border-info text-center">
+                    {{ form_set.management_form }}
+                    <div id="form_set">
+                        {% for form in form_set.forms %}
+                            <div class='no_error'>
+                                {{ form.as_table }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-12">
+                    <hr>
+                </div>
+                <button class="btn btn-outline-info" type="submit">Save</button>
+        </form>
+    </div>
+{% endblock content %}

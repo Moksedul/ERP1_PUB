@@ -1,6 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, ListView
-from .forms import EmployeeForm
+from django.forms import formset_factory
+from django.shortcuts import render, redirect
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView
+from .forms import EmployeeForm, AttendanceForm
 from .models import Employee
 
 
@@ -31,3 +34,25 @@ class EmployeeList(LoginRequiredMixin, ListView):
     model = Employee
     context_object_name = 'employees'
     template_name = 'payroll/employee_list.html'
+
+
+class EmployeeDelete(LoginRequiredMixin, DeleteView):
+    model = Employee
+    template_name = 'payroll/employee_confirm_delete.html'
+    success_url = '/employee_list'
+
+
+@login_required
+def attendance_create(request):
+    attendance_set = formset_factory(AttendanceForm, extra=2)
+    form_set = attendance_set(request.POST or None, request.FILES)
+    if request.method == 'POST':
+        if form_set.is_valid():
+            for form in form_set:
+                product = form.save(commit=False)
+                product.save()
+            return redirect('/employee_list')
+    else:
+        form_set = attendance_set
+
+    return render(request, 'payroll/attendance_form.html', {'form_set': form_set, 'form_name': 'Attendance'})

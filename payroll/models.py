@@ -28,7 +28,7 @@ class Employee(models.Model):
     fathers_name = models.CharField(max_length=50, null=True, blank=True)
     mothers_name = models.CharField(max_length=50, null=True, blank=True)
     spouse_name = models.CharField(max_length=50, null=True, blank=True)
-    NID = models.IntegerField(max_length=25, null=True, blank=True, unique=True)
+    NID = models.CharField(max_length=25, null=True, blank=True, unique=True)
     phone_no = models.CharField(max_length=11, null=True, blank=True)
     hourly_rate = models.FloatField()
     time_table = models.ForeignKey(TimeTable, null=True, on_delete=models.Empty, blank=True)
@@ -59,3 +59,6 @@ class Attendance(models.Model):
     in_time = models.TimeField(default=now)
     out_time = models.TimeField(default=now)
     present = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('employee', 'date',)

@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Row, Column, Submit, Div, HTML, Button
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
-from .models import Employee
+from .models import Employee, Attendance
 
 
 class EmployeeForm(ModelForm):
@@ -45,3 +45,8 @@ class EmployeeForm(ModelForm):
 
         # self.fields['payment_no'].widget.attrs['readonly'] = True
 
+
+class AttendanceForm(ModelForm):
+    class Meta:
+        model = Attendance
+        fields = '__all__'

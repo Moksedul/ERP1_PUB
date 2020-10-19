@@ -1,0 +1,16 @@
+{% extends "main/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-b">Delete Payment</legend>
+                <h4>Are you sure want to Delete Employee "{{ object.employee_name }}"  ? </h4>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Yes</button>
+                <a href="{% url 'employee-list' %}">No</a>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
