@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+{% block content %}
+		<div class="card card-body">
+				<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-employee'%}">Add New Employee</a>
+				<table class="table table-sm table-striped table-bordered text-center">
+					<tr>
+						<th>Employee Name</th>
+						<th>Designation</th>
+						<th>Mobile</th>
+						<th>Rate/Hr (BDT.)</th>
+						<th>Photo</th>
+						<th>Update</th>
+						<th>Remove</th>
+					</tr>
+
+					{% for person in employees %}
+						<tr>
+							<td>{{ person.employee_name }}</td>
+							<td>{{ person.designation }}</td>
+							<td>{{ person.phone_no }}</td>
+							<td>{{ person.hourly_rate }}</td>
+							{% if person.photo %}
+							<td>
+								<img class="rounded article-img border border-primary" src="{{ person.photo.url }}" alt="">
+							</td>
+							{% endif %}
+							<td><a class="btn btn-sm btn-info" href="{% url 'employee-update' person.id %}">Edit</a></td>
+
+							<td><a class="btn btn-sm btn-danger" href="{% url 'employee-delete' person.id %}">Delete</a></td>
+
+						</tr>
+					{% endfor %}
+
+
+				</table>
+		</div>
+
+{% endblock content %}

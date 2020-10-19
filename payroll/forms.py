@@ -19,18 +19,22 @@ class EmployeeForm(ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column('employee_name', css_class='form-group col-md-4 mb-0'),
-                Column('phone_no', css_class='form-group col-md-4 mb-0'),
+                Column('employee_name', css_class='form-group col-md-3 mb-0'),
+                Column('designation', css_class='form-group col-md-3 mb-0'),
+                Column('phone_no', css_class='form-group col-md-2 mb-0'),
                 Column('hourly_rate', css_class='form-group col-md-2 mb-0'),
                 Column('joining_date', css_class='form-group col-md-2 mb-0'),
-                css_class='form-row input-small'
             ),
             Row(
-                Column('fathers_name', css_class='form-group col-md-4 mb-0'),
-                Column('mothers_name', css_class='form-group col-md-4 mb-0'),
-                Column('spouse_name', css_class='form-group col-md-4 mb-0'),
+                Column('fathers_name', css_class='form-group col-md-3 mb-0'),
+                Column('mothers_name', css_class='form-group col-md-3 mb-0'),
+                Column('spouse_name', css_class='form-group col-md-3 mb-0'),
+                Column('NID', css_class='form-group col-md-3 mb-0'),
             ),
-            'address',
+            Row(
+                Column('address', css_class='form-group col-md-10 mb-0'),
+                Column('time_table', css_class='form-group col-md-2 mb-0')
+            ),
             Row(
               Column('photo', css_class='form-group col-md-4 mb-0')
             ),

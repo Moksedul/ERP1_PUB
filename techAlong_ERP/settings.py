@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '192.168.0.160']
 
 INSTALLED_APPS = [
     'payroll',
+    'django_cleanup',
     'local_sale',
     'bkash',
     'daily_cash',
