@@ -44,15 +44,17 @@ class EmployeeDelete(LoginRequiredMixin, DeleteView):
 
 @login_required
 def attendance_create(request):
-    attendance_set = formset_factory(AttendanceForm, extra=2)
+    employee = Employee.objects.all()
+    attendance_set = formset_factory(AttendanceForm, extra=employee.count())
+    print(attendance_set)
     form_set = attendance_set(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form_set.is_valid():
             for form in form_set:
-                product = form.save(commit=False)
-                product.save()
+                attendance = form.save(commit=False)
+                attendance.save()
             return redirect('/employee_list')
     else:
         form_set = attendance_set
-
+    form_set.forms[-1].fields['date'].required = False
     return render(request, 'payroll/attendance_form.html', {'form_set': form_set, 'form_name': 'Attendance'})
