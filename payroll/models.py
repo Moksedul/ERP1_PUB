@@ -53,9 +53,13 @@ class Employee(models.Model):
         return reverse('person-list')
 
 
+class Day(models.Model):
+    date = models.DateField(default=now)
+
+
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    date = models.DateField(default=now)
+    date = models.ForeignKey(Day, on_delete=models.CASCADE)
     in_time = models.TimeField(default=now)
     out_time = models.TimeField(default=now)
     present = models.BooleanField(default=False)
