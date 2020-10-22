@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% block content %}
+		<div class="card card-body">
+				<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'attendance-create'%}">Add Attendance</a>
+				<table class="table table-sm table-striped table-bordered text-center">
+					<tr>
+						<th>Attendance Date</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+
+					{% for attendance in attendance %}
+						<tr>
+							<td>{{ attendance.date }}</td>
+							<td><a class="btn btn-sm btn-info" href="#">Edit</a></td>
+							<td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
+
+						</tr>
+					{% endfor %}
+
+
+				</table>
+		</div>
+
+{% endblock content %}

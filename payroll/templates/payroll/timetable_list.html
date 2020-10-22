@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% block content %}
+		<div class="card card-body">
+				<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'timetable-create'%}">Add Timetable</a>
+				<table class="table table-sm table-striped table-bordered text-center">
+					<tr>
+						<th>Timetable Name</th>
+						<th>In Time</th>
+						<th>Out Time</th>
+						<th>Weekend</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+
+					{% for timetable in timetables %}
+						<tr>
+							<td>{{ timetable.time_table_name }}</td>
+							<td>{{ timetable.in_time }}</td>
+							<td>{{ timetable.out_time }}</td>
+							<td>{{ timetable.weekend }}</td>
+							<td><a class="btn btn-sm btn-info" href="{% url 'timetable-update' timetable.id %}">Edit</a></td>
+							<td><a class="btn btn-sm btn-danger" href="{% url 'timetable-delete' timetable.id %}">Delete</a></td>
+
+						</tr>
+					{% endfor %}
+
+
+				</table>
+		</div>
+
+{% endblock content %}

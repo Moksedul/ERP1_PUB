@@ -1,8 +1,8 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
-from django.forms import ModelForm
+from django.forms import ModelForm, TimeInput
 from django.contrib.admin.widgets import AdminDateWidget
-from .models import Employee, Attendance
+from .models import Employee, Attendance, Day, TimeTable
 
 
 class EmployeeForm(ModelForm):
@@ -40,7 +40,6 @@ class EmployeeForm(ModelForm):
             ),
 
             Submit('submit', 'Save'),
-            Submit('submit', 'Save & Add Another'),
         )
 
         # self.fields['payment_no'].widget.attrs['readonly'] = True
@@ -50,3 +49,47 @@ class AttendanceForm(ModelForm):
     class Meta:
         model = Attendance
         fields = '__all__'
+
+
+class DayForm(ModelForm):
+    class Meta:
+        model = Day
+        fields = '__all__'
+        widgets = {
+            'date': AdminDateWidget(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('date', css_class='form-group col-md-4 mb-0'),
+            ),
+            Submit('submit', 'Create'),
+        )
+
+
+class TimeTableForm(ModelForm):
+    class Meta:
+        model = TimeTable
+        fields = '__all__'
+        widgets = {
+            'in_time': TimeInput(attrs={'type': 'time'}),
+            'out_time': TimeInput(attrs={'type': 'time'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('time_table_name', css_class='form-group col-md-4 mb-0'),
+                Column('in_time', css_class='form-group col-md-4 mb-0'),
+                Column('out_time', css_class='form-group col-md-4 mb-0'),
+            ),
+            Row(
+               'weekend'
+            ),
+            Submit('submit', 'Save'),
+        )

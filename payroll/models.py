@@ -16,10 +16,13 @@ WEEKENDS = [
 
 
 class TimeTable(models.Model):
-    time_table_name = models.CharField(max_length=20, default='Day Time')
-    in_time = models.TimeField(default=now)
-    out_time = models.TimeField(default=now)
+    time_table_name = models.CharField(max_length=10, default='Day Time', unique=True)
+    in_time = models.TimeField(default='09:00')
+    out_time = models.TimeField(default='17:00')
     weekend = models.CharField(choices=WEEKENDS, default=WEEKENDS[0], max_length=20)
+
+    def __str__(self):
+        return str(self.time_table_name)
 
 
 class Employee(models.Model):
@@ -54,7 +57,7 @@ class Employee(models.Model):
 
 
 class Day(models.Model):
-    date = models.DateField(default=now)
+    date = models.DateField(default=now, unique=True)
 
 
 class Attendance(models.Model):

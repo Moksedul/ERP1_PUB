@@ -4,12 +4,12 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-b">Delete Payment</legend>
-                <h4>Are you sure want to Delete Employee "{{ object.employee_name }}"  ? </h4>
+                <legend class="border-bottom mb-b">Delete {{ object_name }}</legend>
+                <h4>Are you sure want to Delete {{ object_name }} "{{ object }}"  ? </h4>
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-danger" type="submit">Yes</button>
-                <a href="{% url 'employee-list' %}">No</a>
+                <a href="{{ cancel_url }}">No</a>
             </div>
         </form>
     </div>
