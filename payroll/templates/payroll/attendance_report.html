@@ -1,0 +1,83 @@
+{% extends "main/base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="container">
+        <form method="POST" >
+			{% csrf_token %}
+			<div class="form-row">
+                <div class="form-group col-md-2">
+                <div class="input-group">
+                <input id="date_from" class="form-control py-2 border-right-0 border" name="date_from" type="search" placeholder="From: dd-mm-yyyy">
+                </div>
+            	</div>
+				<div class="form-group col-md-2">
+                <div class="input-group">
+                <input id="date_to" class="form-control py-2 border-right-0 border" name="date_to" type="search" placeholder="To: dd-mm-yyyy">
+                </div>
+            	</div>
+
+				<div class="form-group col-md-4">
+                  <select id="account_name" class="form-control" name="account_name">
+                    <option selected>{{ account_selected_option.id }} - {{ account_selected_option }}</option>
+					  {% for employee in employees %}
+                    <option>{{ employee }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+
+				<div class="form-group col-md-1">
+ 					<button type="submit" class="btn btn-sm btn-info">Search</button>
+                </div>
+				<div class="form-group col-md-1">
+ 					<div class="d-flex justify-content-end"><a href="">Refresh</a></div>
+                </div>
+
+
+
+
+	<div class="row mb-2">
+		<div class="col-md-12">
+			<div class="d-flex justify-content-end">
+				<input id="date" value="{{date1}}" name="date" type="hidden">
+			<button type="submit" class ="btn-info btn-sm" name="Previous Day" >Previous Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="Today" >Today</button>
+			<button type="submit" class ="btn-info btn-sm" name="Next Day" >Next Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="ALL" >ALL</button>
+			</div>
+		</div>
+	</div>
+
+
+            </div>
+        </form>
+
+    </div>
+
+    <div class="row">
+        <div class=" card card-body col-md-8">
+			<table class="table-sm table-striped table-bordered">
+				<tr class="text-center">
+					<th class="text-left">Employee Name</th>
+					<th>Designation</th>
+                    <th>Date</th>
+                    <th>In Time</th>
+                    <th>Out Time</th>
+                    <th>Work Hour</th>
+				</tr>
+
+				{% for attendance in attendances %}
+					<tr>
+						<td>{{ attendance.name }}</td>
+						<td class="text-center">{{ attendance.designation }}</td>
+                        <td class="text-center">{{ attendance.date }}</td>
+                        <td class="text-center">{{ attendance.in_time }}</td>
+                        <td class="text-center">{{ attendance.out_time }}</td>
+                        <td class="text-center">{{ attendance.work_hour }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

@@ -12,12 +12,10 @@
 					{% for attendance in attendance %}
 						<tr>
 							<td>{{ attendance.date }}</td>
-							<td><a class="btn btn-sm btn-info" href="{% url 'attendance-update' attendance.id%}">Edit</a></td>
-							<td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
-
+							<td><a class="btn btn-sm btn-info" href="{% url 'attendance-update' attendance.id %}">Edit</a></td>
+							<td><a class="btn btn-sm btn-danger" href="{% url 'attendance-delete' attendance.id %}">Delete</a></td>
 						</tr>
 					{% endfor %}
-
 
 				</table>
 		</div>

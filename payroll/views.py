@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory, TimeInput
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
+
+from core.views import time_difference
 from .forms import EmployeeForm, DayForm, TimeTableForm
 from .models import Employee, Day, Attendance, TimeTable
 
@@ -165,7 +167,62 @@ class AttendanceList(LoginRequiredMixin, ListView):
         return context
 
 
-def delete(request):
-    attendance = Attendance.objects.all()
-    print(attendance)
-    return render(request, 'payroll/attendance_form.html', )
+class AttendanceDelete(LoginRequiredMixin, DeleteView):
+    model = Day
+    template_name = 'payroll/confirm_delete.html'
+    success_url = '/attendance_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Attendance'
+        context['cancel_url'] = '/attendance_list'
+        return context
+
+
+def attendance_report(request):
+    employees = Employee.objects.all()
+    attendances = Attendance.objects.all()
+    voucher_contains_query = request.GET.get('voucher_no')
+    name_contains_query = request.GET.get('name_contains')
+    phone_number_query = request.GET.get('phone_no')
+    voucher_total_price = 0
+    remaining_amount = 0
+
+    attendances_list = {
+        'attendances': []
+
+    }
+
+    for attendance in attendances:
+        employee = Employee.objects.get(pk=attendance.employee_id)
+
+        if attendance.present is True:
+            time = time_difference(attendance.in_time, attendance.out_time)
+            time = time / 3600
+            work_hours = round(time, 2)
+        else:
+            work_hours = 0
+
+        key = "attendances"
+        attendances_list.setdefault(key, [])
+        attendances_list[key].append({
+            'name': employee.employee_name,
+            'designation': employee.designation,
+            'date': str(attendance.date),
+            'in_time': attendance.in_time,
+            'out_time': attendance.out_time,
+            'work_hour': work_hours
+        })
+
+    if attendances_list['attendances']:
+        def my_function(e):
+            return e['date']
+
+        attendances_list['attendances'].sort(key=my_function, reverse=True)
+
+    context = {
+        'attendances': attendances_list['attendances'],
+        'employees': employees,
+        'tittle': 'Attendance Report | techAlong Business'
+    }
+    return render(request, "payroll/attendance_report.html", context)

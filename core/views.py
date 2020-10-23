@@ -1,3 +1,4 @@
+from datetime import datetime
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
 from collection.models import Collection
@@ -202,3 +203,12 @@ def account_balance_calc(pk):
         account_balance = account_balance - item['debit_amount'] + item['credit_amount']
 
     return account_balance
+
+
+def time_difference(time_1, time2):
+    time_1 = datetime.strptime(str(time_1), '%H:%M:%S')
+    time_2 = datetime.strptime(str(time2), '%H:%M:%S')
+    difference = (time_2 - time_1)
+    pt = datetime.strptime(str(difference), '%H:%M:%S')
+    total_seconds = pt.second + pt.minute * 60 + pt.hour * 3600
+    return total_seconds
