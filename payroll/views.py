@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import formset_factory, inlineformset_factory
+from django.forms import inlineformset_factory, TimeInput
 from django.shortcuts import render, redirect
-from django.utils.timezone import now
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
-from .forms import EmployeeForm, AttendanceForm, DayForm, TimeTableForm
+from .forms import EmployeeForm, DayForm, TimeTableForm
 from .models import Employee, Day, Attendance, TimeTable
 
 
@@ -15,7 +14,8 @@ class EmployeeCreate(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_name'] = 'Add New Employee'
+        context['form_name'] = 'Add Employee'
+        context['tittle'] = 'Add Employee | techAlong Business'
         return context
 
 
@@ -28,6 +28,7 @@ class EmployeeUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form_name'] = 'Update Employee'
+        context['tittle'] = 'Update Employee | techAlong Business'
         return context
 
 
@@ -35,6 +36,11 @@ class EmployeeList(LoginRequiredMixin, ListView):
     model = Employee
     context_object_name = 'employees'
     template_name = 'payroll/employee_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tittle'] = 'Employees | techAlong Business'
+        return context
 
 
 class EmployeeDelete(LoginRequiredMixin, DeleteView):
@@ -97,16 +103,17 @@ def attendance_create(request):
 
     if form.is_valid():
         day = form.save(commit=False)
+        day.save()
         for employee in employees:
-            time_table = TimeTable.objects.get(id=employee.time_table)
+            time_table = TimeTable.objects.get(id=employee.time_table_id)
             attendance = Attendance(
                 employee=employee,
                 date=day,
                 in_time=time_table.in_time,
                 out_time=time_table.out_time,
             )
-            print(attendance)
-        return redirect('/attendance_create')
+            attendance.save()
+        return redirect('/attendance_list')
     else:
         form = form
 
@@ -117,20 +124,32 @@ def attendance_create(request):
 def attendance_update(request, pk):
     day = Day.objects.get(pk=pk)
     AttendanceFormSet = inlineformset_factory(
-                    Day, Attendance, fields=('employee', 'in_time', 'out_time', 'present'), extra=1
+                    Day, Attendance, fields=('employee', 'in_time', 'out_time', 'present'),
+                    widgets={
+                        'in_time': TimeInput(attrs={'type': 'time'}),
+                        'out_time': TimeInput(attrs={'type': 'time'}),
+                    },
+                    extra=0, can_delete=False,
                     )
     form2set = AttendanceFormSet(instance=day)
+
+    for form in form2set.forms:
+        form.fields['employee'].widget.attrs['readonly'] = True
+        form.fields['in_time'].widget.attrs.update({'class': ''})
+
     if request.method == 'POST':
-        print('in post')
         form2set = AttendanceFormSet(request.POST, instance=day)
-        print('valid')
         if form2set.is_valid():
             form2set.save()
-        return redirect('/local_sale_list')
+        return redirect('/attendance_list')
     else:
         form2set = form2set
-
-    return render(request, 'payroll/attendance_form.html', {'form2set': form2set})
+    context = {
+        'form_set': form2set,
+        'form_name': 'Attendance Update',
+        'tittle': 'Attendance Update | tecAlong Business'
+    }
+    return render(request, 'payroll/attendance_form.html', context)
 
 
 # it is actually Day
@@ -138,6 +157,12 @@ class AttendanceList(LoginRequiredMixin, ListView):
     model = Day
     context_object_name = 'attendance'
     template_name = 'payroll/attendance_list.html'
+    ordering = '-date'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tittle'] = 'Attendance | techAlong Business'
+        return context
 
 
 def delete(request):

@@ -6,19 +6,20 @@
         <hr>
         <form method="post" >
             {% csrf_token %}
-                <div class="col-12 border border-info text-center">
+                <div class="col-12">
                     {{ form_set.management_form }}
                     <div id="form_set">
                         {% for form in form_set.forms %}
-                            <div>
-                                {{ form.as_table }}
+                            <div class="row">
+                                {{ form|crispy }}
                             </div>
+                        <hr>
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-12">
-                    <hr>
-                </div>
+
+
+
                 <button class="btn btn-outline-info" type="submit">Save</button>
         </form>
     </div>

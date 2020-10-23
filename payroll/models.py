@@ -59,6 +59,9 @@ class Employee(models.Model):
 class Day(models.Model):
     date = models.DateField(default=now, unique=True)
 
+    def __str__(self):
+        return str(self.date)
+
 
 class Attendance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -69,3 +72,6 @@ class Attendance(models.Model):
 
     class Meta:
         unique_together = ('employee', 'date',)
+
+    def __str__(self):
+        return '%s %s ' % (self.employee, self.date)

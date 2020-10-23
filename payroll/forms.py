@@ -1,6 +1,6 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
-from django.forms import ModelForm, TimeInput
+from django.forms import ModelForm, TimeInput, BaseInlineFormSet
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import Employee, Attendance, Day, TimeTable
 
@@ -41,14 +41,6 @@ class EmployeeForm(ModelForm):
 
             Submit('submit', 'Save'),
         )
-
-        # self.fields['payment_no'].widget.attrs['readonly'] = True
-
-
-class AttendanceForm(ModelForm):
-    class Meta:
-        model = Attendance
-        fields = '__all__'
 
 
 class DayForm(ModelForm):
