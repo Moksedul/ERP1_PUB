@@ -71,6 +71,7 @@
                     <th>Date</th>
                     <th>In Time</th>
                     <th>Out Time</th>
+					<th>Status</th>
                     <th>Work Hour</th>
 				</tr>
 
@@ -81,12 +82,34 @@
                         <td class="text-center">{{ attendance.date }}</td>
                         <td class="text-center">{{ attendance.in_time }}</td>
                         <td class="text-center">{{ attendance.out_time }}</td>
-                        <td class="text-center">{{ attendance.work_hour }}</td>
+						<td class="text-center text-white" style="background-color:#FF0000">{{ attendance.status }}</td>
+                        <td class="text-center" >{{ attendance.work_hour }}</td>
 					</tr>
 				{% endfor %}
 			</table>
         </div>
-    </div>
 
+		{% if selected_employee == '--' %}
+			<div class=""></div>
+		{% else %}
+			<div class="card col-md-4">
+				<div class="row">
+					<div class="col-6">Total Working Hour</div>
+					<div class="col-1">:</div>{{ total_work_hour }} BDT.
+				</div>
+				<div class="row">
+					<div class="col-6">Working Rate/Hr</div>
+					<div class="col-1">:</div>{{ selected_employee.hourly_rate }} BDT.
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-6"><strong>Net Payable</strong></div>
+					<div class="col-1">:</div>{{ employee_payable }} BDT.
+				</div>
+			</div>
+        {% endif %}
+
+    </div>
+</div>
 </div>
 {% endblock content %}

@@ -239,8 +239,10 @@ def attendance_report(request):
             time = time_difference(attendance.in_time, attendance.out_time)
             time = time / 3600
             work_hours = round(time, 2)
+            status = 'Present'
         else:
             work_hours = 0
+            status = 'Absent'
 
         key = "attendances"
         attendances_list.setdefault(key, [])
@@ -250,6 +252,7 @@ def attendance_report(request):
             'date': str(attendance.date),
             'in_time': attendance.in_time,
             'out_time': attendance.out_time,
+            'status': status,
             'work_hour': work_hours
         })
 
@@ -265,12 +268,23 @@ def attendance_report(request):
         date2 = date2.strftime("%d-%m-%Y")
         date_criteria = date1 + ' to ' + date2
 
+    total_work_hour = 0
+    employee_payable = 0
+
+    if employee_selected != '--':
+        for item in attendances_list['attendances']:
+            total_work_hour += item['work_hour']
+        employee_payable = total_work_hour * employee_selected.hourly_rate
+        print(employee_payable)
+
     context = {
         'date1': date1,
         'date_criteria': date_criteria,
         'attendances': attendances_list['attendances'],
         'employees': employees,
         'selected_employee': employee_selected,
+        'total_work_hour': total_work_hour,
+        'employee_payable': employee_payable,
         'tittle': 'Attendance Report | techAlong Business'
     }
     return render(request, "payroll/attendance_report.html", context)
