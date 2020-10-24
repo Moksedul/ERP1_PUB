@@ -1,7 +1,10 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory, TimeInput
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 
 from core.views import time_difference
@@ -179,14 +182,51 @@ class AttendanceDelete(LoginRequiredMixin, DeleteView):
         return context
 
 
+@login_required()
 def attendance_report(request):
     employees = Employee.objects.all()
     attendances = Attendance.objects.all()
-    voucher_contains_query = request.GET.get('voucher_no')
-    name_contains_query = request.GET.get('name_contains')
-    phone_number_query = request.GET.get('phone_no')
-    voucher_total_price = 0
-    remaining_amount = 0
+    date1 = now()
+    date2 = now()
+    dd = request.POST.get('date')
+    employee_name = request.POST.get('employee_name')
+    if employee_name is not None and employee_name != '---':
+        employee_id = int(''.join(filter(str.isdigit, employee_name)))
+        employee_selected = get_object_or_404(Employee, pk=employee_id)
+        attendances = attendances.filter(employee=employee_selected)
+    else:
+        employee_selected = '--'
+
+    if dd is not None and dd != 'None' and dd != '':
+        dd = datetime.strptime(dd, "%d-%m-%Y")
+        date1 = dd
+        date2 = dd
+
+    if 'ALL' in request.POST:
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
+    elif 'Today' in request.POST:
+        date1 = now()
+        date2 = now()
+    elif 'Previous Day' in request.POST:
+        date1 = date1 - timedelta(1)
+        date2 = date2 - timedelta(1)
+    elif 'Next Day' in request.POST:
+        date1 = date1 + timedelta(1)
+        date2 = date2 + timedelta(1)
+    elif request.method == 'POST' and date1 != '' and date2 != '':
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
+        if date1 is not None and date1 != '':
+            date1 = datetime.strptime(date1, "%d-%m-%Y")
+            date2 = datetime.strptime(date2, "%d-%m-%Y")
+
+    if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
+        days = Day.objects.filter(date__range=[date1, date2])
+        d_id = []
+        for day in days:
+            d_id.append(day.id)
+        attendances = attendances.filter(date_id__in=d_id)
 
     attendances_list = {
         'attendances': []
@@ -195,7 +235,6 @@ def attendance_report(request):
 
     for attendance in attendances:
         employee = Employee.objects.get(pk=attendance.employee_id)
-
         if attendance.present is True:
             time = time_difference(attendance.in_time, attendance.out_time)
             time = time / 3600
@@ -220,9 +259,18 @@ def attendance_report(request):
 
         attendances_list['attendances'].sort(key=my_function, reverse=True)
 
+    date_criteria = 'ALL'
+    if date1 is not None and date2 is not None and date1 != '':
+        date1 = date1.strftime("%d-%m-%Y")
+        date2 = date2.strftime("%d-%m-%Y")
+        date_criteria = date1 + ' to ' + date2
+
     context = {
+        'date1': date1,
+        'date_criteria': date_criteria,
         'attendances': attendances_list['attendances'],
         'employees': employees,
+        'selected_employee': employee_selected,
         'tittle': 'Attendance Report | techAlong Business'
     }
     return render(request, "payroll/attendance_report.html", context)

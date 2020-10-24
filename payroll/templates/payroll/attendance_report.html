@@ -17,10 +17,10 @@
             	</div>
 
 				<div class="form-group col-md-4">
-                  <select id="account_name" class="form-control" name="account_name">
-                    <option selected>{{ account_selected_option.id }} - {{ account_selected_option }}</option>
+                  <select id="employee_name" class="form-control" name="employee_name">
+                    <option selected>{{ selected_employee.id }}-{{ selected_employee }}</option>
 					  {% for employee in employees %}
-                    <option>{{ employee }}</option>
+                    <option>{{ employee.id }} - {{employee.employee_name}}</option>
 					  {% endfor %}
                   </select>
                 </div>
@@ -54,7 +54,16 @@
     </div>
 
     <div class="row">
-        <div class=" card card-body col-md-8">
+
+        {% if selected_employee == '--' %}
+			<div class="card card-body col-md-12">
+		{% else %}
+			<div class="card card-body col-md-8">
+        {% endif %}
+
+			<div class="d-flex justify-content-center"><h6>Attendance Report</h6></div>
+			<div class="d-flex justify-content-center"><h6>Employee: {{ selected_employee }}</h6></div>
+			<div class="d-flex justify-content-center">Date: {{date_criteria}}</div>
 			<table class="table-sm table-striped table-bordered">
 				<tr class="text-center">
 					<th class="text-left">Employee Name</th>
