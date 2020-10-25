@@ -1,13 +1,14 @@
 from django.urls import path
 from .views import EmployeeCreate, EmployeeUpdate, EmployeeList, EmployeeDelete, attendance_create, \
     TimetableList, TimetableCreate, TimetableUpdate, TimetableDelete, AttendanceList, attendance_update, \
-    AttendanceDelete, attendance_report
+    AttendanceDelete, attendance_report, current_day_attendance_update
 
 urlpatterns = [
     path('add_employee', EmployeeCreate.as_view(), name='add-employee'),
     path('employee_list', EmployeeList.as_view(), name='employee-list'),
     path('attendance_create', attendance_create, name='attendance-create'),
     path('attendance/<int:pk>/update', attendance_update, name='attendance-update'),
+    path('attendance/update_current', current_day_attendance_update, name='attendance-update-home'),
     path('attendance_list', AttendanceList.as_view(), name='attendance-list'),
     path('attendance/<int:pk>/delete', AttendanceDelete.as_view(), name='attendance-delete'),
     path('timetable_create', TimetableCreate.as_view(), name='timetable-create'),

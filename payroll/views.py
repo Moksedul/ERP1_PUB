@@ -129,13 +129,13 @@ def attendance_create(request):
 def attendance_update(request, pk):
     day = Day.objects.get(pk=pk)
     AttendanceFormSet = inlineformset_factory(
-                    Day, Attendance, fields=('employee', 'in_time', 'out_time', 'present'),
-                    widgets={
-                        'in_time': TimeInput(attrs={'type': 'time'}),
-                        'out_time': TimeInput(attrs={'type': 'time'}),
-                    },
-                    extra=0, can_delete=False,
-                    )
+        Day, Attendance, fields=('employee', 'in_time', 'out_time', 'present'),
+        widgets={
+            'in_time': TimeInput(attrs={'type': 'time'}),
+            'out_time': TimeInput(attrs={'type': 'time'}),
+        },
+        extra=0, can_delete=False,
+    )
     form2set = AttendanceFormSet(instance=day)
 
     for form in form2set.forms:
@@ -152,9 +152,17 @@ def attendance_update(request, pk):
     context = {
         'form_set': form2set,
         'form_name': 'Attendance Update',
-        'tittle': 'Attendance Update | tecAlong Business'
+        'tittle': 'Attendance Update | tecAlong Business',
+        'date': day.date
     }
     return render(request, 'payroll/attendance_form.html', context)
+
+
+@login_required()
+def current_day_attendance_update(request):
+    day = Day.objects.get(date=now())
+    url = '/attendance/' + str(day.id) + '/update'
+    return redirect(url)
 
 
 # it is actually Day
@@ -170,6 +178,7 @@ class AttendanceList(LoginRequiredMixin, ListView):
         return context
 
 
+# it is actually Day, all attendance will be deleted to the corresponding day
 class AttendanceDelete(LoginRequiredMixin, DeleteView):
     model = Day
     template_name = 'payroll/confirm_delete.html'
@@ -240,9 +249,11 @@ def attendance_report(request):
             time = time / 3600
             work_hours = round(time, 2)
             status = 'Present'
+            status_color = 'background-color:#00254c'
         else:
             work_hours = 0
             status = 'Absent'
+            status_color = 'background-color:#FF0000'
 
         key = "attendances"
         attendances_list.setdefault(key, [])
@@ -253,6 +264,7 @@ def attendance_report(request):
             'in_time': attendance.in_time,
             'out_time': attendance.out_time,
             'status': status,
+            'status_color': status_color,
             'work_hour': work_hours
         })
 
@@ -274,6 +286,7 @@ def attendance_report(request):
     if employee_selected != '--':
         for item in attendances_list['attendances']:
             total_work_hour += item['work_hour']
+            total_work_hour = round(total_work_hour, 2)
         employee_payable = total_work_hour * employee_selected.hourly_rate
         print(employee_payable)
 

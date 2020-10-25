@@ -19,7 +19,7 @@
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'general-voucher-list'%}">GENERAL VOUCHER</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'collection-list'%}">COLLECTION</a>
             <a class="btn btn-info  btn-sm btn-block" href="{% url 'payment-list'%}">PAYMENT</a>
-
+            <a class="btn btn-info  btn-sm btn-block" href="{% url 'attendance-update-home'%}">ATTENDANCE</a>
 
         </div>
     </div>
@@ -35,7 +35,7 @@
 <div class="col-9">
     <div class="row m-2">
 
-            <div class="card mr-2" style="width: 10rem;">
+            <div class="card mr-2 mt-2" style="width: 10rem;">
               <div class="card-body">
                 <div class="persons"></div>
                 <div class="card-title">Total Persons</div>
@@ -45,32 +45,45 @@
 
 
 
-            <div class="card mr-2" style="width: 10rem;">
+            <div class="card mr-2 mt-2" style="width: 10rem;">
               <div class="card-body">
                   <div class="buy"></div>
                 <div class="card-title">Total Buy</div>
-                <p class="card-text">{{ persons }}</p>
+                <p class="card-text">{{ buy_count }}</p>
               </div>
             </div>
 
 
 
-            <div class="card mr-2" style="width: 10rem;">
+            <div class="card mr-2 mt-2" style="width: 10rem;">
               <div class="card-body">
                   <div class="sale"></div>
                 <div class="card-title">Total Sale</div>
-                <p class="card-text">{{ persons }}</p>
+                <p class="card-text">{{ sale_count }}</p>
               </div>
             </div>
 
 
-            <div class="card mr-2" style="width: 10rem;">
+            <div class="card mr-2 mt-2" style="width: 10rem;">
               <div class="card-body">
-                  <div class="sale"></div>
-                <div class="card-title">Total Sale</div>
-                <p class="card-text">{{ persons }}</p>
+                  <div class="payment"></div>
+                <div class="card-title">Total Payment</div>
+                <p class="card-text">{{ payment_count }}</p>
               </div>
             </div>
+
+            <div class="card mr-2 mt-2" style="width: 10rem;">
+              <div class="card-body">
+                  <div class="labour"></div>
+                <div class="card-title">Total Employee</div>
+                <p class="card-text">{{ employee_count }}</p>
+              </div>
+            </div>
+
+            <div class="mr-2 mt-2 bg-steel" style="width: 10rem; height: 2rem;">
+                <div >Present Today: 100</div>
+            </div>
+
 
     </div>
 </div>
