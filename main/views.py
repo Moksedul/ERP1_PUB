@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.db.models import Sum
@@ -22,7 +23,11 @@ def home(request):
     buy_count = BuyVoucher.objects.all().count()
     payment_count = Payment.objects.all().count()
     employee_count = Employee.objects.all().count()
-    day = Day.objects.get(date=now())
+
+    try:
+        day = Day.objects.get(date=now())
+    except ObjectDoesNotExist:
+        day = None
     attendances = Attendance.objects.filter(date=day)
     present = 0
     absent = 0
@@ -31,6 +36,7 @@ def home(request):
             present += 1
         else:
             absent += 1
+
     context = {
         'payment_count': payment_count,
         'order_count': order_count,
