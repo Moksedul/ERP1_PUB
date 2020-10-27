@@ -75,3 +75,5 @@ class Attendance(models.Model):
 
     def __str__(self):
         return '%s %s ' % (self.employee, self.date)
+
+class SalaryPayment(models.Model):
