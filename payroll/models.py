@@ -1,10 +1,13 @@
 from PIL import Image
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
 
+from accounts.models import default_account, Accounts
+from bkash.models import BkashTransaction
 
-WEEKENDS = [
+DAYS = [
     ('FRI', 'Friday'),
     ('SAT', 'Saturday'),
     ('SUN', 'Sunday'),
@@ -19,7 +22,7 @@ class TimeTable(models.Model):
     time_table_name = models.CharField(max_length=10, default='Day Time', unique=True)
     in_time = models.TimeField(default='09:00')
     out_time = models.TimeField(default='17:00')
-    weekend = models.CharField(choices=WEEKENDS, default=WEEKENDS[0], max_length=20)
+    weekend = models.CharField(choices=DAYS, default=DAYS[0], max_length=20)
 
     def __str__(self):
         return str(self.time_table_name)
@@ -76,4 +79,41 @@ class Attendance(models.Model):
     def __str__(self):
         return '%s %s ' % (self.employee, self.date)
 
+
+MONTHS = [
+    ('JAN', 'Friday'),
+    ('FEB', 'Saturday'),
+    ('MAR', 'Sunday'),
+    ('APR', 'Monday'),
+    ('MAY', 'Tuesday'),
+    ('JUN', 'Wednesday'),
+    ('JUL', 'Thursday'),
+    ('AUG', 'Thursday'),
+    ('SEP', 'Thursday'),
+    ('OCT', 'Thursday'),
+    ('NOV', 'Thursday'),
+]
+
+PAYMENT_MODE_CHOICES = [
+    ('CQ', 'Cheque'),
+    ('CA', 'Cash'),
+    ('ONL', 'Online'),
+    ('PO', 'Pay Order'),
+    ('BK', 'Bkash')
+]
+
+
 class SalaryPayment(models.Model):
+    Employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    month = models.CharField(choices=MONTHS, max_length=20)
+    amount = models.FloatField()
+    date = models.DateField(auto_now=True)
+    date_time = models.DateTimeField(auto_now=True)
+    payed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    payment_mode = models.CharField(choices=PAYMENT_MODE_CHOICES, default=PAYMENT_MODE_CHOICES[1], max_length=10)
+    cheque_PO_ONL_no = models.IntegerField(null=True, blank=True)
+    cheque_date = models.DateField(default=now, null=True, blank=True)
+    bank_name = models.CharField(max_length=50, null=True, blank=True)
+    payment_from_account = models.ForeignKey(Accounts, default=default_account, null=True, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(BkashTransaction, on_delete=models.CASCADE, null=True)
+    remarks = models.CharField(max_length=200)
