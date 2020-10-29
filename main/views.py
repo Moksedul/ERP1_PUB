@@ -56,25 +56,3 @@ def home(request):
 @login_required()
 def settings(request):
     return render(request, 'main/settings_home.html')
-
-
-class PaymentCreate(LoginRequiredMixin, CreateView):
-    form_class = PaymentForm
-    template_name = 'payments/payment_add_form.html'
-    success_url = '/payment_list'
-
-    def form_valid(self, form):
-        form.instance.payed_by = self.request.user
-        super().form_valid(form=form)
-        voucher = get_object_or_404(Payment, payment_no=form.cleaned_data['payment_no'])
-        data = {
-            'general_voucher': None,
-            'payment_no': voucher,
-            'collection_no': None,
-            'investment_no': None,
-            'bk_payment_no': None,
-            'description': 'for buy',
-            'type': 'P'
-        }
-        create_account_ledger(data)
-        return HttpResponseRedirect(self.get_success_url())

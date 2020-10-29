@@ -3,13 +3,15 @@ from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory, TimeInput
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 
 from core.views import time_difference
-from .forms import EmployeeForm, DayForm, TimeTableForm
-from .models import Employee, Day, Attendance, TimeTable
+from ledger.views import create_account_ledger
+from .forms import EmployeeForm, DayForm, TimeTableForm, SalaryPaymentForm
+from .models import Employee, Day, Attendance, TimeTable, SalaryPayment
 
 
 class EmployeeCreate(LoginRequiredMixin, CreateView):
@@ -160,6 +162,7 @@ def attendance_update(request, pk):
 
 @login_required()
 def current_day_attendance_update(request):
+    print(request)
     day = Day.objects.get(date=now())
     url = '/attendance/' + str(day.id) + '/update'
     return redirect(url)
@@ -301,3 +304,43 @@ def attendance_report(request):
         'tittle': 'Attendance Report | techAlong Business'
     }
     return render(request, "payroll/attendance_report.html", context)
+
+
+class SalaryPaymentCreate(LoginRequiredMixin, CreateView):
+    form_class = SalaryPaymentForm
+    template_name = 'payroll/payroll_form.html'
+    success_url = '/salary_payment_add'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tittle'] = 'Attendance | techAlong Business'
+        context['form_name'] = 'Salary Payment'
+        return context
+
+    def form_valid(self, form):
+        form.instance.payed_by = self.request.user
+        print(form.instance.payed_by)
+        super().form_valid(form)
+        # voucher = get_object_or_404(Payment, payment_no=form.cleaned_data['payment_no'])
+        # data = {
+        #     'general_voucher': None,
+        #     'payment_no': voucher,
+        #     'collection_no': None,
+        #     'investment_no': None,
+        #     'bk_payment_no': None,
+        #     'description': 'for buy',
+        #     'type': 'P'
+        # }
+        # create_account_ledger(data)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class SalaryPaymentList(LoginRequiredMixin, ListView):
+    model = SalaryPayment
+    context_object_name = 'payments'
+    template_name = 'payroll/salary_payment_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tittle'] = 'Salary Payments | techAlong Business'
+        return context

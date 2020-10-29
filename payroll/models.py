@@ -81,17 +81,18 @@ class Attendance(models.Model):
 
 
 MONTHS = [
-    ('JAN', 'Friday'),
-    ('FEB', 'Saturday'),
-    ('MAR', 'Sunday'),
-    ('APR', 'Monday'),
-    ('MAY', 'Tuesday'),
-    ('JUN', 'Wednesday'),
-    ('JUL', 'Thursday'),
-    ('AUG', 'Thursday'),
-    ('SEP', 'Thursday'),
-    ('OCT', 'Thursday'),
-    ('NOV', 'Thursday'),
+    ('JAN', 'JAN'),
+    ('FEB', 'FEB'),
+    ('MAR', 'MAR'),
+    ('APR', 'APR'),
+    ('MAY', 'MAY'),
+    ('JUN', 'JUN'),
+    ('JUL', 'JUL'),
+    ('AUG', 'AUG'),
+    ('SEP', 'SEP'),
+    ('OCT', 'OCT'),
+    ('NOV', 'NOV'),
+    ('DEC', 'DEC'),
 ]
 
 PAYMENT_MODE_CHOICES = [
@@ -105,9 +106,9 @@ PAYMENT_MODE_CHOICES = [
 
 class SalaryPayment(models.Model):
     Employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
-    month = models.CharField(choices=MONTHS, max_length=20)
+    month = models.CharField(choices=MONTHS, max_length=20, null=True, blank=True)
     amount = models.FloatField()
-    date = models.DateField(auto_now=True)
+    date = models.DateField(default=now)
     date_time = models.DateTimeField(auto_now=True)
     payed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     payment_mode = models.CharField(choices=PAYMENT_MODE_CHOICES, default=PAYMENT_MODE_CHOICES[1], max_length=10)
@@ -116,4 +117,8 @@ class SalaryPayment(models.Model):
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     payment_from_account = models.ForeignKey(Accounts, default=default_account, null=True, on_delete=models.CASCADE)
     transaction = models.ForeignKey(BkashTransaction, on_delete=models.CASCADE, null=True)
-    remarks = models.CharField(max_length=200)
+    remarks = models.CharField(max_length=200, null=True, blank=True)
+
+    @staticmethod
+    def get_absolute_url():
+        return reverse('person-list')

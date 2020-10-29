@@ -1,8 +1,8 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Submit
-from django.forms import ModelForm, TimeInput, BaseInlineFormSet
+from crispy_forms.layout import Layout, Row, Column, Submit, Div
+from django.forms import ModelForm, TimeInput
 from django.contrib.admin.widgets import AdminDateWidget
-from .models import Employee, Attendance, Day, TimeTable
+from .models import Employee, Day, TimeTable, SalaryPayment
 
 
 class EmployeeForm(ModelForm):
@@ -83,5 +83,50 @@ class TimeTableForm(ModelForm):
             Row(
                'weekend'
             ),
+            Submit('submit', 'Save'),
+        )
+
+
+class SalaryPaymentForm(ModelForm):
+    class Meta:
+        model = SalaryPayment
+        fields = '__all__'
+        exclude = ('payed_by', 'transaction',)
+        widgets = {
+            'date': AdminDateWidget(),
+            'cheque_date': AdminDateWidget(),
+        }
+        labels = {
+            'cheque_PO_ONL_no': 'Cheque/PO/ONL No',
+            'cheque_date': 'Date',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['payment_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('Employee', css_class='form-group col-md-4 mb-0'),
+                Column('month', css_class='form-group col-md-2 mb-0'),
+                Column('amount', css_class='form-group col-md-2 mb-0'),
+                Column('date', css_class='form-group col-md-2 mb-0'),
+                Column('payment_mode', css_class='form-group col-md-2 mb-0'),
+            ),
+            Div(
+                Row(
+                    Column('cheque_PO_ONL_no', css_class='form-group col-md-4 mb-0'),
+                    Column('cheque_date', css_class='form-group col-md-4 mb-0'),
+                    Column('bank_name', css_class='form-group col-md-4 mb-0'),
+                ),
+                id="detail_payment", style="display:none; border: 1px solid gray; margin-bottom: 15px;", css_class="container"
+            ),
+
+
+            Row(
+                Column('payment_from_account', css_class='form-group col-md-6 mb-0'),
+                Column('remarks', css_class='form-group col-md-6 mb-0'),
+            ),
+
             Submit('submit', 'Save'),
         )
