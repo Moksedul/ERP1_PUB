@@ -8,6 +8,7 @@ from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
+from payroll.models import SalaryPayment
 from vouchers.models import GeneralVoucher, BuyVoucher, SaleVoucher
 from collection.models import Collection
 from payments.models import Payment
@@ -21,6 +22,7 @@ def ledger(request):
     collections = Collection.objects.all()
     payments = Payment.objects.all()
     agent_payments = PaymentBkashAgent.objects.all()
+    salary_payments = SalaryPayment.objects.all()
     name = request.GET.get('name_contains')
     date1 = request.GET.get('date_from')
     date2 = request.GET.get('date_to')
@@ -85,6 +87,19 @@ def ledger(request):
             'url2': '#'
         })
 
+    for voucher in salary_payments:
+        key = "voucher"
+        ledgers.setdefault(key, [])
+        ledgers[key].append({
+            'date': voucher.date,
+            'name': voucher.Employee,
+            'voucher_no': voucher.month + ' Salary Payment',
+            'descriptions': voucher.remarks,
+            'debit_amount': voucher.amount,
+            'url1': '#',
+            'url2': '#'
+        })
+
     for voucher in collections:
         key = "voucher"
         ledgers.setdefault(key, [])
@@ -133,7 +148,8 @@ def create_account_ledger(data):
         payment_no=data['payment_no'],
         collection_no=data['collection_no'],
         investment_no=data['investment_no'],
-        bk_payment_no=data['bk_payment_no']
+        bk_payment_no=data['bk_payment_no'],
+        salary_payment=data['salary_payment'],
     )
     account_ledger.save()
     print(account_ledger)
@@ -224,6 +240,26 @@ def account_ledger_report(request):
                     'url1': '/general_voucher_list',
                     'url2': '/general_voucher_list'
                 })
+
+        # for salary payment
+        if account_ledger.type == 'SP':
+            salary_payment = SalaryPayment.objects.filter(payment_from_account_id=selected_account)
+            salary_payment = salary_payment.filter(id=account_ledger.salary_payment_id)
+            for salary_payment in salary_payment:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'date': account_ledger.date,
+                    'name': salary_payment.Employee,
+                    'voucher_no': salary_payment,
+                    'type': 'Cost for',
+                    'descriptions': account_ledger.description,
+                    'debit_amount': salary_payment.amount,
+                    'credit_amount': 0,
+                    'url1': '/salary_payment_list',
+                    'url2': '/salary_payment_list'
+                })
+
         # for buy payment
         if account_ledger.type == 'P':
             payment = Payment.objects.filter(payment_from_account_id=selected_account)

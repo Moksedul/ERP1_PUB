@@ -309,7 +309,7 @@ def attendance_report(request):
 class SalaryPaymentCreate(LoginRequiredMixin, CreateView):
     form_class = SalaryPaymentForm
     template_name = 'payroll/payroll_form.html'
-    success_url = '/salary_payment_add'
+    success_url = '/salary_payment_list'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -319,20 +319,20 @@ class SalaryPaymentCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.payed_by = self.request.user
-        print(form.instance.payed_by)
-        super().form_valid(form)
-        # voucher = get_object_or_404(Payment, payment_no=form.cleaned_data['payment_no'])
-        # data = {
-        #     'general_voucher': None,
-        #     'payment_no': voucher,
-        #     'collection_no': None,
-        #     'investment_no': None,
-        #     'bk_payment_no': None,
-        #     'description': 'for buy',
-        #     'type': 'P'
-        # }
-        # create_account_ledger(data)
-        return HttpResponseRedirect(self.get_success_url())
+        payment = form.save()
+        voucher = get_object_or_404(SalaryPayment, pk=payment.id)
+        data = {
+            'general_voucher': None,
+            'payment_no': None,
+            'collection_no': None,
+            'investment_no': None,
+            'bk_payment_no': None,
+            'salary_payment': voucher,
+            'description': 'Salary',
+            'type': 'SP'
+        }
+        create_account_ledger(data)
+        return redirect('/salary_payment_list')
 
 
 class SalaryPaymentList(LoginRequiredMixin, ListView):
@@ -343,4 +343,16 @@ class SalaryPaymentList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tittle'] = 'Salary Payments | techAlong Business'
+        return context
+
+
+class SalaryPaymentDelete(LoginRequiredMixin, DeleteView):
+    model = SalaryPayment
+    template_name = 'payroll/confirm_delete.html'
+    success_url = '/salary_payment_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Salary Payment'
+        context['cancel_url'] = '/salary_payment_list'
         return context

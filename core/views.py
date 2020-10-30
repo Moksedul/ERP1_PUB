@@ -5,6 +5,7 @@ from collection.models import Collection
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
+from payroll.models import SalaryPayment
 from vouchers.models import *
 
 
@@ -127,6 +128,19 @@ def account_balance_calc(pk):
                     'debit_amount': general_voucher.cost_amount,
                     'credit_amount': 0,
                 })
+
+        # for SalaryP payment
+        if account_ledger.type == 'SP':
+            salary_payment = SalaryPayment.objects.filter(payment_from_account_id=selected_account)
+            salary_payment = salary_payment.filter(id=account_ledger.salary_payment_id)
+            for salary_payment in salary_payment:
+                key = "voucher"
+                ledgers.setdefault(key, [])
+                ledgers[key].append({
+                    'debit_amount': salary_payment.amount,
+                    'credit_amount': 0,
+                })
+
         # for buy payment
         if account_ledger.type == 'P':
             payment = Payment.objects.filter(payment_from_account_id=selected_account)

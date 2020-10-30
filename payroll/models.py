@@ -121,4 +121,7 @@ class SalaryPayment(models.Model):
 
     @staticmethod
     def get_absolute_url():
-        return reverse('person-list')
+        return reverse('salary-payment-list')
+
+    def __str__(self):
+        return '%s (%s) ' % (self.Employee, self.month)

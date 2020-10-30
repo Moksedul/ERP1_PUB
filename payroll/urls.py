@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import EmployeeCreate, EmployeeUpdate, EmployeeList, EmployeeDelete, attendance_create, \
     TimetableList, TimetableCreate, TimetableUpdate, TimetableDelete, AttendanceList, attendance_update, \
-    AttendanceDelete, attendance_report, current_day_attendance_update, SalaryPaymentCreate, SalaryPaymentList
+    AttendanceDelete, attendance_report, current_day_attendance_update, SalaryPaymentCreate, SalaryPaymentList, \
+    SalaryPaymentDelete
 
 urlpatterns = [
     path('add_employee', EmployeeCreate.as_view(), name='add-employee'),
@@ -20,4 +21,5 @@ urlpatterns = [
     path('attendance_report', attendance_report, name='attendance-report'),
     path('salary_payment_add', SalaryPaymentCreate.as_view(), name='salary-payment-add'),
     path('salary_payment_list', SalaryPaymentList.as_view(), name='salary-payment-list'),
+    path('salary_payment/<int:pk>/delete', SalaryPaymentDelete.as_view(), name='salary-payment-delete'),
 ]

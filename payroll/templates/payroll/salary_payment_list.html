@@ -7,12 +7,11 @@
 </div>
 <a class="btn btn-sm btn-info" href="#">Report</a>
 	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="#">New Payment</a>
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'salary-payment-add' %}">New Salary Payment</a>
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Payment Number</th>
-					<th>Voucher Number</th>
-					<th>Payment To</th>
+					<th>Employee Name </th>
+					<th>Month</th>
 					<th>Payed Amount</th>
 					<th>Payed Date</th>
 					<th>Remarks</th>
@@ -23,20 +22,19 @@
 
 				{% for payment in payments %}
 					<tr>
-						<td>{{ payment.payment_no }}</td>
-						<td>{{ payment.voucher_no }}</td>
-						<td>{{ payment.payed_to }}</td>
-						<td>{{ payment.payment_amount }} TK</td>
-						<td>{{ payment.payment_date }}</td>
+						<td>{{ payment.Employee }}</td>
+						<td>{{ payment.month }}</td>
+						<td>{{ payment.amount }} TK</td>
+						<td>{{ payment.date }}</td>
 						<td>{{ payment.remarks }} </td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'payment-detail' payment.id%}">Detail</a></td>
+						<td><a class="btn btn-sm btn-info" href="#">Detail</a></td>
 
 						{% if payment.transaction  %}
 								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
 								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
 						{% else %}
-								<td><a class="btn btn-sm btn-info" href="#">Edit</a></td>
-								<td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'salary-payment-delete' payment.id %}">Edit</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'salary-payment-delete' payment.id %}">Delete</a></td>
 						{%endif%}
 
 					</tr>
