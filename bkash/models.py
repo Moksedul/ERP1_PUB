@@ -45,6 +45,7 @@ def increment_invoice_number():
 TRANSACTION_AGAINST = [
     ('GENERAL', 'GENERAL'),
     ('PAYMENT', 'PAYMENT'),
+    # ('SALARY', 'SALARY'),
 ]
 
 

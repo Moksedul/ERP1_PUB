@@ -64,9 +64,15 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
         transaction = get_object_or_404(BkashTransaction, invoice_no=form.cleaned_data['invoice_no'])
         account = Accounts.objects.get(account_name='BKASH')
         t_type = form.cleaned_data['transaction_type']
+        ledger_type = ''
+        general_voucher = None
+        payment_voucher = None
+        salary_voucher = None
+        description = 'N/A'
 
         # creating general voucher for transaction
         if t_type == 'GENERAL':
+            ledger_type = 'G'
             general_voucher = GeneralVoucher(
                 person_name=transaction.payed_to,
                 cost_Descriptions=form.cleaned_data['description'],
@@ -76,20 +82,9 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
             )
             general_voucher.save()
 
-            # creating ledger for corresponding general voucher
-            data = {
-                'general_voucher': general_voucher,
-                'payment_no': None,
-                'collection_no': None,
-                'investment_no': None,
-                'bk_payment_no': None,
-                'description': general_voucher.cost_Descriptions,
-                'type': 'G'
-            }
-            create_account_ledger(data)
-
-            # creating payment voucher for transaction
+        # creating payment voucher for transaction
         if t_type == 'PAYMENT':
+            ledger_type = 'P'
             payment_voucher = Payment(
                 payment_for_person=transaction.payed_to,
                 payed_by=transaction.posted_by,
@@ -101,17 +96,32 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
             )
             payment_voucher.save()
 
-            # creating ledger for corresponding payment voucher
-            data = {
-                'general_voucher': None,
-                'payment_no': payment_voucher,
-                'collection_no': None,
-                'investment_no': None,
-                'bk_payment_no': None,
-                'description': 'N/A',
-                'type': 'P'
-            }
-            create_account_ledger(data)
+        # # creating payment voucher for transaction
+        # if t_type == 'SALARY':
+        #     ledger_type = 'SP'
+        #     salary_voucher = SalaryPayment(
+        #         Employee=transaction.payed_to,
+        #         payed_by=transaction.posted_by,
+        #         payment_mode='Bkash',
+        #         amount=form.cleaned_data['transaction_amount'],
+        #         payment_from_account=account,
+        #         transaction=transaction,
+        #         remarks=form.cleaned_data['description']
+        #     )
+        #     salary_voucher.save()
+
+        # creating ledger
+        data = {
+            'general_voucher': general_voucher,
+            'payment_no': payment_voucher,
+            'collection_no': None,
+            'investment_no': None,
+            'bk_payment_no': None,
+            'salary_payment': salary_voucher,
+            'description': description,
+            'type': ledger_type
+        }
+        create_account_ledger(data)
 
         return HttpResponseRedirect(self.get_success_url())
 
