@@ -48,6 +48,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
             'collection_no': None,
             'investment_no': None,
             'bk_payment_no': None,
+            'salary_payment': None,
             'description': 'for buy',
             'type': 'P'
         }

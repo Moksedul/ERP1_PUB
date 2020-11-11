@@ -84,6 +84,7 @@ class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
             'collection_no': voucher,
             'investment_no': None,
             'bk_payment_no': None,
+            'salary_payment': None,
             'description': 'From Sale',
             'type': 'C'
         }

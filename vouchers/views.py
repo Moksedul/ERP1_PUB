@@ -114,6 +114,7 @@ class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
             'collection_no': None,
             'investment_no': None,
             'bk_payment_no': None,
+            'salary_payment': None,
             'description': voucher.cost_Descriptions,
             'type': 'G'
         }

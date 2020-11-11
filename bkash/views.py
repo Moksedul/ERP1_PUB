@@ -199,7 +199,8 @@ class AgentPaymentCreate(LoginRequiredMixin, CreateView):
             'investment_no': None,
             'description': 'for Bkash Agent Payment',
             'type': 'BK',
-            'bk_payment_no': voucher
+            'bk_payment_no': voucher,
+            'salary_payment': None,
         }
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())

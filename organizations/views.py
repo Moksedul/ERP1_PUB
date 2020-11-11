@@ -16,8 +16,10 @@ class PersonCreateView(LoginRequiredMixin, CreateView):
 
 class PersonListView(LoginRequiredMixin, ListView):
     model = Persons
+    ordering = ['-id']
     template_name = 'organizations/person_list.html'
     context_object_name = 'persons'
+    # paginate_by = 10
 
 
 class PersonUpdateView(LoginRequiredMixin, UpdateView):
