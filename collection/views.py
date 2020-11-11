@@ -54,6 +54,8 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
             'collection_no': voucher,
             'investment_no': None,
             'bk_payment_no': None,
+            'salary_payment': None,
+            'date': voucher.collection_date,
             'description': 'From Sale',
             'type': 'C'
         }
@@ -86,7 +88,8 @@ class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
             'bk_payment_no': None,
             'salary_payment': None,
             'description': 'From Sale',
-            'type': 'C'
+            'type': 'C',
+            'date': voucher.collection_date
         }
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())

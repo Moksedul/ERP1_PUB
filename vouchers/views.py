@@ -77,30 +77,6 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
 # sale voucher end
 
 
-# general voucher start
-def general_voucher_create(request):
-    context = {}
-    form = GeneralForm(request.POST or None)
-
-    if form.is_valid():
-        form.save()
-        voucher = get_object_or_404(GeneralVoucher, voucher_number=form.cleaned_data['voucher_number'])
-        if str(voucher.from_account) == 'Daily Cash':
-            data = {
-                'general_voucher': voucher,
-                'payment_no': None,
-                'collection_no': None,
-                'investment_no': None,
-                'bk_payment_no': None,
-                'description': voucher.cost_Descriptions,
-                'type': 'G'
-            }
-            create_daily_cash(data)
-
-    context['form'] = form
-    return render(request, 'vouchers/general_voucher_add_form.html', context)
-
-
 class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
     form_class = GeneralForm
     template_name = 'vouchers/general_voucher_add_form.html'

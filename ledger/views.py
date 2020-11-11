@@ -142,6 +142,7 @@ def ledger(request):
 
 def create_account_ledger(data):
     account_ledger = AccountLedger(
+        date=data['date'],
         general_voucher=data['general_voucher'],
         description=data['description'],
         type=data['type'],
@@ -152,7 +153,6 @@ def create_account_ledger(data):
         salary_payment=data['salary_payment'],
     )
     account_ledger.save()
-    print(account_ledger)
 
 
 @login_required()

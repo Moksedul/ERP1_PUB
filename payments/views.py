@@ -50,7 +50,8 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
             'bk_payment_no': None,
             'salary_payment': None,
             'description': 'for buy',
-            'type': 'P'
+            'type': 'P',
+            'date': voucher.payment_date
         }
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())

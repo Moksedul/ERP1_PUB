@@ -328,6 +328,7 @@ class SalaryPaymentCreate(LoginRequiredMixin, CreateView):
             'investment_no': None,
             'bk_payment_no': None,
             'salary_payment': voucher,
+            'date': voucher.date,
             'description': 'Salary',
             'type': 'SP'
         }
