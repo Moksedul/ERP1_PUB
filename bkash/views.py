@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
 from accounts.models import Accounts
+from ledger.models import AccountLedger
 from ledger.views import create_account_ledger
 from organizations.models import Persons
 from payments.models import Payment
@@ -64,6 +65,7 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
         transaction = get_object_or_404(BkashTransaction, invoice_no=form.cleaned_data['invoice_no'])
         account = Accounts.objects.get(account_name='BKASH')
         t_type = form.cleaned_data['transaction_type']
+        date = form.cleaned_data['transaction_date']
         ledger_type = ''
         general_voucher = None
         payment_voucher = None
@@ -79,6 +81,7 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
                 cost_amount=form.cleaned_data['transaction_amount'],
                 from_account=account,
                 transaction=transaction,
+                date_added=date
             )
             general_voucher.save()
 
@@ -92,7 +95,8 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
                 payment_amount=form.cleaned_data['transaction_amount'],
                 payment_from_account=account,
                 transaction=transaction,
-                remarks=form.cleaned_data['description']
+                remarks=form.cleaned_data['description'],
+                payment_date=date
             )
             payment_voucher.save()
 
@@ -119,6 +123,7 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
             'bk_payment_no': None,
             'salary_payment': salary_voucher,
             'description': description,
+            'date': date,
             'type': ledger_type
         }
         create_account_ledger(data)
@@ -138,6 +143,12 @@ class TransactionUpdate(LoginRequiredMixin, UpdateView):
         transaction = get_object_or_404(BkashTransaction, invoice_no=form.cleaned_data['invoice_no'])
         account = Accounts.objects.get(account_name='BKASH')
         t_type = form.cleaned_data['transaction_type']
+        date = form.cleaned_data['transaction_date']
+        general_voucher = None
+        payment_voucher = None
+        salary_voucher = None
+        description = 'N/A'
+        account_ledger = []
 
         # updating general voucher for transaction
         if t_type == 'GENERAL':
@@ -147,12 +158,15 @@ class TransactionUpdate(LoginRequiredMixin, UpdateView):
                 'cost_Descriptions': form.cleaned_data['description'],
                 'cost_amount': form.cleaned_data['transaction_amount'],
                 'from_account': account,
-                'transaction': transaction
+                'transaction': transaction,
+                'date_added': date
             }
             general_voucher.__dict__.update(general_voucher_new)
             general_voucher.save()
+            description = general_voucher.cost_Descriptions
+            account_ledger = AccountLedger.objects.get(general_voucher=general_voucher)
 
-        # updating payment voucher for transaction
+            # updating payment voucher for transaction
         if t_type == 'PAYMENT':
             payment_voucher = Payment.objects.get(transaction=transaction)
             payment_voucher_new = {
@@ -162,11 +176,27 @@ class TransactionUpdate(LoginRequiredMixin, UpdateView):
                 'payment_amount': form.cleaned_data['transaction_amount'],
                 'payment_from_account': account,
                 'transaction': transaction,
-                'remarks': form.cleaned_data['description']
+                'remarks': form.cleaned_data['description'],
+                'payment_date': date
             }
 
             payment_voucher.__dict__.update(payment_voucher_new)
             payment_voucher.save()
+            account_ledger = AccountLedger.objects.get(payment_no=payment_voucher)
+
+        # updating ledger
+        account_ledger_new = {
+            'general_voucher': general_voucher,
+            'payment_no': payment_voucher,
+            'collection_no': None,
+            'investment_no': None,
+            'bk_payment_no': None,
+            'salary_payment': salary_voucher,
+            'description': description,
+            'date': date,
+        }
+        account_ledger.__dict__.update(account_ledger_new)
+        account_ledger.save()
 
         return HttpResponseRedirect(self.get_success_url())
 
