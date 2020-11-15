@@ -40,7 +40,8 @@ urlpatterns = [
     path('', include('report.urls')),
     path('', include('bkash.urls')),
     path('', include('local_sale.urls')),
-    path('', include('payroll.urls'))
+    path('', include('payroll.urls')),
+    path('', include('hut_buy.urls'))
 
 ]
 
