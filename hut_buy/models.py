@@ -22,7 +22,7 @@ class HutProduct(models.Model):
 
 
 class Expense(models.Model):
-    name = models.ForeignKey(Products, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
     hut_buy = models.ForeignKey(HutBuy, on_delete=models.CASCADE)
     amount = models.FloatField()
 

@@ -15,13 +15,14 @@ def hut_buy_create(request):
     form3set = expense_set(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form1.is_valid():
-            sale = form1.save(commit=False)
-            sale.posted_by = request.user
-            sale.save()
+            buy = form1.save(commit=False)
+            buy.posted_by = request.user
+            # buy.save()
             for form2 in form2set:
                 product = form2.save(commit=False)
-                product.sale_no = sale
-                product.save()
+                product.sale_no = buy
+                # product.save()
+                print(product)
             return redirect('/new_hut_buy')
     else:
         form1 = HutBuyForm
@@ -37,3 +38,7 @@ def hut_buy_create(request):
     }
 
     return render(request, 'hut_buy/hut_buy_form.html', context)
+
+
+class HutBuyList(LoginRequiredMixin, ListView):
+    pass
