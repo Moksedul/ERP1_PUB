@@ -11,9 +11,9 @@ from .models import HutBuy
 def hut_buy_create(request):
     form1 = HutBuyForm(request.POST or None)
     product_set = formset_factory(ProductForm)
-    expense_set = formset_factory(ExpenseForm)
+    # expense_set = formset_factory(ExpenseForm)
     form2set = product_set(request.POST or None, request.FILES)
-    form3set = expense_set(request.POST or None, request.FILES)
+    # form3set = expense_set(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form1.is_valid():
             buy = form1.save(commit=False)
@@ -22,23 +22,23 @@ def hut_buy_create(request):
             for form2 in form2set:
                 product = form2.save(commit=False)
                 product.hut_buy = buy
-                product.save()
+                # product.save()
                 print(product)
-            for form3 in form3set:
-                expense = form3.save(commit=False)
-                expense.hut_buy = buy
-                expense.save()
-                print(expense)
-            return redirect('/new_hut_buy')
+            # for form3 in form3set:
+            #     expense = form3.save(commit=False)
+            #     expense.hut_buy = buy
+            #     expense.save()
+            #     print(expense)
+            return redirect('/hut_buy_list')
     else:
         form1 = HutBuyForm
         form2set = product_set
-        form3set = expense_set
+        # form3set = expense_set
 
     context = {
         'form1': form1,
         'form2set': form2set,
-        'form3set': form3set,
+        # 'form3set': form3set,
         'form_name': 'Hut-Buy Add',
         'button_name': 'Save',
     }
@@ -52,4 +52,13 @@ class HutBuyList(LoginRequiredMixin, ListView):
     context_object_name = 'hut_buy'
 
 
-class
+class HutBuyDelete(LoginRequiredMixin, DeleteView):
+    model = HutBuy
+    template_name = 'main/confirm_delete.html'
+    success_url = '/hut_buy_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Hut Buy'
+        context['cancel_url'] = '/hut_buy_list'
+        return context

@@ -26,8 +26,8 @@
 						<td>{{ item.weight }}</td>
 						<td>{{ item.cost }}</td>
 						<td>{{ item.Expense }}</td>
-						<td><a class="btn btn-sm btn-info" href="#">Edit</a></td>
-						<td><a class="btn btn-sm btn-danger" href="#">Delete</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'delete-hut-buy' item.id %}">Edit</a></td>
+						<td><a class="btn btn-sm btn-danger" href="{% url 'delete-hut-buy' item.id %}">Delete</a></td>
 					</tr>
 				{% endfor %}
 

@@ -11,9 +11,6 @@ class HutBuyForm(ModelForm):
         widgets = {
                     'date': AdminDateWidget(),
                 }
-        labels = {
-            'sale_no': 'Voucher No',
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,7 +24,6 @@ class ProductForm(ModelForm):
         exclude = ('hut_buy',)
         labels = {
             'name': 'Product Name',
-            'number_of_bag': 'Bags',
         }
 
     def __init__(self, *args, **kwargs):
