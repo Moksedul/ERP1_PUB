@@ -43,6 +43,7 @@ def bank_account_list(request):
             'bank_branch': str(account.bank_name) + ': ' + str(account.bank_branch),
             'remaining_balance': balance,
             'id': account.id,
+
         })
 
     context = {
@@ -136,7 +137,9 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
             'bk_payment_no': None,
             'investment_no': investment_save,
             'description': description,
-            'type': 'I'
+            'type': 'I',
+            'date': investment_save.date_added,
+            'salary_payment': None
         }
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())

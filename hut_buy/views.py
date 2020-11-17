@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DeleteView
 from django.forms import formset_factory, inlineformset_factory
 from .forms import HutBuyForm, ProductForm, ExpenseForm
+from .models import HutBuy
 
 
 @login_required
@@ -17,12 +18,17 @@ def hut_buy_create(request):
         if form1.is_valid():
             buy = form1.save(commit=False)
             buy.posted_by = request.user
-            # buy.save()
+            buy.save()
             for form2 in form2set:
                 product = form2.save(commit=False)
-                product.sale_no = buy
-                # product.save()
+                product.hut_buy = buy
+                product.save()
                 print(product)
+            for form3 in form3set:
+                expense = form3.save(commit=False)
+                expense.hut_buy = buy
+                expense.save()
+                print(expense)
             return redirect('/new_hut_buy')
     else:
         form1 = HutBuyForm
@@ -41,4 +47,9 @@ def hut_buy_create(request):
 
 
 class HutBuyList(LoginRequiredMixin, ListView):
-    pass
+    model = HutBuy
+    template_name = 'hut_buy/hut_buy_list.html'
+    context_object_name = 'hut_buy'
+
+
+class
