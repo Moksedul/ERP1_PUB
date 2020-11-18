@@ -10,6 +10,9 @@ class HutBuy(models.Model):
     posted_by = models.ForeignKey(User, on_delete=models.PROTECT)
     date_time_stamp = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return str(self.hut_name)
+
 
 class HutProduct(models.Model):
     name = models.ForeignKey(Products, on_delete=models.CASCADE)
