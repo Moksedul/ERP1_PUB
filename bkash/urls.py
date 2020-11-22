@@ -13,6 +13,7 @@ urlpatterns = [
     path('transaction_list', TransactionList.as_view(), name='transaction-list'),
     path('agent_payment_add', AgentPaymentCreate.as_view(), name='agent-payment-add'),
     path('agent_payment_list', AgentPaymentList.as_view(), name='agent-payment-list'),
+    path('agent_payment_ledger', bkash_ledger_report, name='agent-payment-ledger'),
     # path('payment/<int:pk>/detail', payment_details, name='payment-detail'),
     path('agent/<int:pk>/update', BkashAgentUpdate.as_view(), name='agent-update'),
     path('transaction/<int:pk>/update', TransactionUpdate.as_view(), name='transaction-update'),
