@@ -105,3 +105,13 @@ def hut_buy_update(request, pk):
     }
 
     return render(request, 'hut_buy/hut_buy_form.html', context)
+
+
+@login_required
+def hut_buy_detail(request, pk):
+
+    context = {
+        'button_name': 'Update',
+    }
+
+    return render(request, 'hut_buy/hut_buy_detail.html', context)

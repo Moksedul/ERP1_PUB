@@ -15,6 +15,7 @@
                     <th>Product Wight</th>
 					<th>Product Cost</th>
 					<th>Expense</th>
+					<th>Detail</th>
 					<th>Update</th>
 					<th>Delete</th>
 				</tr>
@@ -26,7 +27,8 @@
 						<td>{{ item.weight }}</td>
 						<td>{{ item.cost }}</td>
 						<td>{{ item.Expense }}</td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'update-hut-buy' item.id %}">Edit</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'detail-hut-buy' item.id %}">Details</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'update-hut-buy' item.id %}">Update</a></td>
 						<td><a class="btn btn-sm btn-danger" href="{% url 'delete-hut-buy' item.id %}">Delete</a></td>
 					</tr>
 				{% endfor %}
