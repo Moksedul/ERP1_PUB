@@ -53,6 +53,12 @@ class HutBuyList(LoginRequiredMixin, ListView):
     template_name = 'hut_buy/hut_buy_list.html'
     context_object_name = 'hut_buy'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tittle'] = 'techAlong Business|Hut Buy List'
+
+        return context
+
 
 class HutBuyDelete(LoginRequiredMixin, DeleteView):
     model = HutBuy
@@ -63,6 +69,8 @@ class HutBuyDelete(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context['object_name'] = 'Hut Buy'
         context['cancel_url'] = '/hut_buy_list'
+        context['tittle'] = 'techAlong Business|Hut Buy Delete'
+
         return context
 
 
@@ -102,6 +110,7 @@ def hut_buy_update(request, pk):
         'form3set': form3set,
         'form_name': 'Hut-Buy Update',
         'button_name': 'Update',
+        'tittle': 'techAlong Business|Hut Buy Update',
     }
 
     return render(request, 'hut_buy/hut_buy_form.html', context)
@@ -109,9 +118,60 @@ def hut_buy_update(request, pk):
 
 @login_required
 def hut_buy_detail(request, pk):
+    hut_buy = HutBuy.objects.get(id=pk)
+    products = HutProduct.objects.filter(hut_buy_id=hut_buy.id)
+    expenses = Expense.objects.filter(hut_buy_id=hut_buy.id)
+    serial_no = 'FEHB-' + str(hut_buy.id)
+    product_total = 0
+    expense_total = 0
+    total_weight = 0
+
+    product_list = {
+        'products': []
+    }
+
+    expense_list = {
+        'expenses': []
+    }
+
+    for product in products:
+        amount = product.price
+        product_total += amount
+        total_weight += product.weight
+        key = "products"
+        product_list.setdefault(key, [])
+        product_list[key].append({
+            'name': product.name,
+            'weight': product.weight,
+            'price': amount,
+        })
+
+    for expense in expenses:
+        amount = expense.amount
+        expense_total += amount
+        key = "expenses"
+        expense_list.setdefault(key, [])
+        expense_list[key].append({
+            'name': expense.name,
+            'amount': amount,
+        })
+
+    total_costing = product_total + expense_total
+    rate_with_cost = total_costing / total_weight
+    rate_without_cost = product_total / total_weight
 
     context = {
-        'button_name': 'Update',
+        'hut_buy': hut_buy,
+        'products': product_list['products'],
+        'expenses': expense_list['expenses'],
+        'product_total': product_total,
+        'expense_total': expense_total,
+        'total_costing': total_costing,
+        'total_weight': total_weight,
+        'rate_with_cost': rate_with_cost,
+        'rate_without_cost': rate_without_cost,
+        'serial_no': serial_no,
+        'tittle': 'techAlong Business|Hut Buy Detail',
     }
 
     return render(request, 'hut_buy/hut_buy_detail.html', context)

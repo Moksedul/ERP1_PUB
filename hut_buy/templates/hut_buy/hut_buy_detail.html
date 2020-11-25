@@ -7,42 +7,62 @@
     </div>
     <hr>
     <div class="row mb-3">
-        <div class="col-3"><strong>Voucher Number</strong></div>
+        <div class="col-3"><strong>Serial Number</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.sale_no }}</div>
-        <div class="col-2"><strong>Sale Date</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ sale.date }}</div>
+        <div class="col-2">{{ serial_no }}</div>
+        <div class="col-1"></div>
+        <div class="col-3"><strong>Date :  </strong>{{ hut_buy.date }}</div>
     </div>
     <div class="row mb-3">
-        <div class="col-3"><strong>Buyer Name</strong></div>
+        <div class="col-3"><strong>Bought By</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ sale.buyer_name }}</div>
+        <div class="col-3">{{ hut_buy.posted_by }}</div>
     </div>
     <div class="row mb-3">
-        <div class="col-3"><strong>Company Name</strong></div>
+        <div class="col-3"><strong>Hut Name</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ sale.company_name }}</div>
+        <div class="col-3">{{ hut_buy.hut_name }}</div>
     </div>
 
 
     <div class="row">
         <div class="col-12 border border-info text-center">
-            <h5>Product Details</h5>
+            <h5>Product</h5>
             <table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Product Name</th>
-					<th>Rate (৳)</th>
 					<th>Weight (KG)</th>
-                    <th>Total Amount (৳)</th>
+                    <th>Price (৳)</th>
 				</tr>
 
 				{% for product in products %}
 					<tr>
 						<td>{{ product.name }}</td>
-						<td>{{ product.rate }}</td>
 						<td>{{ product.weight }}</td>
-                        <td>{{ product.amount }}</td>
+                        <td>{{ product.price }}</td>
+					</tr>
+				{% endfor %}
+
+
+			</table>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12 border border-info text-center">
+            <h5>Expense</h5>
+            <table class="table table-sm table-striped table-bordered">
+				<tr>
+					<th>Expense Name</th>
+                    <th>Amount(৳)</th>
+				</tr>
+
+				{% for expense in expenses %}
+					<tr>
+						<td>{{ expense.name }}</td>
+						<td>{{ expense.amount }}</td>
 					</tr>
 				{% endfor %}
 
@@ -53,16 +73,6 @@
 
 
     <div class="row mb-3"></div>
-    <div class="row mb-3">
-            <div class="col-3"><strong>Transport Charge</strong></div>
-            <div class="col-1"><strong>:</strong></div>
-            <div class="col-3">{{ sale.transport_charge }} BDT.</div>
-    </div>
-    <div class="row mb-3">
-            <div class="col-3"><strong>Transport Charge Payee:</strong></div>
-            <div class="col-1"><strong>:</strong></div>
-            <div class="col-3">{{ sale.transport_charge_payee }}</div>
-    </div>
 
 <hr>
         <div class="row mb-3">
@@ -73,48 +83,34 @@
     </div>
     <div class="row mb-3">
         <div class="col-6"></div>
-        <div class="col-3"><strong>Transport Charge </strong></div>
-        <div class="col-1"><strong>: ({{ sign_charge }}) </strong></div>
-        <div class="col-2">{{ sale.transport_charge }} BDT.</div>
+        <div class="col-3"><strong>Expense Total </strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ expense_total }} BDT.</div>
     </div>
 
 <hr>
     <div class="row mb-3">
         <div class="col-6"></div>
-        <div class="col-3"><strong>Voucher Total </strong></div>
+        <div class="col-3"><strong>Total Costing</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2"><strong>{{ voucher_total }} BDT.</strong></div>
+        <div class="col-2"><strong>{{ total_costing }} BDT.</strong></div>
     </div>
 
     <div class="row mb-3">
-        <div class="col-6"></div>
-        <div class="col-3"><strong>Previous Due </strong></div>
-        <div class="col-1"><strong>: (+) </strong></div>
-        <div class="col-2">{{ sale.previous_due }} BDT.</div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-6"></div>
-        <div class="col-3"><strong>Discount </strong></div>
-        <div class="col-1"><strong>: (-)</strong></div>
-        <div class="col-2"><strong>{{ sale.discount }} BDT.</strong></div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-6"></div>
-        <div class="col-3"><strong>Grand Total Amount </strong></div>
+        <div class="col-3"><strong>Total Weight</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2"><strong>{{ grand_total }} BDT.</strong></div>
+        <div class="col-3">{{ total_weight }} KG</div>
     </div>
 
     <div class="row mb-3">
-        <div class="col-3"><strong>Supply Description</strong></div>
+        <div class="col-3"><strong>Rate Without Cost</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ sale.description }}</div>
+        <div class="col-3">{{ rate_without_cost }} BDT./KG</div>
     </div>
-
     <div class="row mb-3">
-        <div class="col-3"><strong>Remarks</strong></div>
+        <div class="col-3"><strong>Rate With Cost</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ sale.remarks }}</div>
+        <div class="col-3">{{ rate_with_cost }} BDT./KG</div>
     </div>
 
 </div>
