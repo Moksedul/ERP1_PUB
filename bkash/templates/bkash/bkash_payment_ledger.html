@@ -6,7 +6,7 @@
 			{% csrf_token %}
 			<div class="form-row">
 				<div class="form-group col-md-4">
-                <select id="nem" class="form-control" name="name">
+                <select id="name" class="form-control" name="name">
                     <option selected>{{ name_selected }}</option>
 					  {% for name in agent_names %}
                     <option>{{ name }}</option>
@@ -23,11 +23,9 @@
                 <input id="date_to" class="form-control py-2 border-right-0 border" name="date_to" type="search" placeholder="To: dd-mm-yyyy">
                 </div>
             	</div>
-				<div class="form-group col-md-1">
+				<div class="form-group col-md-2">
  					<button type="submit" class="btn btn-sm btn-info">Search</button>
-                </div>
-				<div class="form-group col-md-1">
- 					<div class="d-flex justify-content-end"><a href="">Refresh</a></div>
+					<a href="" class="btn btn-sm btn-info"> &#x21BB;</a>
                 </div>
 
 
@@ -52,8 +50,8 @@
     </div>
 
 	<div class=" card card-body">
-			<div class="d-flex justify-content-center"><h6>Accounts Ledger</h6></div>
-			<div class="d-flex justify-content-center"><h6>{{ account_name }}</h6></div>
+			<div class="d-flex justify-content-center"><h6>Bkash Ledger</h6></div>
+			<div class="d-flex justify-content-center"><h6>{{ agent_name }}</h6></div>
 			<div class="d-flex justify-content-center">Date: {{date_criteria}}</div>
 			<div class="btn btn-secondary btn-sm btn-block bg-steel">
 				Main Balance : {{ main_balance }}
@@ -61,17 +59,19 @@
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Date</th>
-					<th>Name</th>
+					<th>Agent Name</th>
+					<th>Payed To</th>
 					<th>Descriptions</th>
-					<th>Debit</th>
-					<th>Credit</th>
+					<th>Transaction Amount</th>
+					<th>Payed Amount</th>
 					<th>Balance</th>
 				</tr>
 
 				{% for item in ledgers %}
 					<tr>
 						<td>{{ item.date }}</td>
-						<td>{{ item.name }}</td>
+						<td>{{ item.agent_name }}</td>
+						<td>{{ item.transacted_to }}</td>
 						<td>
 							<a target="_blank" href="{{ item.url1 }}">{{ item.voucher_no }}</a>
 							 {{ item.type }} <a target="_blank" href="{{ item.url2 }}">{{ item.descriptions }}</a>

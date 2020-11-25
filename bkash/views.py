@@ -266,10 +266,18 @@ def bkash_ledger_report(request):
     dd = request.POST.get('date')
     agent_names = BkashAgents.objects.all()
     bkash_transactions = BkashTransaction.objects.all()
-    transaction_selection = bkash_transactions
     agent_payments = PaymentBkashAgent.objects.all()
+    name_contains = request.POST.get('name')
+    if name_contains is None or name_contains == '':
+        name_contains = 'Select Agent Name'
     balance = 0
     total_balance = 0
+
+    # checking name from input
+    if name_contains != 'Select Agent Name':
+        agent = BkashAgents.objects.get(agent_name=name_contains)
+        bkash_transactions = bkash_transactions.filter(agent_name=agent)
+        agent_payments = agent_payments.filter(agent_name=agent)
 
     if dd is not None and dd != 'None' and dd != '':
         dd = datetime.strptime(dd, "%d-%m-%Y")
@@ -297,47 +305,63 @@ def bkash_ledger_report(request):
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
         bkash_transactions = bkash_transactions.filter(transaction_date__range=[date1, date2])
+        agent_payments = agent_payments.filter(payment_date__range=[date1, date2])
 
     transactions = {
         'voucher': []
 
     }
 
+    for agent_payment in agent_payments:
+        key = "voucher"
+        transactions.setdefault(key, [])
+        transactions[key].append({
+            'date': agent_payment.payment_date,
+            'agent_name': agent_payment.agent_name,
+            'transacted_to': '',
+            'voucher_no': agent_payment.payment_no,
+            'descriptions': '',
+            'debit_amount': 0,
+            'credit_amount': agent_payment.amount,
+            'url1': '#',
+            'url2': '#'
+        })
+
     for bkash_transaction in bkash_transactions:
         key = "voucher"
         transactions.setdefault(key, [])
         transactions[key].append({
             'date': bkash_transaction.transaction_date,
-            'name': bkash_transaction.agent_name,
-            'voucher_no': bkash_payment.payment_no,
-            'type': 'Payed for',
-            'descriptions': bkash_payment.transaction_invoice_no,
-            'debit_amount': bkash_payment.amount,
+            'agent_name': bkash_transaction.agent_name,
+            'transacted_to': bkash_transaction.payed_to,
+            'voucher_no': bkash_transaction.invoice_no,
+            'descriptions': '',
+            'debit_amount': bkash_transaction.transaction_amount,
             'credit_amount': 0,
-            'url1': '/agent_payment_list',
-            'url2': '/agent_payment_list'
+            'url1': '#',
+            'url2': '#'
         })
 
-    if ledgers['voucher']:
+    if transactions['voucher']:
         def my_function(e):
             return e['date']
 
-        ledgers['voucher'].sort(key=my_function, reverse=False)
+        transactions['voucher'].sort(key=my_function, reverse=False)
 
     report = {
         'voucher': []
     }
 
-    for item in ledgers['voucher']:
-        balance = balance - item['debit_amount'] + item['credit_amount']
+    for item in transactions['voucher']:
+        balance = balance - item['credit_amount'] + item['debit_amount']
         total_balance = total_balance + item['credit_amount']
         key = "voucher"
         report.setdefault(key, [])
         report[key].append({
             'date': item['date'],
-            'name': item['name'],
+            'agent_name': item['agent_name'],
+            'transacted_to': item['transacted_to'],
             'voucher_no': item['voucher_no'],
-            'type': item['type'],
             'descriptions': item['descriptions'],
             'debit_amount': item['debit_amount'],
             'credit_amount': item['credit_amount'],
@@ -345,6 +369,8 @@ def bkash_ledger_report(request):
             'url1': item['url1'],
             'url2': item['url2'],
         })
+    p = report['voucher']
+    print(type(p))
 
     date_criteria = 'ALL'
     if date1 is not None and date2 is not None and date1 != '':
@@ -352,15 +378,13 @@ def bkash_ledger_report(request):
         date2 = date2.strftime("%d-%m-%Y")
         date_criteria = date1 + ' to ' + date2
 
-
     context = {
         'date1': date1,
         'date_criteria': date_criteria,
         'ledgers': report['voucher'],
         'main_balance': total_balance,
-        'account_name': account_name,
-        'accounts': accounts,
-        'account_selected_option': account
+        'agent_names': agent_names,
+        'name_selected': name_contains,
     }
 
     return render(request, 'bkash/bkash_payment_ledger.html', context)
