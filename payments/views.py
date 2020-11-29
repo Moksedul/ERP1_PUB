@@ -18,6 +18,7 @@ from core.views import buy_total_amount
 
 def load_buy_vouchers(request):
     name = request.GET.get('name')
+    print(name)
     vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('voucher_number')
     context = {
         'vouchers': vouchers,

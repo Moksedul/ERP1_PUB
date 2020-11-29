@@ -73,10 +73,10 @@ function showChequeDetails() {
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
   <script>
-    $("#id_payment_for_person").select(function () {
+    $("#id_payment_for_person").change(function () {
       var url = $("#paymentForm").attr("data-vouchers-url");
       var nameId = $(this).val();
-
+       console.log(nameId);
       $.ajax({
         url: url,
         data: {
@@ -92,7 +92,16 @@ function showChequeDetails() {
 
 <script>
     $(document).ready(function () {
+
         $('#id_payment_for_person').select2({
+
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+
+        $('#id_payment_from_account').select2({
 
         });
     });
