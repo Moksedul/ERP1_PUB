@@ -71,8 +71,9 @@ function showChequeDetails() {
 
 <!-- for voucher option load by seller name -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
   <script>
-    $("#id_payment_for_person").change(function () {
+    $("#id_payment_for_person").select(function () {
       var url = $("#paymentForm").attr("data-vouchers-url");
       var nameId = $(this).val();
 
@@ -88,4 +89,13 @@ function showChequeDetails() {
 
     });
   </script>
+
+<script>
+    $(document).ready(function () {
+        $('#id_payment_for_person').select2({
+
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 {% endblock content %}

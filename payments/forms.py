@@ -1,5 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
+
+from organizations.models import Persons
 from .models import Payment, BuyVoucher
 
 
@@ -34,3 +36,11 @@ class PaymentForm(ModelForm):
                 pass  # invalid input from the client; ignore and fallback to empty Voucher queryset
         # elif self.instance.pk:
         #     self.fields['voucher_no'].queryset = self.instance.voucher_number.voucher_no_set.order_by('voucher_number')
+        #
+        # self.fields['payment_for_person'].queryset = Persons.objects.none()
+        #
+        # if 'payment_for_person' in self.data:
+        #     self.fields['payment_for_person'].queryset = Persons.objects.all()
+        #
+        # elif self.instance.pk:
+        #     self.fields['payment_for_person'].queryset = Persons.objects.all().filter(pk=self.instance.Persons.pk)
