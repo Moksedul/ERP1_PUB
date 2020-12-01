@@ -1,6 +1,5 @@
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
-from django_select2.forms import Select2Widget
 
 from organizations.models import Persons
 from .models import Payment, BuyVoucher
@@ -14,7 +13,6 @@ class PaymentForm(ModelForm):
         widgets = {
             'payment_date': AdminDateWidget(),
             'cheque_date': AdminDateWidget(),
-            'payment_for_person': Select2Widget
         }
         labels = {
             'cheque_PO_ONL_no': 'Cheque/PO/ONL No',
