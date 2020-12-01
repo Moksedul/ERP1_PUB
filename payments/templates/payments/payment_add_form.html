@@ -72,7 +72,7 @@ function showChequeDetails() {
 
 <!-- for voucher option load by seller name -->
   <script>
-    $("#id_payment_for_person").change(function () {
+    $(".select2-selection__rendered").change(function () {
       var url = $("#paymentForm").attr("data-vouchers-url");
       var nameId = $(this).val();
        console.log(nameId);
@@ -89,25 +89,21 @@ function showChequeDetails() {
     });
   </script>
 
-<!--<script>-->
-<!--    $(document).ready(function () {-->
-
-<!--        $('#id_payment_for_person').select2({-->
-
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-<!--<script>-->
-<!--    $(document).ready(function () {-->
-
-<!--        $('#id_payment_from_account').select2({-->
-
-<!--        });-->
-<!--    });-->
-<!--</script>-->
 <script>
-$(document).ready(function () {
-   $("select").select2();
-});
+    $(document).ready(function () {
+
+        $('#id_payment_for_person').select2({
+
+        });
+    });
 </script>
+<script>
+    $(document).ready(function () {
+
+        $('#id_payment_from_account').select2({
+
+        });
+    });
+</script>
+
 {% endblock content %}
