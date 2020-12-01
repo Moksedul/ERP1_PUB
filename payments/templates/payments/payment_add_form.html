@@ -72,7 +72,7 @@ function showChequeDetails() {
 
 <!-- for voucher option load by seller name -->
   <script>
-    $(".select2-selection__rendered").change(function () {
+    $("#id_payment_for_person").change(function () {
       var url = $("#paymentForm").attr("data-vouchers-url");
       var nameId = $(this).val();
        console.log(nameId);
