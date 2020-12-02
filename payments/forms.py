@@ -23,7 +23,8 @@ class PaymentForm(ModelForm):
         super().__init__(*args, **kwargs)
         # self.fields['voucher_no'].queryset = BuyVoucher.objects.none()
         self.fields['payment_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
-        self.fields['payment_for_person'].widget.attrs.update({'onchange': 'voucherFilter()'})
+        # self.fields['payment_for_person'].widget.attrs.update({'class': "selectpicker"})
+        # self.fields['payment_for_person'].widget.attrs.update({'data-live-search': "true"})
         self.fields['payment_no'].widget.attrs['readonly'] = True
 
         if 'payment_for_person' in self.data:
