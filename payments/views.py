@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from daily_cash.views import create_daily_cash
 from ledger.views import create_account_ledger
+from products.models import Products
 from .models import Payment
 from vouchers.models import BuyVoucher
 from organizations.models import Persons
@@ -18,8 +19,9 @@ from core.views import buy_total_amount
 
 def load_buy_vouchers(request):
     name = request.GET.get('name')
-    print(name)
+
     vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('voucher_number')
+    print(vouchers)
     context = {
         'vouchers': vouchers,
     }
@@ -34,9 +36,16 @@ class PersonCreatePayment(LoginRequiredMixin, CreateView):
     success_url = '/add_payment'
 
 
+def payment_create(request):
+    persons = Persons.objects.all()
+    products = Payment.objects.all()
+
+    return render(request, 'payments/payment1.html', {'products': products, 'persons': persons})
+
+
 class PaymentCreate(LoginRequiredMixin, CreateView):
     form_class = PaymentForm
-    template_name = 'payments/payment_add_form.html'
+    template_name = 'payments/payment_form.html'
     success_url = '/payment_list'
 
     def form_valid(self, form):
@@ -68,7 +77,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
 class PaymentUpdateView(LoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
-    template_name = 'payments/payment_update_form.html'
+    template_name = 'payments/payment_form.html'
 
 
 @login_required()
