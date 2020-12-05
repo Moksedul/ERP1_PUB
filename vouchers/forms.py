@@ -23,6 +23,10 @@ class BuyForm(ModelForm):
             'date_added': AdminDateWidget(),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['voucher_number'].widget.attrs['readonly'] = True
+
 
 class GeneralForm(ModelForm):
     class Meta:

@@ -1,4 +1,7 @@
 from datetime import datetime
+
+from django.shortcuts import render
+
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
 from collection.models import Collection
@@ -7,6 +10,16 @@ from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
 from vouchers.models import *
+
+
+def load_person_image(request):
+    name = request.GET.get('name')
+    person = Persons.objects.get(id=name)
+    print(person)
+    context = {
+        'person': person,
+    }
+    return render(request, 'main/person_image.html', context)
 
 
 def sale_total_amount(pk):

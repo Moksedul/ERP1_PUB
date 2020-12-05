@@ -1,41 +1,38 @@
 {% extends "main/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<style>
-      input[type=text],input[type=number], select {
-      font-size: 10px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-  };
-</style>
+
     <div class="container">
-        <h5 class="text-center">Add Buy Voucher</h5>
+        <h5 class="text-center">{{form_name}}</h5>
+        <div id="person_image"></div>
         <hr>
-        <form method="post" >
+          <form method="post"
+              id="buyForm"
+              data-image-url="{% url 'load-person-image' %}" novalidate>
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-2 mb-0" >
                    {{ form.voucher_number|as_crispy_field }}
                 </div>
-                <div class="col-md-3 mb-0" >
+                <div class="col-md-4 mb-0" >
                     <div class="row">
                         <div class="form-group col-10 pr-0" >{{ form.seller_name|as_crispy_field }}</div>
                         <div class="col-2 mt-3 pl-0 pt-3"><a class="btn btn-sm btn-info" href="{% url 'add-person-buy' %}">Add</a></div>
                     </div>
                 </div>
-                <div class="form-group col-md-3 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.product_name|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.weight|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.number_of_bag|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.number_of_vehicle|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.rate|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-6 mb-0" >
@@ -64,7 +61,36 @@
                 </div>
 
             </div>
-                <button class="btn btn-outline-info" type="submit">Saves</button>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
     </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function ()
+{
+   var $select1 = $('#id_seller_name');
+       $select1.on('change',function()
+       {
+            var url2 = $("#buyForm").attr("data-image-url");
+            var nameId = $(this).val();
+             $.ajax({
+                        url: url2,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#person_image").html(data);
+                        }
+                  });
+       }).trigger('change');
+});
+</script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_seller_name").select2({});
+    $("#id_product_name").select2({});
+    $("#id_bazar_or_company_name").select2({});
+});
+</script>
 {% endblock content %}

@@ -27,6 +27,13 @@ class BuyVoucherCreateView(LoginRequiredMixin, CreateView):
         form.instance.added_by = self.request.user
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New Buy'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New Buy'
+        return context
+
 
 class BuyListView(LoginRequiredMixin, ListView):
     model = BuyVoucher
@@ -38,7 +45,14 @@ class BuyListView(LoginRequiredMixin, ListView):
 class BuyVoucherUpdateView(LoginRequiredMixin, UpdateView):
     form_class = BuyForm
     model = BuyVoucher
-    template_name = 'vouchers/buyvoucher_update_form.html'
+    template_name = 'vouchers/buyvoucher_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Buy Update'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Buy Update'
+        return context
 
 
 class BuyDeleteView(LoginRequiredMixin, DeleteView):

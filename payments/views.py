@@ -17,16 +17,6 @@ from .forms import PaymentForm
 from core.views import buy_total_amount
 
 
-def load_person_image(request):
-    name = request.GET.get('name')
-    person = Persons.objects.get(id=name)
-    print(person)
-    context = {
-        'person': person,
-    }
-    return render(request, 'payments/person_image.html', context)
-
-
 def load_buy_vouchers(request):
     name = request.GET.get('name')
     person = Persons.objects.get(id=name)
