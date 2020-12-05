@@ -17,11 +17,20 @@ from .forms import PaymentForm
 from core.views import buy_total_amount
 
 
+def load_person_image(request):
+    name = request.GET.get('name')
+    person = Persons.objects.get(id=name)
+    print(person)
+    context = {
+        'person': person,
+    }
+    return render(request, 'payments/person_image.html', context)
+
+
 def load_buy_vouchers(request):
     name = request.GET.get('name')
-
+    person = Persons.objects.get(id=name)
     vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('voucher_number')
-    print(vouchers)
     context = {
         'vouchers': vouchers,
     }
@@ -34,13 +43,6 @@ class PersonCreatePayment(LoginRequiredMixin, CreateView):
     fields = '__all__'
     template_name = 'organizations/person_add.html'
     success_url = '/add_payment'
-
-
-def payment_create(request):
-    persons = Persons.objects.all()
-    products = Payment.objects.all()
-
-    return render(request, 'payments/payment1.html', {'products': products, 'persons': persons})
 
 
 class PaymentCreate(LoginRequiredMixin, CreateView):
@@ -66,6 +68,13 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New Payment'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New Payment'
+        return context
+
 
 class PaymentListView(LoginRequiredMixin, ListView):
     model = Payment
@@ -78,6 +87,13 @@ class PaymentUpdateView(LoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
     template_name = 'payments/payment_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Payment Update'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Payment Update'
+        return context
 
 
 @login_required()

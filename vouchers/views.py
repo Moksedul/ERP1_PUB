@@ -21,7 +21,7 @@ class PersonCreateBuy(LoginRequiredMixin, CreateView):
 # buy voucher start
 class BuyVoucherCreateView(LoginRequiredMixin, CreateView):
     form_class = BuyForm
-    template_name = 'vouchers/buyvoucher_add_form.html'
+    template_name = 'vouchers/buyvoucher_form.html'
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user

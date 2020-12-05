@@ -7,6 +7,7 @@ urlpatterns = [
     path('add_payment', PaymentCreate.as_view(), name='add-payment'),
     path('payment/add_person', PersonCreatePayment.as_view(), name='add-person-payment'),
     path('load_buy_vouchers/', load_buy_vouchers, name='load-buy-vouchers'),
+    path('load_person_image/', load_person_image, name='load-person-image'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('payment_list', PaymentListView.as_view(), name='payment-list'),
     path('payment/<int:pk>/detail', payment_details, name='payment-detail'),

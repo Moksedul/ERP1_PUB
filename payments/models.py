@@ -39,7 +39,7 @@ def increment_payment_number():
 class Payment(models.Model):
     payment_no = models.CharField(max_length=50, unique=True, default=increment_payment_number)
     payment_for_person = models.ForeignKey(Persons, null=True, on_delete=models.CASCADE)
-    voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE, blank=True)
+    voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE)
     payed_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     payed_to = models.CharField(max_length=50, null=True, blank=True)
     payment_date = models.DateField(default=now)

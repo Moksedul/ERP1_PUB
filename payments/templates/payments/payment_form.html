@@ -2,9 +2,14 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h5 class="text-center">Add Payment</h5>
+        <h5 class="text-center">{{form_name}}</h5>
+        <div id="person_image"></div>
         <hr>
-        <form method="post" id="paymentForm" data-vouchers-url="{% url 'load-buy-vouchers' %}" novalidate>
+        <form method="post"
+              id="paymentForm"
+              data-vouchers-url="{% url 'load-buy-vouchers' %}"
+              data-image-url="{% url 'load-person-image' %}" novalidate>
+
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-2 mb-0" >
@@ -52,7 +57,7 @@
                    {{ form.remarks|as_crispy_field }}
                 </div>
             </div>
-                <button class="btn btn-outline-info" type="submit">Save</button>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
     </div>
 
@@ -80,18 +85,29 @@ $(document).ready(function ()
        $options = $select2.find('option');
        $select1.on('change',function()
        {
-          var url = $("#paymentForm").attr("data-vouchers-url");
-      var nameId = $(this).val();
-       console.log(nameId);
-      $.ajax({
-        url: url,
-        data: {
-          'name': nameId
-        },
-        success: function (data) {
-          $("#select2").html(data);
-        }
-      });
+            var url1 = $("#paymentForm").attr("data-vouchers-url");
+            var url2 = $("#paymentForm").attr("data-image-url");
+            var nameId = $(this).val();
+            $.ajax({
+                        url: url1,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#select2").html(data);
+                          $("#person_image").html(data);
+                        }
+                  });
+
+             $.ajax({
+                        url: url2,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#person_image").html(data);
+                        }
+                  });
        }).trigger('change');
 });
 </script>
