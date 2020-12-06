@@ -1,0 +1,75 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h5 class="text-center">{{form_name}}</h5>
+        <div id="person_image"></div>
+        <hr>
+        <form method="post"
+              id="generalForm"
+              data-image-url="{% url 'load-person-image' %}" novalidate>
+            {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group col-md-2 mb-0" >
+                       {{ form.voucher_number|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-5 mb-0" >
+                       {{ form.person_name|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-5 mb-0" >
+                       {{ form.cost_amount|as_crispy_field }}
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4 mb-0" >
+                       {{ form.cost_Descriptions|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-8 mb-0" >
+                        <div class="form-row">
+                            <div class="form-group col-md-8 mb-0" >
+                            {{ form.from_account|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-4 mb-0" >
+                            {{ form.date_added|as_crispy_field }}
+                            </div>
+                            <div class="form-group col-md-12 mb-0" >
+                               {{ form.remarks|as_crispy_field }}
+                            </div>
+                        </div>
+                </div>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
+            </div>
+        </form>
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function ()
+{
+   var $select1 = $('#id_person_name');
+       $select1.on('change',function()
+       {
+            var url2 = $("#generalForm").attr("data-image-url");
+            var nameId = $(this).val();
+             $.ajax({
+                        url: url2,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#person_image").html(data);
+                        }
+                  });
+       }).trigger('change');
+});
+</script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_person_name").select2({});
+
+});
+</script>
+{% endblock content %}

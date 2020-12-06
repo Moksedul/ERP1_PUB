@@ -15,7 +15,6 @@ from vouchers.models import *
 def load_person_image(request):
     name = request.GET.get('name')
     person = Persons.objects.get(id=name)
-    print(person)
     context = {
         'person': person,
     }

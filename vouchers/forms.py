@@ -33,6 +33,13 @@ class GeneralForm(ModelForm):
         model = GeneralVoucher
         fields = '__all__'
         exclude = ('transaction',)
+        labels = {
+            'cost_amount': 'Amount'
+        }
         widgets = {
             'date_added': AdminDateWidget(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['voucher_number'].widget.attrs['readonly'] = True

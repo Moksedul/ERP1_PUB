@@ -64,11 +64,18 @@ class BuyDeleteView(LoginRequiredMixin, DeleteView):
 # sale voucher start
 class SaleCreateView(LoginRequiredMixin, CreateView):
     form_class = SaleForm
-    template_name = 'vouchers/salevoucher_add_form.html'
+    template_name = 'vouchers/salevoucher_form.html'
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New Sale'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New Sale'
+        return context
 
 
 class SaleListView(LoginRequiredMixin, ListView):
@@ -81,7 +88,14 @@ class SaleListView(LoginRequiredMixin, ListView):
 class SaleUpdateView(LoginRequiredMixin, UpdateView):
     model = SaleVoucher
     form_class = SaleForm
-    template_name = 'vouchers/sale_update_form.html'
+    template_name = 'vouchers/salevoucher_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Sale Update'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Sale Update'
+        return context
 
 
 class SaleDeleteView(LoginRequiredMixin, DeleteView):
@@ -93,7 +107,7 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
 
 class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
     form_class = GeneralForm
-    template_name = 'vouchers/general_voucher_add_form.html'
+    template_name = 'vouchers/general_voucher_form.html'
 
     def form_valid(self, form):
         form.save()
@@ -106,16 +120,31 @@ class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
             'bk_payment_no': None,
             'salary_payment': None,
             'description': voucher.cost_Descriptions,
-            'type': 'G'
+            'type': 'G',
+            'date': voucher.date_added
         }
         create_account_ledger(data)
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New General Voucher'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New General Voucher'
+        return context
 
 
 class GeneralVoucherUpdateView(LoginRequiredMixin, UpdateView):
     model = GeneralVoucher
     form_class = GeneralForm
-    template_name = 'vouchers/general_voucher_update_form.html'
+    template_name = 'vouchers/general_voucher_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update General Voucher'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update General Voucher'
+        return context
 
 
 class GeneralVoucherListView(LoginRequiredMixin, ListView):
@@ -139,33 +168,22 @@ def sale_details(request, pk):
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
-
     for challan in challan:
         pass
 
-    total_weight = challan.weight
-    total_amount = total_weight*sale.rate
+    challan_weight = challan.weight
+    total_challan_amount = challan_weight*sale.rate
 
-    if sale.weight_of_each_bag is not None:
-        total_self_weight_of_bag = sale.weight_of_each_bag*challan.number_of_bag
+    fotka_amount = sale.fotka_weight * sale.fotka_rate
 
-    if sale.per_bag_unloading_cost is not None:
-        total_unloading_cost = sale.per_bag_unloading_cost*challan.number_of_bag
-
-    if sale.measuring_cost_per_kg is not None:
-        total_measuring_cost = sale.measuring_cost_per_kg*total_weight
-
-    weight_after_deduction = total_weight - total_self_weight_of_bag
-    total_amount_without_bag = sale.rate*weight_after_deduction
-    amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
 
     context = {
         'sale': sale,
         'challan': challan,
-        'total_weight': total_weight,
+        'total_weight': challan_weight,
         'weight_after_deduction': weight_after_deduction,
         'amount_after_deduction': amount_after_deduction,
-        'total_amount': total_amount,
+        'total_amount': total_challan_amount,
         'total_unloading_cost': total_unloading_cost,
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost

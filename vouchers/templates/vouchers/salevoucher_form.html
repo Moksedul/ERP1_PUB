@@ -2,19 +2,35 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
-    <h5 class="text-center">Update Sale Voucher</h5>
+    <h5 class="text-center">{{form_name}}</h5>
         <hr>
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-12 mb-0" >
+                <div class="form-group col-md-2 mb-0" >
                    {{ form.voucher_number|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-5 mb-0" >
                    {{ form.challan_no|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-5 mb-0" >
                    {{ form.rate|as_crispy_field }}
+                </div>
+                <div class="col-md-6 mb-0 border border-primary">
+                    <div class="row">
+                        <div class="form-group col-md-8 mb-0" >
+                           {{ form.fotka_weight|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-md-4 mb-0" >
+                           {{ form.fotka_rate|as_crispy_field }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.seed_weight|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.moisture_weight|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.per_bag_unloading_cost|as_crispy_field }}
@@ -29,9 +45,6 @@
                    {{ form.date_added|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-2 mb-0" >
-                   {{ form.added_by|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-8 mb-0" >
                     <h6>Sale Status</h6>
                    {{ form.status|as_crispy_field }}
                 </div>
@@ -40,7 +53,7 @@
                 </div>
 
             </div>
-                <button class="btn btn-outline-info" type="submit">Update</button>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
     </div>
 {% endblock content %}

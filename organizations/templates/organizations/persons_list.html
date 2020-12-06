@@ -5,9 +5,10 @@
 		{% include 'main/settings_sidebar.html' %}
 	</div>
 	<div class="col-10">
+		<input class="form-control" id="myInput" type="text" placeholder="Type to Search..">
 		<div class="card card-body">
 				<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-person'%}">Add Person</a>
-				<table class="table table-sm table-striped table-bordered">
+				<table class="table table-sm table-striped table-bordered" id="myTable">
 					<tr>
 						<th>Person Name</th>
 						<th>Company Name</th>
@@ -18,7 +19,6 @@
 						<th>Update</th>
 						<th>Remove</th>
 					</tr>
-
 					{% for person in persons %}
 						<tr>
 							<td>{{ person.person_name }}</td>
@@ -35,11 +35,21 @@
 						</tr>
 					{% endfor %}
 
-
 				</table>
 		</div>
 
 	</div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
 {% endblock content %}
