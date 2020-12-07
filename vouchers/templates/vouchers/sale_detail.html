@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row ">
         <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
+        <a href="{% url 'sale-update' sale.id%}"><button class="btn-xs btn-info">E</button></a>
     </div>
     <hr>
     <div class="row mb-3">
@@ -50,9 +51,26 @@
         <div class="col-3">{{ sale.rate }} BDT.</div>
     </div>
     <div class="row mb-2">
-        <div class="col-3"><strong>Total Amount</strong></div>
+        <div class="col-3"><strong>Total Challan Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ total_amount }} BDT.</div>
+        <div class="col-3">{{ total_challan_amount }} BDT.</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3"><strong>Weight of Fotka</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ sale.fotka_weight }} Kg.</div>
+        <div class="col-2"><strong>F.Rate : </strong> {{ sale.fotka_rate }} Tk.</div>
+        <div class="col-1"><strong>F.Amount</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ fotka_amount }} Tk.</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3"><strong>Seed Weight </strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ sale.seed_weight }} Kg.</div>
+        <div class="col-3"><strong>Moisture Weight</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ sale.moisture_weight }} Kg.</div>
     </div>
     <div class="row mb-3">
         <div class="col-3"><strong>Self Weight of Each Bag</strong></div>
@@ -61,23 +79,6 @@
         <div class="col-3"><strong>Total Self Weight of Bags</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ total_self_weight_of_bag }} Kg.</div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-3"><strong>Unloading Cost/bag</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.per_bag_unloading_cost }} BDT.</div>
-        <div class="col-3"><strong>Total Unloading cost</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ total_unloading_cost }} BDT.</div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-3"><strong>Measuring Cost/Kg</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.measuring_cost_per_kg }} BDT.</div>
-        <div class="col-3"><strong>Total Measuring cost</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ total_measuring_cost }} BDT.</div>
     </div>
 
 <hr>
@@ -94,7 +95,23 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ amount_after_deduction }} BDT.</div>
     </div>
-
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Fotka Amount</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">(+){{ fotka_amount }} BDT.</div>
+    </div>
+    <hr>
+    <div class="row mb-3">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Net Amount</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ net_amount }} BDT.</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2"><strong>In Words : </strong></div>
+        <div class="col-10">{{ sale.remarks }}</div>
+    </div>
     <div class="row mb-3">
         <div class="col-3"><strong>Remarks</strong></div>
         <div class="col-1"><strong>:</strong></div>

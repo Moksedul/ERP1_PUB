@@ -174,8 +174,18 @@ def sale_details(request, pk):
     challan_weight = challan.weight
     total_challan_amount = challan_weight*sale.rate
 
-    fotka_amount = sale.fotka_weight * sale.fotka_rate
+    total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag
 
+    fotka_weight = sale.fotka_weight
+    fotka_amount = fotka_weight * sale.fotka_rate
+
+    moisture_weight = sale.moisture_weight
+
+    seed_weight = sale.seed_weight
+
+    weight_after_deduction = challan_weight - moisture_weight - seed_weight - fotka_weight - total_self_weight_of_bag
+    amount_after_deduction = weight_after_deduction * sale.rate
+    net_amount = amount_after_deduction + fotka_amount
 
     context = {
         'sale': sale,
@@ -183,10 +193,11 @@ def sale_details(request, pk):
         'total_weight': challan_weight,
         'weight_after_deduction': weight_after_deduction,
         'amount_after_deduction': amount_after_deduction,
-        'total_amount': total_challan_amount,
-        'total_unloading_cost': total_unloading_cost,
+        'total_challan_amount': total_challan_amount,
+        'fotka_amount': fotka_amount,
         'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': total_measuring_cost
+        'total_measuring_cost': total_measuring_cost,
+        'net_amount': net_amount
     }
     return render(request, 'vouchers/sale_detail.html', context)
 
