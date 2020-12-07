@@ -168,6 +168,11 @@ def sale_details(request, pk):
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
+    moisture_weight = 0
+    seed_weight = 0
+    fotka_weight = 0
+    fotka_amount = 0
+    
     for challan in challan:
         pass
 
@@ -176,12 +181,15 @@ def sale_details(request, pk):
 
     total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag
 
-    fotka_weight = sale.fotka_weight
-    fotka_amount = fotka_weight * sale.fotka_rate
+    if sale.fotka_weight is not None:
+        fotka_weight = sale.fotka_weight
+        fotka_amount = fotka_weight * sale.fotka_rate
 
-    moisture_weight = sale.moisture_weight
+    if sale.moisture_weight is not None:
+        moisture_weight = sale.moisture_weight
 
-    seed_weight = sale.seed_weight
+    if sale.seed_weight is not None:
+        seed_weight = sale.seed_weight
 
     weight_after_deduction = challan_weight - moisture_weight - seed_weight - fotka_weight - total_self_weight_of_bag
     amount_after_deduction = weight_after_deduction * sale.rate

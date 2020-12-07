@@ -2,10 +2,13 @@
   <dictionary name="Moksedul Alam">
     <words>
       <w>bazar</w>
+      <w>bigdigit</w>
       <w>buyvoucher</w>
       <w>catlog</w>
       <w>challan</w>
       <w>challans</w>
+      <w>crore</w>
+      <w>devideby</w>
       <w>dropdown</w>
       <w>endblock</w>
       <w>fatema</w>
@@ -14,13 +17,16 @@
       <w>fels</w>
       <w>fotka</w>
       <w>imgs</w>
+      <w>lakh</w>
       <w>navbar</w>
+      <w>predef</w>
       <w>preloader</w>
       <w>salevoucher</w>
       <w>selectpicker</w>
       <w>tableta</w>
       <w>tabletech</w>
       <w>taka</w>
+      <w>upto</w>
     </words>
   </dictionary>
 </component>
