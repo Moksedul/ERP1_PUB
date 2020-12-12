@@ -1,86 +1,29 @@
-def handel_upto_99(number):
-    predef = {0:"zero",1:"one",2:"two",3:"three",4:"four",5:"five",6:"six",7:"seven",8:"eight",9:"nine",10:"ten",11:"eleven",12:"twelve",13:"thirteen",14:"fourteen",15:"fifteen",16:"sixteen",17:"seventeen",18:"eighteen",19:"nineteen",20:"twenty",30:"thirty",40:"forty",50:"fifty",60:"sixty",70:"seventy",80:"eighty",90:"ninety",100:"hundred",100000:"lakh",10000000:"crore",1000000:"million",1000000000:"billion"}
-    if number in predef.keys():
-        return predef[number]
-    else:
-        return predef[(number/10)*10]+' '+predef[number%10]
+import decimal    
 
 
-def return_bigdigit(number, devideby):
-    predef = {0: "zero",
-              1: "one",
-              2: "two",
-              3: "three",
-              4: "four",
-              5: "five",
-              6: "six",
-              7: "seven",
-              8: "eight",
-              9: "nine",
-              10: "ten",
-              11: "eleven",
-              12: "twelve",
-              13: "thirteen",
-              14: "fourteen",
-              15: "fifteen",
-              16: "sixteen",
-              17: "seventeen",
-              18: "eighteen",
-              19: "nineteen",
-              20: "twenty",
-              30: "thirty",
-              40: "forty",
-              50: "fifty",
-              60: "sixty",
-              70: "seventy",
-              80: "eighty",
-              90: "ninety",
-              100: "hundred",
-              1000: "thousand",
-              100000: "lakh",
-              10000000: "crore",
-              1000000: "million",
-              1000000000: "billion"}
-    if devideby in predef.keys():
+def num2words(num):
+    num = decimal.Decimal(num)
+    decimal_part = num - int(num)
+    num = int(num)
 
-        return predef[number/devideby]+" "+predef[devideby]
-    else:
-        devideby /= 10
-        return handel_upto_99(number/devideby)+" "+predef[devideby]
+    if decimal_part:
+        return num2words(num) + " point " + (" ".join(num2words(i) for i in str(decimal_part)[2:]))
+
+    under_20 = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
+    tens = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
+    above_100 = {100: 'Hundred', 1000: 'Thousand', 100000: 'Lakhs', 10000000: 'Crores'}
+
+    if num < 20:
+        return under_20[num]
+
+    if num < 100:
+        return tens[num // 10 - 2] + ('' if num % 10 == 0 else ' ' + under_20[num % 10])
+
+    # find the appropriate pivot - 'Million' in 3,603,550, or 'Thousand' in 603,550
+    pivot = max([key for key in above_100.keys() if key <= num])
+
+    return num2words(num // pivot) + ' ' + above_100[pivot] + ('' if num % pivot==0 else ' ' + num2words(num % pivot))
 
 
-def digit2words(number):
-    dev = {
-        100: "hundred",
-        1000: "thousand",
-        100000: "lakh",
-        10000000: "crore",
-        1000000000: "billion"}
-    if number == 0:
-        return "Zero"
-    if number < 100:
-        result = handel_upto_99(number)
-
-    else:
-        result = ""
-        while number >= 100:
-            devideby = 1
-            length = len(str(number))
-            for i in range(length-1):
-                devideby *= 10
-            if number % devideby == 0:
-                if devideby in dev:
-                    return handel_upto_99(number/devideby)+" " + dev[devideby]
-                else:
-                    return handel_upto_99(number/(devideby/10))+" " + dev[devideby/10]
-            res = return_bigdigit(number, devideby)
-            result = result+' '+res
-            if devideby not in dev:
-                number = number-((devideby/10)*(number/(devideby/10)))
-            number = number-devideby*(number/devideby)
-
-        if number < 100:
-            result = result + ' ' + handel_upto_99(number)
-    return result
-
-print(digit2words(1458))
+print(num2words(decimal.Decimal("1054785")))
+# Six Lakhs Fifty Thousand Nine Hundred Fifty Eight point Three Two
