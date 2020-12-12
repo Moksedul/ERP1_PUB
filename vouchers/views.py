@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from core.digit2words import d2w
 from ledger.views import create_account_ledger
 from .forms import *
 from challan.models import Challan
@@ -194,7 +195,7 @@ def sale_details(request, pk):
     weight_after_deduction = challan_weight - moisture_weight - seed_weight - fotka_weight - total_self_weight_of_bag
     amount_after_deduction = weight_after_deduction * sale.rate
     net_amount = amount_after_deduction + fotka_amount
-
+    net_amount_in_words = d2w(net_amount)
     context = {
         'sale': sale,
         'challan': challan,
@@ -205,7 +206,8 @@ def sale_details(request, pk):
         'fotka_amount': fotka_amount,
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost,
-        'net_amount': net_amount
+        'net_amount': net_amount,
+        'net_amount_in_words': net_amount_in_words
     }
     return render(request, 'vouchers/sale_detail.html', context)
 
