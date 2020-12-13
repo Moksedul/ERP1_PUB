@@ -2,9 +2,12 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h5 class="text-center">Update Challan</h5>
+        <h5 class="text-center">{{form_name}}</h5>
+        <div id="person_image"></div>
         <hr>
-        <form method="post" >
+        <form method="post"
+              id="challanForm"
+              data-image-url="{% url 'load-person-image' %}" novalidate>
             {% csrf_token %}
             <div class="form-row">
             <div class="form-group col-md-2 mb-0">
@@ -49,7 +52,38 @@
                 </div>
 
             </div>
-                <button class="btn btn-outline-info" type="submit">Update</button>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
     </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function ()
+{
+   var $select1 = $('#id_buyer_name');
+       $select1.on('change',function()
+       {
+            var url2 = $("#challanForm").attr("data-image-url");
+            var nameId = $(this).val();
+             $.ajax({
+                        url: url2,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#person_image").html(data);
+                        }
+                  });
+       }).trigger('change');
+});
+</script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_buyer_name").select2({});
+    $("#id_product_name").select2({});
+    $("#id_company_name").select2({});
+});
+</script>
 {% endblock content %}

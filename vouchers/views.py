@@ -58,7 +58,15 @@ class BuyVoucherUpdateView(LoginRequiredMixin, UpdateView):
 
 class BuyDeleteView(LoginRequiredMixin, DeleteView):
     model = BuyVoucher
+    template_name = 'main/confirm_delete.html'
     success_url = '/buy_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Buy Voucher'
+        context['tittle'] = 'Buy Voucher Delete'
+        context['cancel_url'] = '/buy_list'
+        return context
 # buy voucher end
 
 
@@ -101,8 +109,15 @@ class SaleUpdateView(LoginRequiredMixin, UpdateView):
 
 class SaleDeleteView(LoginRequiredMixin, DeleteView):
     model = SaleVoucher
-    template_name = 'vouchers/sale_confirm_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/sale_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Sale Voucher'
+        context['tittle'] = 'Sale Voucher Delete'
+        context['cancel_url'] = '/sale_list'
+        return context
 # sale voucher end
 
 
@@ -157,8 +172,15 @@ class GeneralVoucherListView(LoginRequiredMixin, ListView):
 
 class GeneralVoucherDeleteView(LoginRequiredMixin, DeleteView):
     model = GeneralVoucher
-    template_name = 'vouchers/general_voucher_confirm_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/general_voucher_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'General Voucher'
+        context['tittle'] = 'General Voucher Delete'
+        context['cancel_url'] = '/general_voucher_list'
+        return context
 # sale general voucher end
 
 
@@ -235,6 +257,7 @@ def buy_details(request, pk):
     total_amount_without_bag = buy.rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
     grand_total_amount = amount_after_deduction + buy.previous_amount
+    net_amount_in_words = d2w(grand_total_amount)
 
     context = {
         'buy': buy,
@@ -245,6 +268,7 @@ def buy_details(request, pk):
         'total_amount': total_amount,
         'total_unloading_cost': total_unloading_cost,
         'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': total_measuring_cost
+        'total_measuring_cost': total_measuring_cost,
+        'net_amount_in_words': net_amount_in_words
     }
     return render(request, 'vouchers/buy_detail.html', context)

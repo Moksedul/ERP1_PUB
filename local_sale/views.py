@@ -111,5 +111,12 @@ class LocalSaleList(LoginRequiredMixin, ListView):
 
 class LocalSaleDelete(LoginRequiredMixin, DeleteView):
     model = LocalSale
-    template_name = 'local_sale/sale_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/local_sale_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Local Sale'
+        context['tittle'] = 'Local Sale Delete'
+        context['cancel_url'] = '/local_sale_list'
+        return context

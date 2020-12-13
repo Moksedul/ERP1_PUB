@@ -69,11 +69,23 @@
     </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $('#add_more').click(function() {
         var form_idx = $('#id_form-TOTAL_FORMS').val();
         $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
         $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_form-" + form_idx + "-name"
+        console.log(id);
+        $(id).select2({});
     });
+</script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_buyer_name").select2({});
+    $("#id_company_name").select2({});
+    $("#id_form-0-name").select2({});
+});
 </script>
 {% endblock content %}

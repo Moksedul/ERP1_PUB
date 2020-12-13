@@ -111,11 +111,14 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ grand_total_amount }} BDT.</div>
     </div>
-
     <div class="row mb-3">
-        <div class="col-3"><strong>Remarks</strong></div>
+        <div class="col-2"><strong>In Words  </strong></div>
+        <div class="col-10"><strong>:</strong> {{net_amount_in_words}} Taka only</div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2"><strong>Remarks</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ buy.remarks }}</div>
+        <div class="col-10">{{ buy.remarks }}</div>
     </div>
 
 </div>
