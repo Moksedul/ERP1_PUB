@@ -10,11 +10,12 @@
 <a class="btn btn-info  btn-sm  " href="{% url 'add-collection-sale'%}">Add Sale Collection</a>
 <a class="btn btn-info  btn-sm  " href="{% url 'add-collection-local-sale'%}">Add Local Sale Collection</a>
 	<div class=" card card-body">
-		<div class="text-center"><h6>Collection list</h6></div>
-			<table class="table table-sm table-striped">
+		<div class="text-center"><h3>Collection list</h3></div>
+			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Collection Number</th>
-					<th>Sale Voucher Number</th>
+					<th>Voucher Number</th>
+					<th>Name</th>
 					<th>Collection Amount</th>
 					<th>Collection Date</th>
 					<th>Status</th>
@@ -32,6 +33,7 @@
 						{% else %}
 							<td>{{ collection.local_sale_voucher_no }}</td>
 						{% endif %}
+						<td>{{ collection.collected_from }}</td>
 						<td>{{ collection.collection_amount }} TK</td>
 						<td>{{ collection.collection_date }}</td>
 						<td>{% if collection.collection_status %}

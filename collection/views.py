@@ -41,7 +41,7 @@ def load_local_sale_vouchers(request):
 
 class CollectionCreateSale(LoginRequiredMixin, CreateView):
     form_class = CollectionFormSale
-    template_name = 'collections/collection_add_form.html'
+    template_name = 'collections/collection_form.html'
 
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
@@ -62,6 +62,13 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Sale Collection'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'Sale Collection'
+        return context
+
 
 # person creation from Payment form
 class PersonCreateCollection(LoginRequiredMixin, CreateView):
@@ -73,7 +80,7 @@ class PersonCreateCollection(LoginRequiredMixin, CreateView):
 
 class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
     form_class = CollectionFormLocalSale
-    template_name = 'collections/collection_add_form.html'
+    template_name = 'collections/collection_form.html'
 
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
@@ -94,12 +101,26 @@ class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Local Sale Collection'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'Local Sale Collection'
+        return context
+
 
 class CollectionListView(LoginRequiredMixin, ListView):
     model = Collection
     template_name = 'collections/collection_list.html'
     context_object_name = 'collections'
     paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Sale Collection'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Collection List'
+        return context
 
 
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):
@@ -111,13 +132,27 @@ class CollectionDeleteView(LoginRequiredMixin, DeleteView):
 class CollectionUpdateViewSale(LoginRequiredMixin, UpdateView):
     model = Collection
     form_class = CollectionFormSale
-    template_name = 'collections/collection_update_form.html'
+    template_name = 'collections/collection_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Sale Collection'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Sale Collection'
+        return context
 
 
 class CollectionUpdateViewLocalSale(LoginRequiredMixin, UpdateView):
     model = Collection
     form_class = CollectionFormLocalSale
-    template_name = 'collections/collection_update_form.html'
+    template_name = 'collections/collection_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = ' Update Local Sale Collection'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Local Sale Collection'
+        return context
 
 
 @login_required()

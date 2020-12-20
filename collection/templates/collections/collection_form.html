@@ -2,9 +2,14 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h5 class="text-center">Add Collection</h5>
-        <form method="post" id="collectionForm" data-vouchers-url1="{% url 'load-sale-vouchers' %}"
-              data-vouchers-url2="{% url 'load-local-sale-vouchers' %}" novalidate>
+        <h5 class="text-center">{{form_name}}</h5>
+        <div id="person_image"></div>
+        <form method="post"
+              id="collectionForm"
+              data-vouchers-url1="{% url 'load-sale-vouchers' %}"
+              data-vouchers-url2="{% url 'load-local-sale-vouchers' %}"
+              data-image-url="{% url 'load-person-image' %}"
+              novalidate>
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-2 mb-0" >
@@ -66,7 +71,7 @@
                    {{ form.remarks|as_crispy_field }}
                 </div>
             </div>
-                <button class="btn btn-outline-info" type="submit">Save</button>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
     </div>
 
@@ -82,42 +87,62 @@ function showChequeDetails() {
 
 }
 </script>
-
-<!-- for voucher option load by buyer name -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script>
-    $("#id_collected_from").change(function () {
-      var url = $("#collectionForm").attr("data-vouchers-url1");
-      var nameId = $(this).val();
-
-      $.ajax({
-        url: url,
-        data: {
-          'name': nameId
-        },
-        success: function (data) {
-          $("#id_sale_voucher_no").html(data);
-        }
-      });
-
-    });
-  </script>
-
+<!-- for voucher option load by seller name and search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    $("#id_collected_from").change(function () {
-      var url = $("#collectionForm").attr("data-vouchers-url2");
-      var nameId = $(this).val();
+$(document).ready(function ()
+{
+   var $select1 = $('#id_collected_from'),
+       $select2 = $('#id_local_sale_voucher_no'),
+       $select3 = $('#id_sale_voucher_no'),
+       $options1 = $select2.find('option');
+       $options2 = $select3.find('option');
+       $select1.on('change',function()
+       {
+            var url1 = $("#collectionForm").attr("data-vouchers-url2");
+            var url2 = $("#collectionForm").attr("data-image-url");
+            var url3 = $("#collectionForm").attr("data-vouchers-url1");
+            var nameId = $(this).val();
+            $.ajax({
+                        url: url1,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#id_local_sale_voucher_no").html(data);
+                        }
+                  });
 
-      $.ajax({
-        url: url,
-        data: {
-          'name': nameId
-        },
-        success: function (data) {
-          $("#id_local_sale_voucher_no").html(data);
-        }
-      });
+            $.ajax({
+                        url: url3,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#id_sale_voucher_no").html(data);
+                        }
+                  });
 
-    });
-  </script>
+             $.ajax({
+                        url: url2,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#person_image").html(data);
+                        }
+                  });
+       }).trigger('change');
+});
+</script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_collected_from").select2({});
+    $("#id_collection_to_account").select2({});
+    $("#id_sale_voucher_no").select2({});
+    $("#id_local_sale_voucher_no").select2({});
+});
+</script>
+
 {% endblock content %}
