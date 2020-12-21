@@ -108,8 +108,10 @@ def collection_report(request):
     if name_contains is None:
         name_contains = 'Select Name'
     phone_no_contains = request.GET.get('phone_no')
+    print(phone_no_contains)
     if phone_no_contains is None or phone_no_contains == '':
-        phone_no_contains = 'Type Phone No'
+        phone_no_contains = 'Select Phone No'
+        print(phone_no_contains)
 
     total_receivable = 0
     voucher_list = {
@@ -145,7 +147,7 @@ def collection_report(request):
         collections = collections.filter(collected_from=person.id)
 
     # checking phone no from input
-    if phone_no_contains != 'Type Phone No':
+    if phone_no_contains != 'Select Phone No':
         print(phone_no_contains)
         person = Persons.objects.get(contact_number=phone_no_contains)
         challans = Challan.objects.filter(buyer_name=person.id)
@@ -224,7 +226,7 @@ def collection_report(request):
         'voucher_selected': voucher_contains,
         'names': names,
         'name_selected': name_contains,
-        'phone_no_typed': phone_no_contains
+        'phone_no_selected': phone_no_contains
     }
     return render(request, "report/collection_report.html", context)
 

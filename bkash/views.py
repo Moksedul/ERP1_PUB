@@ -58,8 +58,15 @@ class BkashAgentList(LoginRequiredMixin, ListView):
 
 class AgentDelete(LoginRequiredMixin, DeleteView):
     model = BkashAgents
-    template_name = 'bkash/agent_confirm_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/agent_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Bkash Agent'
+        context['tittle'] = 'Bkash Agent Delete'
+        context['cancel_url'] = '/agent_list'
+        return context
 
 
 # person creation from Payment form
@@ -146,6 +153,13 @@ class TransactionCreate(LoginRequiredMixin, CreateView):
 
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New Bkash Transaction'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New Bkash Transaction'
+        return context
+
 
 class TransactionUpdate(LoginRequiredMixin, UpdateView):
     model = BkashTransaction
@@ -216,11 +230,25 @@ class TransactionUpdate(LoginRequiredMixin, UpdateView):
 
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Bkash Transaction'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Bkash Transaction'
+        return context
+
 
 class TransactionDelete(LoginRequiredMixin, DeleteView):
     model = BkashTransaction
-    template_name = 'bkash/transaction_confirm_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/transaction_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Bkash Transaction'
+        context['tittle'] = 'Bkash Transaction Delete'
+        context['cancel_url'] = '/transaction_list'
+        return context
 
 
 class TransactionList(LoginRequiredMixin, ListView):
@@ -251,12 +279,26 @@ class AgentPaymentCreate(LoginRequiredMixin, CreateView):
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New Agent Payment'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New Agent Payment'
+        return context
+
 
 class AgentPaymentUpdate(LoginRequiredMixin, UpdateView):
     model = PaymentBkashAgent
     form_class = PaymentBkashAgentForm
     template_name = 'bkash/agent_payment_form.html'
     success_url = '/agent_payment_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Agent Payment'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Agent Payment'
+        return context
 
 
 class AgentPaymentList(LoginRequiredMixin, ListView):
@@ -267,8 +309,15 @@ class AgentPaymentList(LoginRequiredMixin, ListView):
 
 class AgentPaymentDelete(LoginRequiredMixin, DeleteView):
     model = PaymentBkashAgent
-    template_name = 'bkash/agent_payment_confirm_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/agent_payment_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Agent Payment'
+        context['tittle'] = 'Agent Payment Delete'
+        context['cancel_url'] = '/agent_payment_list'
+        return context
 
 
 @login_required()

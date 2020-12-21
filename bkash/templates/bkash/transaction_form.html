@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h5 class="text-center">Bkash Transaction</h5>
+        <h5 class="text-center">{{form_name}}</h5>
         <hr>
         <form method="post" id="TransactionForm">
             {% csrf_token %}
@@ -47,8 +47,18 @@
 
 
             </div>
-                <button class="btn btn-outline-info" type="submit">Save</button>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
     </div>
 
+
+<!-- for options search functionality-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_payed_to").select2({});
+    $("#id_agent_name").select2({});
+});
+</script>
 {% endblock content %}

@@ -12,14 +12,12 @@
                   </select>
             </div>
                 <div class="form-group col-md-4">
-                <div class="input-group">
-                <input id="phone_no" class="form-control py-2 border-right-0 border" name="phone_no" type="search" placeholder="{{ phone_no_typed }}">
-                <span class="input-group-append">
-                    <div class="input-group-text bg-transparent">
-                        <i class="fa fa-search"></i>
-                    </div>
-                </span>
-                </div>
+                    <select id="phone_no" class="form-control" name="phone_no">
+                    <option selected>{{ phone_no_selected }}</option>
+					  {% for name in names %}
+                    <option>{{ name.contact_number }}</option>
+					  {% endfor %}
+                  </select>
             </div>
                 <div class="form-group col-md-4">
                   <select id="voucher_no" class="form-control" name="voucher_no">
@@ -101,4 +99,16 @@
     </div>
 
 </div>
+
+
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ()
+{
+    $("#name").select2({});
+    $("#voucher_no").select2({});
+    $("#phone_no").select2({});
+});
+</script>
 {% endblock content %}
