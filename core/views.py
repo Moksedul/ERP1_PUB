@@ -84,6 +84,8 @@ def buy_total_amount(pk):
     weight_after_deduction = total_weight - total_self_weight_of_bag
     total_amount_without_bag = buy.rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
+    if not buy.previous_amount:
+        buy.previous_amount = 0
     grand_total_amount = amount_after_deduction + buy.previous_amount
     return grand_total_amount
 
