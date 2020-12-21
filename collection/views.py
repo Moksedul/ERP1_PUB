@@ -125,8 +125,15 @@ class CollectionListView(LoginRequiredMixin, ListView):
 
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):
     model = Collection
-    template_name = 'collections/collection_confirm_delete.html'
+    template_name = 'main/confirm_delete.html'
     success_url = '/collection_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Collection'
+        context['cancel_url'] = '/collection_list'
+        context['tittle'] = 'Delete Collection'
+        return context
 
 
 class CollectionUpdateViewSale(LoginRequiredMixin, UpdateView):
