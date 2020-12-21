@@ -7,7 +7,6 @@ urlpatterns = [
     path('add_agent', BkashAgentCreate.as_view(), name='add-agent'),
     path('add_transaction', TransactionCreate.as_view(), name='add-transaction'),
     path('bkash/add_person', PersonCreateBkash.as_view(), name='add-person-bkash'),
-    path('bkash/add_agent', BkashAgentCreateTransaction.as_view(), name='add-agent-bkash'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path('agent_list', BkashAgentList.as_view(), name='agent-list'),
     path('transaction_list', TransactionList.as_view(), name='transaction-list'),

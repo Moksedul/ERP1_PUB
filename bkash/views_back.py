@@ -16,21 +16,21 @@ from .models import BkashAgents, BkashTransaction, PaymentBkashAgent
 class BkashAgentCreate(LoginRequiredMixin, CreateView):
     model = BkashAgents
     fields = '__all__'
-    template_name = 'bkash/agent_add_form.html'
+    template_name = 'bkash/agent_form.html'
     success_url = '/agent_list'
 
 
 class BkashAgentCreateTransaction(LoginRequiredMixin, CreateView):
     model = BkashAgents
     fields = '__all__'
-    template_name = 'bkash/agent_add_form.html'
+    template_name = 'bkash/agent_form.html'
     success_url = '/add_transaction'
 
 
 class BkashAgentUpdate(LoginRequiredMixin, UpdateView):
     model = BkashAgents
     fields = '__all__'
-    template_name = 'bkash/agent_add_form.html'
+    template_name = 'bkash/agent_form.html'
     success_url = '/agent_list'
 
 

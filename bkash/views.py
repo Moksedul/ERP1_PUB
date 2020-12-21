@@ -20,28 +20,40 @@ from .models import BkashAgents, BkashTransaction, PaymentBkashAgent
 class BkashAgentCreate(LoginRequiredMixin, CreateView):
     model = BkashAgents
     fields = '__all__'
-    template_name = 'bkash/agent_add_form.html'
+    template_name = 'bkash/agent_form.html'
     success_url = '/agent_list'
 
-
-class BkashAgentCreateTransaction(LoginRequiredMixin, CreateView):
-    model = BkashAgents
-    fields = '__all__'
-    template_name = 'bkash/agent_add_form.html'
-    success_url = '/add_transaction'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'New Bkash Agent'
+        context['button_name'] = 'Save'
+        context['tittle'] = 'New Bkash Agent'
+        return context
 
 
 class BkashAgentUpdate(LoginRequiredMixin, UpdateView):
     model = BkashAgents
     fields = '__all__'
-    template_name = 'bkash/agent_add_form.html'
+    template_name = 'bkash/agent_form.html'
     success_url = '/agent_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Update Bkash Agent'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Bkash Agent'
+        return context
 
 
 class BkashAgentList(LoginRequiredMixin, ListView):
     model = BkashAgents
     template_name = 'bkash/agent_list.html'
     context_object_name = 'agents'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tittle'] = 'Bkash Agent List'
+        return context
 
 
 class AgentDelete(LoginRequiredMixin, DeleteView):
