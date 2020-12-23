@@ -153,7 +153,12 @@ def create_account_ledger(data):
         salary_payment=data['salary_payment'],
     )
     account_ledger.save()
-    print(account_ledger.date)
+
+
+def update_account_ledger(data, pk):
+    account_ledger = AccountLedger.objects.get(collection_no_id=pk)
+    account_ledger.date = data['date']
+    account_ledger.save()
 
 
 @login_required()

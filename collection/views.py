@@ -6,7 +6,7 @@ from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from ledger.views import create_account_ledger
+from ledger.views import create_account_ledger, update_account_ledger
 from local_sale.models import LocalSale
 from .models import Collection
 from vouchers.models import SaleVoucher
@@ -141,6 +141,17 @@ class CollectionUpdateViewSale(LoginRequiredMixin, UpdateView):
     form_class = CollectionFormSale
     template_name = 'collections/collection_form.html'
 
+    def form_valid(self, form):
+        form.instance.collected_by = self.request.user
+        super().form_valid(form=form)
+        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+
+        data = {
+            'date': voucher.collection_date
+        }
+        update_account_ledger(data, voucher.pk)
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form_name'] = 'Update Sale Collection'
@@ -153,6 +164,17 @@ class CollectionUpdateViewLocalSale(LoginRequiredMixin, UpdateView):
     model = Collection
     form_class = CollectionFormLocalSale
     template_name = 'collections/collection_form.html'
+
+    def form_valid(self, form):
+        form.instance.collected_by = self.request.user
+        super().form_valid(form=form)
+        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+
+        data = {
+            'date': voucher.collection_date
+        }
+        update_account_ledger(data, voucher.pk)
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
