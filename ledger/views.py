@@ -153,6 +153,7 @@ def create_account_ledger(data):
         salary_payment=data['salary_payment'],
     )
     account_ledger.save()
+    print(account_ledger.date)
 
 
 @login_required()

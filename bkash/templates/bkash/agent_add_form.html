@@ -1,0 +1,34 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <h5 class="text-center">Add/Update Bkash Agent</h5>
+        <hr>
+        <form method="post" id="AgentForm">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.agent_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-2 mb-0" >
+                   {{ form.agent_number|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-7 mb-0" >
+                   {{ form.address|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.contact_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.contact_no|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.remarks|as_crispy_field }}
+                </div>
+
+            </div>
+                <button class="btn btn-outline-info" type="submit">Save</button>
+        </form>
+    </div>
+
+{% endblock content %}

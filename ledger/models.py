@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.timezone import now
+
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
 from collection.models import Collection
@@ -8,7 +10,7 @@ from vouchers.models import GeneralVoucher
 
 
 class AccountLedger(models.Model):
-    date = models.DateField(auto_now=True)
+    date = models.DateField(default=now)
     general_voucher = models.ForeignKey(GeneralVoucher, on_delete=models.CASCADE, null=True, blank=True)
     payment_no = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True, blank=True)
     collection_no = models.ForeignKey(Collection, on_delete=models.CASCADE, null=True, blank=True)
