@@ -217,6 +217,7 @@ def sale_details(request, pk):
     weight_after_deduction = challan_weight - moisture_weight - seed_weight - fotka_weight - total_self_weight_of_bag
     amount_after_deduction = weight_after_deduction * sale.rate
     net_amount = amount_after_deduction + fotka_amount
+    net_amount = round(net_amount, 2)
     net_amount_in_words = d2w(net_amount)
     context = {
         'sale': sale,

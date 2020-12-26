@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
+from core.views import local_sale_total_amount, sale_total_amount
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
 from payroll.models import SalaryPayment
@@ -17,32 +18,34 @@ from organizations.models import Companies, Persons
 
 @login_required()
 def ledger(request):
+    buys = BuyVoucher.objects.all()
+    sales = SaleVoucher.objects.all()
+    local_sales = LocalSale.objects.all()
     companies = Companies.objects.all()
+    persons = Persons.objects.all()
     general_vouchers = GeneralVoucher.objects.all()
     collections = Collection.objects.all()
     payments = Payment.objects.all()
     agent_payments = PaymentBkashAgent.objects.all()
     salary_payments = SalaryPayment.objects.all()
-    name = request.GET.get('name_contains')
+    name = request.GET.get('name')
     date1 = request.GET.get('date_from')
     date2 = request.GET.get('date_to')
 
-    if name != '' and name is not None:
-        persons = Persons.objects.filter(person_name__contains=name)
+    if name != 'Select Name' and name is not None:
+        person = Persons.objects.get(person_name=name)
         bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
-        p_id = []
         agent_id = []
-
-        for person in persons:
-            p_id.append(person.id)
-        if p_id:
-            payments = payments.filter(payment_for_person_id__in=p_id)
-            general_vouchers = general_vouchers.filter(person_name_id__in=p_id)
-            collections = Collection.objects.none()
-        else:
-            payments = Payment.objects.none()
-            general_vouchers = GeneralVoucher.objects.none()
-            collections = Collection.objects.none()
+        challan_id = []
+        payments = payments.filter(payment_for_person_id=person)
+        local_sales = local_sales.filter(buyer_name_id=person)
+        general_vouchers = general_vouchers.filter(person_name_id=person)
+        collections = collections.filter(collected_from_id=person)
+        challan_no = Challan.objects.filter(buyer_name_id=person)
+        for challan in challan_no:
+            challan_id.append(challan.id)
+        if challan_id:
+            sales = sales.filter(challan_no_id__in=challan_id)
 
         for agent in bkash_agents:
             agent_id.append(agent.id)
@@ -60,6 +63,35 @@ def ledger(request):
         'voucher': []
 
     }
+
+    for voucher in sales:
+        challan = Challan.objects.get(id=voucher.challan_no_id)
+        amount = sale_total_amount(voucher.id)
+        key = "voucher"
+        ledgers.setdefault(key, [])
+        ledgers[key].append({
+            'date': voucher.date_added,
+            'name': challan.buyer_name,
+            'voucher_no': voucher.voucher_number + ' Sale ',
+            'descriptions': 0,
+            'debit_amount': amount,
+            'url1': '#',
+            'url2': '#'
+        })
+
+    for voucher in local_sales:
+        amount = local_sale_total_amount(voucher.id)
+        key = "voucher"
+        ledgers.setdefault(key, [])
+        ledgers[key].append({
+            'date': voucher.date,
+            'name': voucher.buyer_name,
+            'voucher_no': voucher.sale_no + 'Local Sale ',
+            'descriptions': 0,
+            'debit_amount': amount,
+            'url1': '#',
+            'url2': '#'
+        })
 
     for voucher in agent_payments:
         key = "voucher"
@@ -105,7 +137,7 @@ def ledger(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.collection_date,
-            'name': 'N/A',
+            'name': voucher.collected_from,
             'voucher_no': voucher.collection_no + ' Collection',
             'descriptions': voucher.sale_voucher_no,
             'credit_amount': voucher.collection_amount,
@@ -134,7 +166,9 @@ def ledger(request):
 
     context = {
         'companies': companies,
-        'ledgers': ledgers['voucher']
+        'ledgers': ledgers['voucher'],
+        'persons': persons,
+        'tittle': 'Ledger'
     }
 
     return render(request, 'ledger/ledger.html', context)

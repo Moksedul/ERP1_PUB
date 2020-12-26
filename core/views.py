@@ -23,26 +23,38 @@ def load_person_image(request):
 
 def sale_total_amount(pk):
     sale = SaleVoucher.objects.get(id=pk)
-    challan = Challan.objects.get(challan_no=sale.challan_no)
+    challan = Challan.objects.filter(challan_no=sale.challan_no)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
+    moisture_weight = 0
+    seed_weight = 0
+    fotka_weight = 0
+    fotka_amount = 0
 
-    total_weight = challan.weight
+    for challan in challan:
+        pass
 
-    if sale.weight_of_each_bag is not None:
-        total_self_weight_of_bag = sale.weight_of_each_bag*challan.number_of_bag
+    challan_weight = challan.weight
+    total_challan_amount = challan_weight * sale.rate
 
-    if sale.per_bag_unloading_cost is not None:
-        total_unloading_cost = sale.per_bag_unloading_cost*challan.number_of_bag
+    total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag
 
-    if sale.measuring_cost_per_kg is not None:
-        total_measuring_cost = sale.measuring_cost_per_kg*total_weight
+    if sale.fotka_weight is not None:
+        fotka_weight = sale.fotka_weight
+        fotka_amount = fotka_weight * sale.fotka_rate
 
-    weight_after_deduction = total_weight - total_self_weight_of_bag
-    total_amount_without_bag = sale.rate*weight_after_deduction
-    amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
-    return amount_after_deduction
+    if sale.moisture_weight is not None:
+        moisture_weight = sale.moisture_weight
+
+    if sale.seed_weight is not None:
+        seed_weight = sale.seed_weight
+
+    weight_after_deduction = challan_weight - moisture_weight - seed_weight - fotka_weight - total_self_weight_of_bag
+    amount_after_deduction = weight_after_deduction * sale.rate
+    net_amount = amount_after_deduction + fotka_amount
+    net_amount = round(net_amount, 2)
+    return net_amount
 
 
 def local_sale_total_amount(pk):
