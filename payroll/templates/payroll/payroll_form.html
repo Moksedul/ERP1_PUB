@@ -7,15 +7,4 @@
 
                     {% crispy form %}
     </div>
-<!-- for payment mode options -->
-<script>
-function showChequeDetails() {
-  var x = document.getElementById("id_payment_mode").value;
-  if (x == "CQ" || x == "ONL" || x == "PO") {
-    document.getElementById("detail_payment").style.display = "block";
-  }
-  else{document.getElementById("detail_payment").style.display = "none";}
-
-}
-</script>
 {% endblock content %}

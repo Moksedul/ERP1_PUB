@@ -6,7 +6,7 @@ from datetime import timedelta, datetime
 from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
-from core.views import local_sale_total_amount, sale_total_amount
+from core.views import local_sale_total_amount, sale_total_amount, buy_total_amount
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
 from payroll.models import SalaryPayment
@@ -37,6 +37,7 @@ def ledger(request):
         bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
         agent_id = []
         challan_id = []
+        buys = buys.filter(seller_name_id=person)
         payments = payments.filter(payment_for_person_id=person)
         local_sales = local_sales.filter(buyer_name_id=person)
         general_vouchers = general_vouchers.filter(person_name_id=person)
@@ -46,6 +47,8 @@ def ledger(request):
             challan_id.append(challan.id)
         if challan_id:
             sales = sales.filter(challan_no_id__in=challan_id)
+        else:
+            sales = []
 
         for agent in bkash_agents:
             agent_id.append(agent.id)
@@ -59,10 +62,28 @@ def ledger(request):
         collections = collections.filter(collection_date__range=[date1, date2])
         general_vouchers = general_vouchers.filter(date_added__range=[date1, date2])
         agent_payments = agent_payments.filter(payment_date__range=[date1, date2])
+        sales = sales.filter(date_added__range=[date1, date2])
+        buys = buys.filter(date_added__range=[date1, date2])
+        local_sales = local_sales.filter(date__range=[date1, date2])
     ledgers = {
         'voucher': []
 
     }
+
+    for voucher in buys:
+        amount = buy_total_amount(voucher.id)
+        key = "voucher"
+        ledgers.setdefault(key, [])
+        ledgers[key].append({
+            'date': voucher.date_added,
+            'name': voucher.seller_name,
+            'voucher_no': voucher.voucher_number,
+            'descriptions': ' Buy ' + str(voucher.id),
+            'credit_amount': amount,
+            'debit_amount': 0,
+            'url1': 'buy/' + str(voucher.id) + '/detail',
+            'url2': 'buy/' + str(voucher.id) + '/detail'
+        })
 
     for voucher in sales:
         challan = Challan.objects.get(id=voucher.challan_no_id)
@@ -72,11 +93,12 @@ def ledger(request):
         ledgers[key].append({
             'date': voucher.date_added,
             'name': challan.buyer_name,
-            'voucher_no': voucher.voucher_number + ' Sale ',
-            'descriptions': 0,
+            'voucher_no': voucher.voucher_number,
+            'descriptions': ' Sale ' + str(voucher.id),
             'debit_amount': amount,
-            'url1': '#',
-            'url2': '#'
+            'credit_amount': 0,
+            'url1': 'sale/' + str(voucher.id) + '/detail',
+            'url2': 'sale/' + str(voucher.id) + '/detail'
         })
 
     for voucher in local_sales:
@@ -86,11 +108,12 @@ def ledger(request):
         ledgers[key].append({
             'date': voucher.date,
             'name': voucher.buyer_name,
-            'voucher_no': voucher.sale_no + 'Local Sale ',
-            'descriptions': 0,
+            'voucher_no': voucher.sale_no,
+            'descriptions':  'Local Sale' + str(voucher.id),
             'debit_amount': amount,
-            'url1': '#',
-            'url2': '#'
+            'credit_amount': 0,
+            'url1': 'local_sale/' + str(voucher.id) + '/detail',
+            'url2': 'local_sale/' + str(voucher.id) + '/detail'
         })
 
     for voucher in agent_payments:
@@ -99,11 +122,12 @@ def ledger(request):
         ledgers[key].append({
             'date': voucher.payment_date,
             'name': voucher.agent_name,
-            'voucher_no': voucher.payment_no + ' Agent Payment ',
-            'descriptions': voucher.description,
+            'voucher_no': voucher.payment_no,
+            'descriptions': 'Agent Payment',
             'debit_amount': voucher.amount,
-            'url1': '#',
-            'url2': '#'
+            'credit_amount': 0,
+            'url1': '/agent_payment_list',
+            'url2': '/agent_payment_list'
         })
 
     for voucher in general_vouchers:
@@ -112,11 +136,12 @@ def ledger(request):
         ledgers[key].append({
             'date': voucher.date_added,
             'name': voucher.person_name,
-            'voucher_no': voucher.voucher_number + ' General Cost',
-            'descriptions': voucher.cost_Descriptions,
+            'voucher_no': voucher.voucher_number,
+            'descriptions': voucher.cost_Descriptions + ' General Cost',
             'debit_amount': voucher.cost_amount,
-            'url1': '#',
-            'url2': '#'
+            'credit_amount': 0,
+            'url1': '/general_voucher_list',
+            'url2': '/general_voucher_list'
         })
 
     for voucher in salary_payments:
@@ -125,25 +150,40 @@ def ledger(request):
         ledgers[key].append({
             'date': voucher.date,
             'name': voucher.Employee,
-            'voucher_no': voucher.month + ' Salary Payment',
-            'descriptions': voucher.remarks,
+            'voucher_no': voucher.month,
+            'descriptions': voucher.remarks + ' Salary Payment',
             'debit_amount': voucher.amount,
+            'credit_amount': 0,
             'url1': '#',
             'url2': '#'
         })
 
     for voucher in collections:
         key = "voucher"
-        ledgers.setdefault(key, [])
-        ledgers[key].append({
-            'date': voucher.collection_date,
-            'name': voucher.collected_from,
-            'voucher_no': voucher.collection_no + ' Collection',
-            'descriptions': voucher.sale_voucher_no,
-            'credit_amount': voucher.collection_amount,
-            'url1': '#',
-            'url2': '#'
-        })
+        if voucher.sale_voucher_no:
+            ledgers.setdefault(key, [])
+            ledgers[key].append({
+                'date': voucher.collection_date,
+                'name': voucher.collected_from,
+                'voucher_no': voucher.collection_no,
+                'descriptions': str(voucher.sale_voucher_no) + ' Collection',
+                'credit_amount': voucher.collection_amount,
+                'debit_amount': 0,
+                'url1': 'collection/' + str(voucher.id) + '/detail',
+                'url2': 'sale/' + str(voucher.sale_voucher_no_id) + '/detail'
+            })
+        else:
+            ledgers.setdefault(key, [])
+            ledgers[key].append({
+                'date': voucher.collection_date,
+                'name': voucher.collected_from,
+                'voucher_no': voucher.collection_no,
+                'descriptions': str(voucher.local_sale_voucher_no) + ' Collection',
+                'credit_amount': voucher.collection_amount,
+                'debit_amount': 0,
+                'url1': 'collection/' + str(voucher.id) + '/detail',
+                'url2': 'local_sale/' + str(voucher.local_sale_voucher_no_id) + '/detail'
+            })
 
     for voucher in payments:
         key = "voucher"
@@ -151,9 +191,10 @@ def ledger(request):
         ledgers[key].append({
             'date': voucher.payment_date,
             'name': voucher.payment_for_person,
-            'voucher_no': voucher.payment_no + ' Payment',
-            'descriptions': voucher.voucher_no,
+            'voucher_no': voucher.payment_no,
+            'descriptions': str(voucher.voucher_no) + ' Payment',
             'debit_amount': voucher.payment_amount,
+            'credit_amount': 0,
             'url1': 'payment/' + str(voucher.id) + '/detail',
             'url2': 'buy/' + str(voucher.voucher_no_id) + '/detail'
         })
@@ -164,9 +205,28 @@ def ledger(request):
 
         ledgers['voucher'].sort(key=my_function, reverse=True)
 
+    report = {
+        'voucher': []
+    }
+    account_balance = 0
+    for item in ledgers['voucher']:
+        account_balance = account_balance - item['debit_amount'] + item['credit_amount']
+        key = "voucher"
+        report.setdefault(key, [])
+        report[key].append({
+            'date': item['date'],
+            'name': item['name'],
+            'voucher_no': item['voucher_no'],
+            'descriptions': item['descriptions'],
+            'debit_amount': item['debit_amount'],
+            'credit_amount': item['credit_amount'],
+            'balance': round(account_balance, 2),
+            'url1': item['url1'],
+            'url2': item['url2'],
+        })
     context = {
         'companies': companies,
-        'ledgers': ledgers['voucher'],
+        'ledgers': report['voucher'],
         'persons': persons,
         'tittle': 'Ledger'
     }

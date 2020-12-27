@@ -37,7 +37,7 @@ class Employee(models.Model):
     NID = models.CharField(max_length=25, null=True, blank=True, unique=True)
     phone_no = models.CharField(max_length=11, null=True, blank=True)
     hourly_rate = models.FloatField()
-    time_table = models.ForeignKey(TimeTable, null=True, on_delete=models.Empty, blank=True)
+    time_table = models.ForeignKey(TimeTable, null=True, on_delete=models.Empty)
     address = models.CharField(max_length=200, blank=True, null=True)
     joining_date = models.DateField(default=now)
     photo = models.ImageField(upload_to='employee_photo', default='default.jpg')

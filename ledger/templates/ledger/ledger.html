@@ -17,12 +17,12 @@
 
                 <div class="form-group col-md-4">
                 <div class="input-group">
-                <input id="date_from" class="form-control py-2 border-right-0 border" name="date_from" type="search" placeholder="From: YYYY-MM-DD">
+                <input id="date_from" class="form-control form-control-sm py-2 border-right-0 border" name="date_from" type="search" placeholder="From: YYYY-MM-DD">
                 </div>
             	</div>
 				<div class="form-group col-md-4">
                 <div class="input-group">
-                <input id="date_to" class="form-control py-2 border-right-0 border" name="date_to" type="search" placeholder="To: YYYY-MM-DD">
+                <input id="date_to" class="form-control form-control-sm py-2 border-right-0 border" name="date_to" type="search" placeholder="To: YYYY-MM-DD">
                 </div>
             	</div>
             </div>
@@ -84,10 +84,15 @@
 					<tr>
 						<td>{{ item.date }}</td>
                         <td>{{ item.name }}</td>
-						<td><a id="url1" onclick="newWindow()" href="{{ item.url1 }}">{{ item.voucher_no }}</a> For: {{ item.descriptions }}</td>
+						<td><a id="{{item.voucher_no}}" onclick="newWindow(this.id)"
+                               name="{{ item.url1 }}">{{ item.voucher_no }}</a>
+                               For:
+                            <a id="{{item.descriptions}}" onclick="newWindow(this.id)"
+                               name="{{ item.url2 }}">{{ item.descriptions }}</a>
+                        </td>
 						<td>{{ item.debit_amount }}</td>
 						<td>{{ item.credit_amount }}</td>
-						<td>n/a</td>
+						<td>{{ item.balance }}</td>
 					</tr>
 				{% endfor %}
 
@@ -103,15 +108,19 @@ function advanceSearch() {
     x.style.display = "none";
   }
 }
-
-function newWindow() {
-
-    var a = document.getElementById('url1');
-    window.open(a.href, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
-    $("td > a").attr("disabled", "disabled");
-}
-
 </script>
-
-
+<script type="text/javascript">
+    function newWindow(id) {
+    var a = document.getElementById(id);
+    window.open(a.name, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+}
+</script>
+<!-- for search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ()
+{
+    $("select").select2({});
+});
+</script>
 {% endblock content %}
