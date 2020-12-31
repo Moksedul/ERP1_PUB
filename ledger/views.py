@@ -18,6 +18,9 @@ from organizations.models import Companies, Persons
 
 @login_required()
 def ledger(request):
+    date1 = now()
+    date2 = now()
+    dd = request.POST.get('date')
     buys = BuyVoucher.objects.all()
     sales = SaleVoucher.objects.all()
     local_sales = LocalSale.objects.all()
@@ -28,11 +31,35 @@ def ledger(request):
     payments = Payment.objects.all()
     agent_payments = PaymentBkashAgent.objects.all()
     salary_payments = SalaryPayment.objects.all()
-    name = request.GET.get('name')
-    date1 = request.GET.get('date_from')
-    date2 = request.GET.get('date_to')
+    name = request.POST.get('name')
+    selected_name = 'Select Name'
+
+    if dd is not None and dd != 'None' and dd != '':
+        dd = datetime.strptime(dd, "%d-%m-%Y")
+        date1 = dd
+        date2 = dd
+
+    if 'ALL' in request.POST:
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
+    elif 'Today' in request.POST:
+        date1 = now()
+        date2 = now()
+    elif 'Previous Day' in request.POST:
+        date1 = date1 - timedelta(1)
+        date2 = date2 - timedelta(1)
+    elif 'Next Day' in request.POST:
+        date1 = date1 + timedelta(1)
+        date2 = date2 + timedelta(1)
+    elif request.method == 'POST' and date1 != '' and date2 != '':
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
+        if date1 is not None and date1 != '':
+            date1 = datetime.strptime(date1, "%d-%m-%Y")
+            date2 = datetime.strptime(date2, "%d-%m-%Y")
 
     if name != 'Select Name' and name is not None:
+        selected_name = name
         person = Persons.objects.get(person_name=name)
         bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
         agent_id = []
@@ -48,7 +75,7 @@ def ledger(request):
         if challan_id:
             sales = sales.filter(challan_no_id__in=challan_id)
         else:
-            sales = []
+            sales = SaleVoucher.objects.none()
 
         for agent in bkash_agents:
             agent_id.append(agent.id)
@@ -224,11 +251,23 @@ def ledger(request):
             'url1': item['url1'],
             'url2': item['url2'],
         })
+    date_criteria = 'ALL'
+    if date1 is not None and date2 is not None and date1 != '':
+        date1 = date1.strftime("%d-%m-%Y")
+        date2 = date2.strftime("%d-%m-%Y")
+        date_criteria = date1 + ' to ' + date2
+    all_ledger = False
+    if selected_name == 'Select Name':
+        all_ledger = True
     context = {
+        'date_criteria': date_criteria,
+        'date1': date1,
         'companies': companies,
         'ledgers': report['voucher'],
         'persons': persons,
-        'tittle': 'Ledger'
+        'selected_name': selected_name,
+        'tittle': 'Ledger-(খতিয়ান)',
+        'all_ledger': all_ledger
     }
 
     return render(request, 'ledger/ledger.html', context)

@@ -2,66 +2,57 @@
 
 {% block content %}
 
-    <div class="container mt-5">
-        <h5 class="text-center">LEDGER(খতিয়ান)</h5>
-        <form method="GET" >
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                  <select id="name" class="form-control" name="name">
-                    <option selected>Select Name</option>
-					  {% for person in persons %}
-                    <option>{{ person }}</option>
-					  {% endfor %}
-                  </select>
-                </div>
-
-                <div class="form-group col-md-4">
-                <div class="input-group">
-                <input id="date_from" class="form-control form-control-sm py-2 border-right-0 border" name="date_from" type="search" placeholder="From: YYYY-MM-DD">
-                </div>
-            	</div>
-				<div class="form-group col-md-4">
-                <div class="input-group">
-                <input id="date_to" class="form-control form-control-sm py-2 border-right-0 border" name="date_to" type="search" placeholder="To: YYYY-MM-DD">
-                </div>
-            	</div>
-            </div>
-
-            <div class="row" id="advanced_search" style="display:none;">
-            <div class="form-row container" >
-				<div class="form-group col-md-4">
-                  <label for="company_name">Company Name</label>
-                  <select id="company_name" class="form-control" name="company_name">
-                    <option selected>Select...</option>
-					  {% for company in companies %}
-                    <option>{{ company.name_of_company }}</option>
-					  {% endfor %}
-                  </select>
-                </div>
-             <div class="form-group col-md-4">
-                  <label for="sale_voucher_no">Sale Voucher No</label>
-                  <select id="sale_voucher_no" class="form-control" name="sale_voucher_no">
-                    <option selected>Choose...</option>
-					  {% for voucher in vouchers %}
-                    <option>{{ voucher.voucher_number }}</option>
-					  {% endfor %}
-                  </select>
-                </div>
-				<div class="form-group col-md-4">
-                  <label for="buy_voucher_no">Buy Voucher No</label>
-                  <select id="buy_voucher_no" class="form-control" name="buy_voucher_no">
-                    <option selected>Choose...</option>
-					  {% for voucher in vouchers %}
-                    <option>{{ voucher.voucher_number }}</option>
-					  {% endfor %}
-                  </select>
-                </div>
-            </div>
+<div class="container">
+		<div class="container">
 </div>
+        <form method="POST" >
+			{% csrf_token %}
+			<div class="form-row">
+                <div class="form-group  col-md-4">
+                  <select id="name" class="form-control" name="name">
+                    <option selected>{{ selected_name }}</option>
+					  {% for person in persons %}
+                    <option>{{person}}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group col-md-2">
+                <div class="input-group">
+                <input id="date_from" class="form-control form-control-sm py-2 border-right-0 border" name="date_from" type="search" placeholder="From: dd-mm-yyyy">
+                </div>
+            	</div>
+				<div class="form-group col-md-2">
+                <div class="input-group">
+                <input id="date_to" class="form-control form-control-sm py-2 border-right-0 border" name="date_to" type="search" placeholder="To: dd-mm-yyyy">
+                </div>
+            	</div>
 
 
-            <button type="submit" class="btn btn-sm btn-info">Search</button>
-            <div onclick="advanceSearch()" class="btn btn-sm btn-info">Advance Search</div>
+
+				<div class="form-group col-md-1">
+ 					<button type="submit" class="btn btn-sm btn-info">Search</button>
+                </div>
+				<div class="form-group col-md-1">
+ 					<div class="d-flex justify-content-end"><a href="">Refresh</a></div>
+                </div>
+
+
+
+
+	<div class="row mb-2">
+		<div class="col-md-12">
+			<div class="d-flex justify-content-end">
+				<input id="date" value="{{date1}}" name="date" type="hidden">
+			<button type="submit" class ="btn-info btn-sm" name="Previous Day" >Previous Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="Today" >Today</button>
+			<button type="submit" class ="btn-info btn-sm" name="Next Day" >Next Day</button>
+			<button type="submit" class ="btn-info btn-sm" name="ALL" >ALL</button>
+			</div>
+		</div>
+	</div>
+
+
+            </div>
         </form>
 
     </div>
@@ -69,11 +60,16 @@
 <div class="container">
 </div>
 	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="#">Ledger</a>
+			<div class="d-flex justify-content-center bg-steel text-white p-1"><h6>Ledger (খতিয়ান)</h6></div>
+			<div class="d-flex justify-content-center p-1"><h6>Name: {{ selected_name }}</h6></div>
+			<div class="d-flex justify-content-center">Date: {{date_criteria}}</div>
+		<hr>
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Date</th>
-                    <th>Name</th>
+					{% if all_ledger %}
+					<th>Name</th>
+					{% endif %}
 					<th>Descriptions</th>
 					<th>Debit</th>
 					<th>Credit</th>
@@ -83,7 +79,9 @@
 				{% for item in ledgers %}
 					<tr>
 						<td>{{ item.date }}</td>
-                        <td>{{ item.name }}</td>
+						{% if all_ledger %}
+						<td>{{item.name}}</td>
+						{% endif %}
 						<td><a id="{{item.voucher_no}}" onclick="newWindow(this.id)"
                                name="{{ item.url1 }}">{{ item.voucher_no }}</a>
                                For:
