@@ -40,6 +40,10 @@
    text-align: center;
 
 }
+.card{
+display: table;
+}
+
 .centered{
 padding: 5px 0;
 }
