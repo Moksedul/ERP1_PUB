@@ -40,12 +40,16 @@
    text-align: center;
 
 }
-.card{
-display: table;
-}
+
 
 .centered{
 padding: 5px 0;
+}
+.container{
+display: table;
+}
+#myInput{
+width: 100%;
 }
 
 #tableta {
