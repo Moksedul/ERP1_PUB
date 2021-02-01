@@ -230,7 +230,7 @@ def ledger(request):
         def my_function(e):
             return e['date']
 
-        ledgers['voucher'].sort(key=my_function, reverse=True)
+        ledgers['voucher'].sort(key=my_function)
 
     report = {
         'voucher': []
