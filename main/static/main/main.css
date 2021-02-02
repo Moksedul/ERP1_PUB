@@ -45,9 +45,17 @@
 .centered{
 padding: 5px 0;
 }
-.container{
+
+.container main{
 display: table;
 }
+
+table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
 #myInput{
 width: 100%;
 }
@@ -57,7 +65,9 @@ width: 100%;
   border-collapse: collapse;
   width: 100%;
 }
+.btn th{
 
+}
 #tableta td, #customers th {
   border: 1px solid #ddd;
   padding: 8px;
