@@ -5,11 +5,10 @@
 <div>
 
 </div>
-<a class="btn btn-sm btn-info" href="#">Search</a>
-<a class="btn btn-sm btn-info" href="#">Report</a>
+<input class="form-control-sm" id="myInput" type="text" placeholder="Type to Search..">
 	<div class=" card card-body">
 			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-local-sale'%}">New Local Sale</a>
-			<table class="table table-sm table-striped table-bordered">
+			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Sale No</th>
 					<th>Buyer Name</th>
@@ -62,6 +61,16 @@
         		{% endif %}
 		</div>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
 
 {% endblock content %}

@@ -169,6 +169,7 @@ class GeneralVoucherListView(LoginRequiredMixin, ListView):
     model = GeneralVoucher
     template_name = 'vouchers/general_voucher_list.html'
     context_object_name = 'vouchers'
+    ordering = '-voucher_number'
     paginate_by = 20
 
 
