@@ -50,10 +50,12 @@ padding: 5px 0;
 display: table;
 }
 
+@media screen and (max-width: 600px) {
 table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+}
 }
 
 #myInput{
