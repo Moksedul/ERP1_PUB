@@ -41,7 +41,7 @@ class BuyListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/buy_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 20
+    paginate_by = 5
 
 
 class BuyVoucherUpdateView(LoginRequiredMixin, UpdateView):
