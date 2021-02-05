@@ -41,7 +41,6 @@ class BuyListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/buy_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 5
 
 
 class BuyVoucherUpdateView(LoginRequiredMixin, UpdateView):
@@ -93,7 +92,6 @@ class SaleListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/sale_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 20
 
 
 class SaleUpdateView(LoginRequiredMixin, UpdateView):
@@ -170,7 +168,6 @@ class GeneralVoucherListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/general_voucher_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 20
 
 
 class GeneralVoucherDeleteView(LoginRequiredMixin, DeleteView):
