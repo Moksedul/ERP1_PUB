@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from core.digit2words import d2w
 from ledger.views import create_account_ledger
+from .filters import BuyFilter
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
@@ -41,6 +42,11 @@ class BuyListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/buy_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vouchers'] = BuyFilter(self.request.GET, queryset=self.get_queryset())
+        return context
 
 
 class BuyVoucherUpdateView(LoginRequiredMixin, UpdateView):
