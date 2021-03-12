@@ -113,6 +113,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
     model = Collection
     template_name = 'collections/collection_list.html'
     context_object_name = 'collections'
+    ordering = '-collection_date'
     paginate_by = 20
 
     def get_context_data(self, **kwargs):

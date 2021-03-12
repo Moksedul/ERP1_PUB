@@ -5,12 +5,21 @@
 <div>
 
 </div>
+<div class="container">
+<div class="row">
 <a class="btn btn-sm btn-info" href="{% url 'collection-search' %}">Search</a>
 <a class="btn btn-sm btn-info" href="{% url 'collection-report' %}">Report</a>
 <a class="btn btn-info  btn-sm  " href="{% url 'add-collection-sale'%}">Add Sale Collection</a>
 <a class="btn btn-info  btn-sm  " href="{% url 'add-collection-local-sale'%}">Add Local Sale Collection</a>
+<form method="get" action="{% url 'collection-list' %}">
+Search: <input type="text" value="{{filter}}" name="filter"/>
+<button class="btn btn-sm btn-info" type="submit"><i class="fa fa-search" aria-hidden="true" style="color:white"></i></button>
+</form>
+</div>
+</div>
+
 	<div class=" card card-body">
-		<div class="text-center"><h3>Collection list</h3></div>
+		<div class="text-center"><h5>Collection list</h5></div>
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Collection Number</th>
@@ -49,7 +58,7 @@
 								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
 						{% else %}
 							{% if collection.sale_voucher_no %}
-								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-sale' collection.id%}">Edit</a></td>
+								<td><a class="btn  btn-info" href="{% url 'collection-update-sale' collection.id%}">Edit</a></td>
 							{% else %}
 								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-local-sale' collection.id%}">Edit</a></td>
 							{%endif%}
