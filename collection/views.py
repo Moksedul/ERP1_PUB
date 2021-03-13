@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Sum
@@ -8,6 +9,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from ledger.views import create_account_ledger, update_account_ledger
 from local_sale.models import LocalSale
+from .filters import CollectionFilter
 from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
@@ -118,22 +120,117 @@ class CollectionListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        names = Persons.objects.all()
+        sale_vouchers_selection = SaleVoucher.objects.all()
+        local_sale_voucher_selection = LocalSale.objects.all()
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+        print(phone_no_contains)
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+            print(phone_no_contains)
+
+        voucher_list = {'voucher': []}
+        for sale in sale_vouchers_selection:
+            key = "voucher"
+            voucher_list.setdefault(key, [])
+            voucher_list[key].append({'voucher_no': sale.voucher_number})
+        for local_sale in local_sale_voucher_selection:
+            key = "voucher"
+            voucher_list.setdefault(key, [])
+            voucher_list[key].append({'voucher_no': local_sale.sale_no})
+
+        context['names'] = names
+        context['sale_voucher_selection'] = voucher_list['voucher']
+        context['voucher_selected'] = voucher_contains
+        context['name_selected'] = name_contains
+        context['phone_no_selected'] = phone_no_contains
         context['form_name'] = 'Update Sale Collection'
         context['button_name'] = 'Update'
         context['tittle'] = 'Collection List'
         return context
 
     def get_queryset(self):
-        filter_val = self.request.GET.get('filter', 'type to search')
-        print(filter_val)
+        sale_vouchers = SaleVoucher.objects.all()
+        local_sale_vouchers = LocalSale.objects.all()
+        collections = Collection.objects.all()
         order = self.request.GET.get('orderby')
+        voucher_contains = self.request.GET.get('voucher_no')
+        # name_contains = self.request.GET.get('name')
+        # phone_no_contains = self.request.GET.get('phone_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+        print(phone_no_contains)
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+            print(phone_no_contains)
         collection_all = Collection.objects.all().order_by('-collection_date')
         collection_final = collection_all
-        if filter_val != 'type to search':
-            persons = Persons.objects.filter(person_name__contains=filter_val)
-            collection_by_name = collection_all.filter(collected_from__in=persons)
-            collection_final = collection_by_name
+
+        # checking name from input
+        if name_contains != 'Select Name':
+            person = Persons.objects.get(person_name=name_contains)
+            challans = Challan.objects.filter(buyer_name=person.id)
+            v_id = []
+            for challan in challans:
+                v_id.append(challan.id)
+            sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
+            local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
+            collections = collections.filter(collected_from=person.id)
+
+        # checking phone no from input
+        if phone_no_contains != 'Select Phone No':
+            print(phone_no_contains)
+            person = Persons.objects.get(contact_number=phone_no_contains)
+            challans = Challan.objects.filter(buyer_name=person.id)
+            v_id = []
+            for challan in challans:
+                v_id.append(challan.id)
+            sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
+            local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
+            collections = collections.filter(collected_from=person.id)
+
+        # checking voucher number from input
+        if voucher_contains != '' and voucher_contains != 'Select Voucher':
+            sale_vouchers = sale_vouchers.filter(voucher_number=voucher_contains)
+            if sale_vouchers:
+                local_sale_vouchers = LocalSale.objects.none()
+                v_id = []
+                for voucher in sale_vouchers:
+                    v_id.append(voucher.id)
+                collections = collections.filter(sale_voucher_no_id__in=v_id)
+            else:
+                sale_vouchers = SaleVoucher.objects.none()
+                local_sale_vouchers = local_sale_vouchers.filter(sale_no=voucher_contains)
+                v_id = []
+                for voucher in local_sale_vouchers:
+                    v_id.append(voucher.id)
+                collections = collections.filter(local_sale_voucher_no_id__in=v_id)
+        collection_final = collections
         return collection_final
+
+
+def collection_list(request):
+    context = {}
+    filtered_collections = CollectionFilter(
+        request.GET,
+        queryset=Collection.objects.all()
+    )
+    context['filtered_collections'] = filtered_collections
+    paginated_collections = Paginator(filtered_collections.qs, 2)
+    page_number = request.GET.get('page')
+    page_obj = paginated_collections.get_page(page_number)
+    context['page_obj'] = page_obj
+    return render(request, 'collections/collection_list_filtered.html', context=context)
 
 
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):
