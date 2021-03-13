@@ -114,7 +114,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
     template_name = 'collections/collection_list.html'
     context_object_name = 'collections'
     ordering = '-collection_date'
-    paginate_by = 20
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -122,6 +122,18 @@ class CollectionListView(LoginRequiredMixin, ListView):
         context['button_name'] = 'Update'
         context['tittle'] = 'Collection List'
         return context
+
+    def get_queryset(self):
+        filter_val = self.request.GET.get('filter', 'type to search')
+        print(filter_val)
+        order = self.request.GET.get('orderby')
+        collection_all = Collection.objects.all().order_by('-collection_date')
+        collection_final = collection_all
+        if filter_val != 'type to search':
+            persons = Persons.objects.filter(person_name__contains=filter_val)
+            collection_by_name = collection_all.filter(collected_from__in=persons)
+            collection_final = collection_by_name
+        return collection_final
 
 
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):
