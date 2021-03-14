@@ -6,31 +6,51 @@
 
 </div>
 <div class="container">
-<div class="row mb-2">
-<div class="col-md-4">
-	<a class="btn btn-sm btn-info" href="{% url 'collection-report' %}">Report</a>
-	<a class="btn btn-info  btn-sm  " href="{% url 'add-collection-sale'%}">Add Collection</a>
-	<a class="btn btn-info  btn-sm  " href="{% url 'add-collection-local-sale'%}">Add Local Collection</a>
-</div>
 	<form method="GET" id="search">
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                <select id="name" class="form-control" name="name">
-                    <option selected>{{ name_selected }}</option>
-					  {% for name in names %}
-                    <option>{{ name }}</option>
-					  {% endfor %}
-                  </select>
-            </div>
+		<div class="form-row">
+			<div class="col-md-1 mb-1">
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+			  Menu
+			</button>
+
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h6 class="modal-title" id="exampleModalLabel">Collection Menu</h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'collection-report' %}">Report</a>
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'add-collection-sale'%}">Add Collection</a>
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'add-collection-local-sale'%}">Add Local Collection</a>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			</div>
+				<!--search form-->
                 <div class="form-group col-md-3">
+					<select id="name" class="form-control" name="name">
+						<option selected>{{ name_selected }}</option>
+						  {% for name in names %}
+						<option>{{ name }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
                     <select id="phone_no" class="form-control" name="phone_no">
                     <option selected>{{ phone_no_selected }}</option>
 					  {% for name in names %}
                     <option>{{ name.contact_number }}</option>
 					  {% endfor %}
                   </select>
-            </div>
-                <div class="form-group col-md-3">
+            	</div>
+                <div class="form-group col-md-2">
                   <select id="voucher_no" class="form-control" name="voucher_no">
                     <option selected>{{ voucher_selected }}</option>
 					  {% for voucher in sale_voucher_selection %}
@@ -38,12 +58,14 @@
 					  {% endfor %}
                   </select>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-sm btn-info">Search</button>
-            <a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
         </form>
 </div>
-</div>
+
 
 	<div class=" card card-body">
 		<div class="text-center"><h5>Collection list</h5></div>
@@ -56,9 +78,10 @@
 					<th>Collection Date</th>
 					<th>Status</th>
 					<th>Remarks</th>
-					<th>Detail</th>
-					<th>Update</th>
-					<th>Delete</th>
+					<th>D</th>
+					<th>E</th>
+	  {% if admin %}<th>X</th>{% endif %}
+
 				</tr>
 
 				{% for collection in collections %}
@@ -79,17 +102,27 @@
 							{%endif%}
 						</td>
 						<td>{{ collection.remarks }} </td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'collection-detail' collection.id%}">Detail</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'collection-detail' collection.id%}">D</a></td>
 						{% if collection.collection_status %}
-								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+							{% if admin %}
+								{% if collection.sale_voucher_no %}
+									<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-sale' collection.id%}">E</a></td>
+								{% else %}
+									<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-local-sale' collection.id%}">E</a></td>
+								{%endif%}
+								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">X</a></td>
+							{% else %}
+								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">E</a></td>
+						    {%endif%}
 						{% else %}
 							{% if collection.sale_voucher_no %}
-								<td><a class="btn  btn-info" href="{% url 'collection-update-sale' collection.id%}">Edit</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-sale' collection.id%}">E</a></td>
 							{% else %}
-								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-local-sale' collection.id%}">Edit</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'collection-update-local-sale' collection.id%}">E</a></td>
 							{%endif%}
-								<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">Delete</a></td>
+							{% if admin %}
+								<td><a class="btn btn-sm btn-danger" href="{% url 'collection-delete' collection.id%}">X</a></td>
+							{%endif%}
 						{%endif%}
 					</tr>
 				{% endfor %}
@@ -120,6 +153,11 @@
 
         		{% endif %}
 		</div>
+
+
+
+
+
 
 <script>
 function alertEdit() {

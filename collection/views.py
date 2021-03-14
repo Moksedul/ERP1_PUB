@@ -120,6 +120,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        admin = self.request.user.is_staff
         names = Persons.objects.all()
         sale_vouchers_selection = SaleVoucher.objects.all()
         local_sale_voucher_selection = LocalSale.objects.all()
@@ -130,10 +131,8 @@ class CollectionListView(LoginRequiredMixin, ListView):
         if name_contains is None:
             name_contains = 'Select Name'
         phone_no_contains = self.request.GET.get('phone_no')
-        print(phone_no_contains)
         if phone_no_contains is None or phone_no_contains == '':
             phone_no_contains = 'Select Phone No'
-            print(phone_no_contains)
 
         voucher_list = {'voucher': []}
         for sale in sale_vouchers_selection:
@@ -153,12 +152,13 @@ class CollectionListView(LoginRequiredMixin, ListView):
         context['form_name'] = 'Update Sale Collection'
         context['button_name'] = 'Update'
         context['tittle'] = 'Collection List'
+        context['admin'] = admin
         return context
 
     def get_queryset(self):
         sale_vouchers = SaleVoucher.objects.all()
         local_sale_vouchers = LocalSale.objects.all()
-        collections = Collection.objects.all()
+        collections = Collection.objects.all().order_by('-collection_date')
         order = self.request.GET.get('orderby')
         voucher_contains = self.request.GET.get('voucher_no')
         # name_contains = self.request.GET.get('name')
