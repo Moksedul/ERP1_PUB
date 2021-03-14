@@ -62,6 +62,10 @@ table {
 width: 100%;
 }
 
+.table td, .table th, .table tr {
+    vertical-align: middle;
+}
+
 #tableta {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;

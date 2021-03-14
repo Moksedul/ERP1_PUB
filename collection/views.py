@@ -22,10 +22,11 @@ def load_sale_vouchers(request):
     name = request.GET.get('name')
     challan = Challan.objects.filter(buyer_name=name)
     v_id = []
-    for challan in challan:
-        sale = SaleVoucher.objects.get(challan_no_id=challan.id)
-        v_id.append(sale.voucher_number)
-    vouchers = SaleVoucher.objects.filter(voucher_number__in=v_id).order_by('voucher_number')
+    # for challan in challan:
+    #     sale = SaleVoucher.objects.get(challan_no_id=challan.id)
+    #     v_id.append(sale.voucher_number)
+    # vouchers = SaleVoucher.objects.filter(voucher_number__in=v_id).order_by('voucher_number')
+    vouchers = SaleVoucher.objects.filter(challan_no__in=challan)
     context = {
         'vouchers': vouchers,
     }
