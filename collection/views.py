@@ -170,52 +170,28 @@ class CollectionListView(LoginRequiredMixin, ListView):
         if name_contains is None:
             name_contains = 'Select Name'
         phone_no_contains = self.request.GET.get('phone_no')
-        print(phone_no_contains)
+
         if phone_no_contains is None or phone_no_contains == '':
             phone_no_contains = 'Select Phone No'
-            print(phone_no_contains)
-        collection_all = Collection.objects.all().order_by('-collection_date')
-        collection_final = collection_all
 
         # checking name from input
         if name_contains != 'Select Name':
             person = Persons.objects.get(person_name=name_contains)
-            challans = Challan.objects.filter(buyer_name=person.id)
-            v_id = []
-            for challan in challans:
-                v_id.append(challan.id)
-            sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
-            local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
             collections = collections.filter(collected_from=person.id)
 
         # checking phone no from input
-        if phone_no_contains != 'Select Phone No':
-            print(phone_no_contains)
+        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
             person = Persons.objects.get(contact_number=phone_no_contains)
-            challans = Challan.objects.filter(buyer_name=person.id)
-            v_id = []
-            for challan in challans:
-                v_id.append(challan.id)
-            sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
-            local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
             collections = collections.filter(collected_from=person.id)
 
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':
             sale_vouchers = sale_vouchers.filter(voucher_number=voucher_contains)
             if sale_vouchers:
-                local_sale_vouchers = LocalSale.objects.none()
-                v_id = []
-                for voucher in sale_vouchers:
-                    v_id.append(voucher.id)
-                collections = collections.filter(sale_voucher_no_id__in=v_id)
+                collections = collections.filter(sale_voucher_no__in=sale_vouchers)
             else:
-                sale_vouchers = SaleVoucher.objects.none()
                 local_sale_vouchers = local_sale_vouchers.filter(sale_no=voucher_contains)
-                v_id = []
-                for voucher in local_sale_vouchers:
-                    v_id.append(voucher.id)
-                collections = collections.filter(local_sale_voucher_no_id__in=v_id)
+                collections = collections.filter(local_sale_voucher_no__in=local_sale_vouchers)
         collection_final = collections
         return collection_final
 
