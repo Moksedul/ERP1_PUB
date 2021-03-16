@@ -1,14 +1,67 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<!--<div class="card card-body">-->
+<div class="container">
+	<form method="GET" id="search">
+		<div class="form-row">
+			<div class="col-md-1 mb-1">
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+			  Menu
+			</button>
 
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h6 class="modal-title" id="exampleModalLabel">Collection Menu</h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'collection-report' %}">Report</a>
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'add-collection-sale'%}">Add Collection</a>
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'add-collection-local-sale'%}">Add Local Collection</a>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			</div>
+				<!--search form-->
+                <div class="form-group col-md-3">
+					<select id="name" class="form-control" name="name">
+						<option selected>{{ name_selected }}</option>
+						  {% for name in names %}
+						<option>{{ name }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                    <select id="phone_no" class="form-control" name="phone_no">
+                    <option selected>{{ phone_no_selected }}</option>
+					  {% for name in names %}
+                    <option>{{ name.contact_number }}</option>
+					  {% endfor %}
+                  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="voucher_no" class="form-control" name="voucher_no">
+                    <option selected>{{ voucher_selected }}</option>
+					  {% for voucher in sale_voucher_selection %}
+                    <option>{{ voucher.voucher_no }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
+</div>
 	<div class=" card card-body">
-		<form method="get">
-{{ filter.form }}
-  <button type="submit">ok</button>
-</form>
-		<input class="form-control-sm" id="myInput" type="text" placeholder="Type to Search..">
 			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-buy-voucher'%}">Add Buy Voucher</a>
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
