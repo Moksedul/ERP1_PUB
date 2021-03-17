@@ -2,14 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
 from core.digit2words import d2w
 from ledger.views import create_account_ledger
-from .filters import BuyFilter
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
-from daily_cash.views import create_daily_cash
 
 
 # person creation from buy form
@@ -42,11 +39,63 @@ class BuyListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/buy_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['vouchers'] = BuyFilter(self.request.GET, queryset=self.get_queryset())
+        voucher_selection = BuyVoucher.objects.all()
+        names = Persons.objects.all()
+
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        today = now()
+
+        context['names'] = names
+        context['voucher_selected'] = voucher_contains
+        context['voucher_selection'] = voucher_selection
+        context['name_selected'] = name_contains
+        context['phone_no_selected'] = phone_no_contains
+        context['tittle'] = 'Buy Voucher List'
+        context['today'] = today
         return context
+
+    def get_queryset(self):
+        vouchers = BuyVoucher.objects.all().order_by('-date_added')
+        order = self.request.GET.get('orderby')
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        # checking name from input
+        if name_contains != 'Select Name':
+            person = Persons.objects.get(person_name=name_contains)
+            vouchers = vouchers.filter(seller_name=person.id)
+
+        # checking phone no from input
+        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
+            person = Persons.objects.get(contact_number=phone_no_contains)
+            vouchers = vouchers.filter(seller_name=person.id)
+
+        # checking voucher number from input
+        if voucher_contains != '' and voucher_contains != 'Select Voucher':
+            vouchers = vouchers.filter(voucher_number=voucher_contains)
+
+        return vouchers
 
 
 class BuyVoucherUpdateView(LoginRequiredMixin, UpdateView):
@@ -98,6 +147,82 @@ class SaleListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/sale_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        voucher_selection = SaleVoucher.objects.all()
+        challan_selection = Challan.objects.all()
+        names = Persons.objects.all()
+
+        challan_contains = self.request.GET.get('challan_no')
+        if challan_contains is None:
+            challan_contains = 'Select Challan'
+
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+
+        phone_no_contains = self.request.GET.get('phone_no')
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        today = now()
+
+        context['names'] = names
+        context['voucher_selected'] = voucher_contains
+        context['voucher_selection'] = voucher_selection
+        context['challan_selection'] = challan_selection
+        context['challan_selected'] = challan_contains
+        context['name_selected'] = name_contains
+        context['phone_no_selected'] = phone_no_contains
+        context['tittle'] = 'Sale List'
+        context['today'] = today
+        return context
+
+    def get_queryset(self):
+        vouchers = SaleVoucher.objects.all().order_by('-date_added')
+        order = self.request.GET.get('orderby')
+        challan_contains = self.request.GET.get('challan_no')
+        if challan_contains is None:
+            challan_contains = 'Select Challan'
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        # checking name from input
+        if name_contains != 'Select Name':
+            person = Persons.objects.get(person_name=name_contains)
+            challan = Challan.objects.filter(buyer_name=person.id)
+            vouchers = vouchers.filter(challan_no__in=challan)
+
+        # checking phone no from input
+        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
+            person = Persons.objects.get(contact_number=phone_no_contains)
+            challan = Challan.objects.filter(buyer_name=person.id)
+            vouchers = vouchers.filter(challan_no__in=challan)
+
+        # checking voucher number from input
+        if voucher_contains != '' and voucher_contains != 'Select Voucher':
+            vouchers = vouchers.filter(voucher_number=voucher_contains)
+
+        # checking challan number from input
+        if challan_contains != '' and challan_contains != 'Select Challan':
+            challan = Challan.objects.get(challan_no=challan_contains)
+            vouchers = vouchers.filter(challan_no=challan)
+
+        return vouchers
 
 
 class SaleUpdateView(LoginRequiredMixin, UpdateView):

@@ -43,6 +43,7 @@ class BuyVoucher(models.Model):
     bazar_or_company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateField(default=now)
+    date_time_stamp = models.DateTimeField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
     previous_amount = models.FloatField(blank=True, null=True, default=0)
     remarks = models.CharField(max_length=500, blank=True)
@@ -53,6 +54,10 @@ class BuyVoucher(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('buy-list')
+
+    @property
+    def total_amount(self):
+        return self.rate * self.weight
 
 
 def increment_sale_number():

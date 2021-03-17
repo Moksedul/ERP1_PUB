@@ -46,8 +46,14 @@
 padding: 5px 0;
 }
 
+form {
+  background-color: #dee9f7;
+  padding: 15px;
+  border-radius: .25rem;
+}
 .container main{
 display: table;
+
 }
 
 @media screen and (max-width: 600px) {
@@ -64,6 +70,11 @@ width: 100%;
 
 .table td, .table th, .table tr {
     vertical-align: middle;
+    font-size: 15px;
+}
+
+td .btn{
+display:inline;
 }
 
 #tableta {
@@ -95,6 +106,7 @@ body {
  overflow: hidden;
   margin-top: 5rem;
   background-color: #002933;
+  font-family: 'Arial', monospace;
 }
 .bg-ta {
   background-image: url("/media/backgrounds/home_bg1.png");
@@ -103,8 +115,9 @@ body {
 }
 
 .bg-top {
-    background-color: #E6E6FA;
-    padding: 5px;
+    background-color: #e6e6fa29;
+    padding: 1rem;
+    border-radius: .45rem;
 }
 
 .rectangle {

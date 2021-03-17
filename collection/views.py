@@ -196,20 +196,6 @@ class CollectionListView(LoginRequiredMixin, ListView):
         return collection_final
 
 
-def collection_list(request):
-    context = {}
-    filtered_collections = CollectionFilter(
-        request.GET,
-        queryset=Collection.objects.all()
-    )
-    context['filtered_collections'] = filtered_collections
-    paginated_collections = Paginator(filtered_collections.qs, 2)
-    page_number = request.GET.get('page')
-    page_obj = paginated_collections.get_page(page_number)
-    context['page_obj'] = page_obj
-    return render(request, 'collections/collection_list_filtered.html', context=context)
-
-
 class CollectionDeleteView(LoginRequiredMixin, DeleteView):
     model = Collection
     template_name = 'main/confirm_delete.html'
@@ -280,52 +266,3 @@ def collection_details(request, pk):
         'collected_amount_word': collected_amount_word,
     }
     return render(request, 'collections/collection_detail.html', context)
-
-
-@login_required()
-def collection_search(request):
-    sale_vouchers = SaleVoucher.objects.all()
-    sales = sale_vouchers
-    collections = Collection.objects.all()
-    persons = Persons.objects.all()
-    challans = Challan.objects.all()
-    name_contains_query = request.GET.get('name_contains')
-    phone_query = request.GET.get('phone_contains')
-    voucher_contains_query = request.GET.get('voucher_no')
-    total_receivable = 0
-
-    # filter collection by name
-    if name_contains_query != '' and name_contains_query is not None:
-        persons = persons.filter(person_name__contains=name_contains_query)
-        v_id = []
-        c_id = []
-        for person in persons:
-            challans = challans.filter(buyer_name=person.id)
-        for challan in challans:
-            c_id.append(challan.id)
-        sales = sale_vouchers.filter(challan_no_id__in=c_id)
-        for sale in sales:
-            v_id.append(sale.id)
-        collections = collections.filter(sale_voucher_no_id__in=v_id)
-
-    # filter collection by sale voucher
-    elif voucher_contains_query != '' and voucher_contains_query != 'Select Voucher No':
-        sales = sale_vouchers.filter(voucher_number=voucher_contains_query)
-        for sale in sales:
-            collections = collections.filter(sale_voucher_no_id=sale.id)
-
-    total_collected = collections.aggregate(Sum('collection_amount'))
-    total_collected = total_collected['collection_amount__sum']
-
-    for sale in sales:
-        total_receivable = total_receivable + sale_total_amount(sale.id)
-
-    print(total_receivable)
-
-    context = {
-        'collections': collections,
-        'vouchers': sale_vouchers,
-        'total_collected': total_collected,
-        'total_receivable': total_receivable
-    }
-    return render(request, "collections/collection_search_form.html", context)

@@ -1,19 +1,63 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<!--<div class="card card-body">-->
-	<div class=" card card-body">
-		<input class="form-control-sm" id="myInput" type="text" placeholder="Type to Search..">
+
+	<form method="GET" id="search">
+		<div class="form-row">
+			<div class="col-md-1">
 			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-sale'%}">New Sale</a>
+			</div>
+				<!--search form-->
+                <div class="form-group col-md-3">
+					<select id="name" class="form-control" name="name">
+						<option selected>{{ name_selected }}</option>
+						  {% for name in names %}
+						<option>{{ name }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                    <select id="phone_no" class="form-control" name="phone_no">
+                    <option selected>{{ phone_no_selected }}</option>
+					  {% for name in names %}
+                    <option>{{ name.contact_number }}</option>
+					  {% endfor %}
+                  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="voucher_no" class="form-control" name="voucher_no">
+                    <option selected>{{ voucher_selected }}</option>
+					  {% for voucher in voucher_selection %}
+                    <option>{{ voucher.voucher_number }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+			     <div class="form-group col-md-2">
+                  <select id="challan_no" class="form-control" name="challan_no">
+                    <option selected>{{ challan_selected }}</option>
+					  {% for voucher in challan_selection %}
+                    <option>{{ voucher.challan_no }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'sale-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
+
+	<div class=" card card-body">
+			<div class="text-center"><h5>Sale List</h5></div>
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Voucher Number</th>
-					<th>Challan Number</th>
+					<th>Voucher No</th>
+					<th>Challan No</th>
 					<th>Date</th>
 					<th>Status</th>
-					<th>Details</th>
-					<th>Update</th>
-					<th>Remove</th>
+					<th>D</th>
+					<th>E</th>
+					<th>&times;</th>
 				</tr>
 
 				{% for voucher in vouchers %}
@@ -23,14 +67,14 @@
 						<td>{{ voucher.date_added }}</td>
 						{% if voucher.status %}
 								<td>Confirmed</td>
-								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">Detail</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">D</a></td>
+								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">E</a></td>
+								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">&times;</a></td>
 							{%else%}
 								<td>Processing</td>
-								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">Detail</a></td>
-								<td><a class="btn btn-sm btn-info" href="{% url 'sale-update' voucher.id%}">Edit</a></td>
-								<td><a class="btn btn-sm btn-danger" href="{% url 'sale-delete' voucher.id%}">Delete</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">D</a></td>
+								<td><a class="btn btn-sm btn-info" href="{% url 'sale-update' voucher.id%}">E</a></td>
+								<td><a class="btn btn-sm btn-danger" href="{% url 'sale-delete' voucher.id%}">&times;</a></td>
 							{% endif %}
 					</tr>
 				{% endfor %}
@@ -42,21 +86,21 @@
 		        {% if is_paginated %}
 
 					{% if page_obj.has_previous %}
-						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="?page=1">First</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
 					{% endif %}
 
 					{% for num in page_obj.paginator.page_range %}
 						{% if page_obj.number == num %}
-							<a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-sm btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
 						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
 						{% endif %}
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
 					{% endif %}
 
         		{% endif %}
@@ -71,17 +115,16 @@ function alertDelete() {
   alert("Can not be deleted after sale Confirmation");
 }
 </script>
+<!-- search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
+    $(document).ready(function ()
+{
+    $("#name").select2({});
+    $("#voucher_no").select2({});
+    $("#phone_no").select2({});
+    $("#challan_no").select2({});
 });
 </script>
-
 
 {% endblock content %}

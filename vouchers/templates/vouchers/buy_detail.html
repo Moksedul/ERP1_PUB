@@ -1,5 +1,5 @@
 {% extends "main/base.html" %}
-
+{% load indian_numbers_tags %}
 {% block content %}
 <div class="container">
     <div class="row ">
@@ -51,12 +51,12 @@
         <div class="row mb-2">
         <div class="col-3"><strong>Rate (Per Kg.)</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ buy.rate }} BDT.</div>
+        <div class="col-3">{{ buy.rate|floatcomma_indian }} BDT.</div>
     </div>
     <div class="row mb-2">
         <div class="col-3"><strong>Total Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ total_amount }} BDT.</div>
+        <div class="col-3">{{ total_amount|floatcomma_indian }} BDT.</div>
     </div>
     <div class="row mb-3">
         <div class="col-3"><strong>Self Weight of Each Bag</strong></div>
@@ -73,7 +73,7 @@
         <div class="col-2">{{ buy.per_bag_unloading_cost }} BDT.</div>
         <div class="col-3"><strong>Total Unloading cost</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ total_unloading_cost }} BDT.</div>
+        <div class="col-2">{{ total_unloading_cost|floatcomma_indian }} BDT.</div>
     </div>
     <div class="row mb-3">
         <div class="col-3"><strong>Measuring Cost/Kg</strong></div>
@@ -81,7 +81,7 @@
         <div class="col-2">{{ buy.measuring_cost_per_kg }} BDT.</div>
         <div class="col-3"><strong>Total Measuring cost</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ total_measuring_cost }} BDT.</div>
+        <div class="col-2">{{ total_measuring_cost|floatcomma_indian }} BDT.</div>
     </div>
 
 <hr>
@@ -97,19 +97,19 @@
         <div class="col-6"></div>
         <div class="col-3"><strong>Total Amount After Deduction</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ amount_after_deduction }} BDT.</div>
+        <div class="col-2">{{ amount_after_deduction|floatcomma_indian }} BDT.</div>
     </div>
     <div class="row mb-3">
         <div class="col-6"></div>
         <div class="col-3"><strong>Previous Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ buy.previous_amount }} BDT.</div>
+        <div class="col-2">{{ buy.previous_amount|floatcomma_indian }} BDT.</div>
     </div>
      <div class="row mb-3">
         <div class="col-6"></div>
         <div class="col-3"><strong>Grand Total Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ grand_total_amount }} BDT.</div>
+        <div class="col-2">{{ grand_total_amount|floatcomma_indian }} BDT.</div>
     </div>
     <div class="row mb-3">
         <div class="col-2"><strong>In Words  </strong></div>

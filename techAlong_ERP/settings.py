@@ -58,7 +58,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_filters'
+    'django_filters',
+    'django.contrib.humanize',
+    'indian_numbers',  # pip install git+https://github.com/narenchoudhary/django-indian-numbers#egg=django-indian-numbers
 ]
 
 MIDDLEWARE = [
