@@ -1,8 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 from django.views.generic import ListView, DeleteView
 from django.forms import formset_factory, inlineformset_factory
+
+from core.digit2words import d2w
+from organizations.models import Persons
 from .forms import SaleForm, ProductForm
 from .models import LocalSale, Product
 
@@ -88,14 +92,15 @@ def sale_detail(request, pk):
         voucher_total = product_total - sale.transport_charge
 
     grand_total_amount = voucher_total + sale.previous_due - sale.discount
-
+    in_words = d2w(grand_total_amount)
     context = {
         'sale': sale,
         'products': product_list['products'],
         'grand_total': grand_total_amount,
         'product_total': product_total,
         'sign_charge': sign_charge,
-        'voucher_total': voucher_total
+        'voucher_total': voucher_total,
+        'in_words': in_words,
     }
 
     return render(request, 'local_sale/sale_detail.html', context)
@@ -105,8 +110,63 @@ class LocalSaleList(LoginRequiredMixin, ListView):
     model = LocalSale
     template_name = 'local_sale/sale_list.html'
     context_object_name = 'sales'
-    paginate_by = 20
-    ordering = ['-sale_no']
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        voucher_selection = LocalSale.objects.all()
+        names = Persons.objects.all()
+
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        today = now()
+
+        context['names'] = names
+        context['voucher_selected'] = voucher_contains
+        context['voucher_selection'] = voucher_selection
+        context['name_selected'] = name_contains
+        context['phone_no_selected'] = phone_no_contains
+        context['tittle'] = 'Local Sale List'
+        context['today'] = today.date()
+        return context
+
+    def get_queryset(self):
+        vouchers = LocalSale.objects.all().order_by('-date')
+        order = self.request.GET.get('orderby')
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        # checking name from input
+        if name_contains != 'Select Name':
+            person = Persons.objects.get(person_name=name_contains)
+            vouchers = vouchers.filter(buyer_name=person.id)
+
+        # checking phone no from input
+        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
+            person = Persons.objects.get(contact_number=phone_no_contains)
+            vouchers = vouchers.filter(buyer_name=person.id)
+
+        # checking voucher number from input
+        if voucher_contains != '' and voucher_contains != 'Select Voucher':
+            vouchers = vouchers.filter(sale_no=voucher_contains)
+
+        return vouchers
 
 
 class LocalSaleDelete(LoginRequiredMixin, DeleteView):

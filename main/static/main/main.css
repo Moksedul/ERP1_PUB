@@ -73,6 +73,14 @@ width: 100%;
     font-size: 15px;
 }
 
+td .fa-edit{
+color: #005266;
+}
+
+td .fa-trash{
+color: red;
+}
+
 td .btn{
 display:inline;
 }

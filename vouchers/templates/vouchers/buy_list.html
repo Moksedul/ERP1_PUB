@@ -75,7 +75,7 @@
 						{% if user.is_staff %}
 						<td><a class="btn btn-sm btn-info" href="{% url 'buy-update' voucher.id%}">E</a></td>
 						<td><a class="btn btn-sm btn-danger" href="{% url 'buy-delete' voucher.id%}">&times;</a></td>
-						{% elif voucher.date_time_stamp == today %}
+						{% elif voucher.date_time_stamp.date == today.date %}
 						<td><a class="btn btn-sm btn-info" href="{% url 'buy-update' voucher.id%}">E</a></td>
 						{%else%}
 						<td><a class="btn btn-sm btn-secondary" href="#">E</a></td>

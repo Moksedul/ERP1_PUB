@@ -1,5 +1,7 @@
 {% extends 'main/base.html' %}
-
+{% load techAlong_extras %}
+{% load humanize %}
+{% load indian_numbers_tags %}
 {% block content %}
 
 	<form method="GET" id="search">
@@ -53,29 +55,41 @@
 				<tr>
 					<th>Voucher No</th>
 					<th>Challan No</th>
+					<th>Company</th>
+					<th>Product</th>
+					<th>Weight</th>
+					<th>Rate</th>
 					<th>Date</th>
 					<th>Status</th>
-					<th>D</th>
-					<th>E</th>
-					<th>&times;</th>
+					<th>&#128195;</th>
+					<th><i class="fa fa-edit"></i></th>
+					<th><i class="fa fa-trash"></i></th>
 				</tr>
 
 				{% for voucher in vouchers %}
 					<tr>
 						<td>{{ voucher.voucher_number }}</td>
 						<td>{{ voucher.challan_no }}</td>
+						<td>{{ voucher.challan_no.company_name }}</td>
+						<td>{{ voucher.challan_no.product_name }}</td>
+						<td>{{ voucher.challan_no.weight }}</td>
+						<td>{{ voucher.rate }}</td>
 						<td>{{ voucher.date_added }}</td>
 						{% if voucher.status %}
 								<td>Confirmed</td>
-								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">D</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">E</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">&times;</a></td>
-							{%else%}
+								<td><a class="" href="{% url 'sale-detail' voucher.id%}">&#128195;</a></td>
+								{% if user.is_staff %}
+									<td><a class="" href="{% url 'sale-update' voucher.id%}"><i class="fa fa-edit"></i></a></td>
+								{%else%}
+									<td><a class="" onclick="alertEdit()" href="#"><i class="fa fa-edit"></i></a></td>
+								<td><a class="" onclick="alertDelete()" href="#"><i class="fa fa-trash"></i></a></td>
+								{%endif%}
+						{%else%}
 								<td>Processing</td>
-								<td><a class="btn btn-sm btn-info" href="{% url 'sale-detail' voucher.id%}">D</a></td>
-								<td><a class="btn btn-sm btn-info" href="{% url 'sale-update' voucher.id%}">E</a></td>
-								<td><a class="btn btn-sm btn-danger" href="{% url 'sale-delete' voucher.id%}">&times;</a></td>
-							{% endif %}
+								<td><a class="" href="{% url 'sale-detail' voucher.id%}">&#128195;</a></td>
+								<td><a class="" href="{% url 'sale-update' voucher.id%}"><i class="fa fa-edit"></i></a></td>
+								<td><a class="" href="{% url 'sale-delete' voucher.id%}"><i class="fa fa-trash"></i></a></td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 
@@ -86,21 +100,21 @@
 		        {% if is_paginated %}
 
 					{% if page_obj.has_previous %}
-						<a class="btn btn-sm btn-outline-info mb-4"  href="?page=1">First</a>
-						<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
 					{% endif %}
 
 					{% for num in page_obj.paginator.page_range %}
 						{% if page_obj.number == num %}
-							<a class="btn btn-sm btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% endif %}
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
-						<a class="btn btn-sm btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
 					{% endif %}
 
         		{% endif %}

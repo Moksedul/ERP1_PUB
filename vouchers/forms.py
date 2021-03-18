@@ -7,6 +7,7 @@ class SaleForm(ModelForm):
     class Meta:
         model = SaleVoucher
         fields = '__all__'
+        exclude = ('date_time_stamp',)
         widgets = {
             'date_added': AdminDateWidget(),
         }
@@ -19,6 +20,7 @@ class BuyForm(ModelForm):
     class Meta:
         model = BuyVoucher
         fields = '__all__'
+        exclude = ('date_time_stamp',)
         widgets = {
             'date_added': AdminDateWidget(),
         }

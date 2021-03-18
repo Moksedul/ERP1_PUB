@@ -63,7 +63,7 @@ class BuyListView(LoginRequiredMixin, ListView):
         context['voucher_selection'] = voucher_selection
         context['name_selected'] = name_contains
         context['phone_no_selected'] = phone_no_contains
-        context['tittle'] = 'Buy Voucher List'
+        context['tittle'] = 'Local Sale List'
         context['today'] = today
         return context
 
@@ -354,9 +354,9 @@ def sale_details(request, pk):
         'sale': sale,
         'challan': challan,
         'total_weight': challan_weight,
-        'weight_after_deduction': weight_after_deduction,
-        'amount_after_deduction': amount_after_deduction,
-        'total_challan_amount': total_challan_amount,
+        'weight_after_deduction': round(weight_after_deduction, 2),
+        'amount_after_deduction': round(amount_after_deduction, 2),
+        'total_challan_amount': round(total_challan_amount, 2),
         'fotka_amount': fotka_amount,
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost,
