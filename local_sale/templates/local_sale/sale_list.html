@@ -66,12 +66,19 @@
 
 						{% if user.is_staff %}
 							<td><a href="{% url 'update-local-sale' sale.id %}"><i class="fa fa-edit"></i></a></td>
+							{% if sale.date_time_stamp.date == today %}
+							<td><a href="{% url 'delete-local-sale' sale.id %}"><i class="fa fa-trash"></i></a></td>
+							{%else%}
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+							{%endif%}
 						{% elif sale.date_time_stamp.date == today %}
-							<td><a href="{% url 'update-local-sale' sale.id %}"><i class="fa fa-edit"></i></a>{{sale.date_time_stamp.date}} {{today}}</td>
+							<td><a href="{% url 'update-local-sale' sale.id %}"><i class="fa fa-edit"></i></a></td>
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
 						{%else%}
-							<td><a href="#"><i class="fa fa-edit"></i></a></td>
+							<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
 						{%endif%}
-						<td><a href="{% url 'delete-local-sale' sale.id %}"><i class="fa fa-trash"></i></a></td>
+
 
 					</tr>
 				{% endfor %}
