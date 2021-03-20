@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('weight', models.FloatField()),
                 ('price', models.FloatField()),
-                ('hut_buy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='hut_buy.HutBuy')),
+                ('lc', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lc.HutBuy')),
                 ('name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.Products')),
             ],
         ),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('amount', models.FloatField()),
-                ('hut_buy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='hut_buy.HutBuy')),
+                ('lc', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lc.HutBuy')),
             ],
         ),
     ]

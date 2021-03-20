@@ -161,7 +161,7 @@ def hut_buy_detail(request, pk):
     rate_without_cost = product_total / total_weight
 
     context = {
-        'hut_buy': hut_buy,
+        'lc': hut_buy,
         'products': product_list['products'],
         'expenses': expense_list['expenses'],
         'product_total': product_total,

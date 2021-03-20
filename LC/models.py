@@ -1,8 +1,34 @@
+from django.contrib.auth.models import User
 from django.db import models
-from accounts.models import Accounts
+from django.utils.timezone import now
+from products.models import Products
 
 
 class LC(models.Model):
-    lc_number = models.CharField(max_length=50, unique=True)
+    lc_number = models.CharField(max_length=10, unique=True)
     bank_name = models.CharField(max_length=100)
-    account = models.ForeignKey(Accounts, on_delete=models.PROTECT)
+    added_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    opening_date = models.DateField(default=now)
+    date_time_stamp = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return str(self.lc_number)
+
+
+class LCProduct(models.Model):
+    name = models.ForeignKey(Products, on_delete=models.PROTECT)
+    lc = models.ForeignKey(LC, on_delete=models.CASCADE)
+    weight = models.FloatField()
+    rate = models.FloatField()
+
+    def __str__(self):
+        return str(self.name)
+
+
+class LCExpense(models.Model):
+    name = models.CharField(max_length=50)
+    lc = models.ForeignKey(LC, on_delete=models.CASCADE)
+    amount = models.FloatField()
+
+    def __str__(self):
+        return str(self.name)

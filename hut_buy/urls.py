@@ -8,7 +8,5 @@ urlpatterns = [
     path('hut_buy/<int:pk>/delete', HutBuyDelete.as_view(), name='delete-hut-buy'),
     path('hut_buy/<int:pk>/update', hut_buy_update, name='update-hut-buy'),
     path('hut_buy/<int:pk>/detail', hut_buy_detail, name='detail-hut-buy'),
-    # path('local_sale/<int:pk>/update', sale_update, name='update-local-sale'),
-    # path('local_sale/<int:pk>/detail', sale_detail, name='detail-local-sale'),
     # path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]
