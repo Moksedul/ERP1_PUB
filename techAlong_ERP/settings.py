@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '192.168.1.253']
 # Application definition
 
 INSTALLED_APPS = [
+    'LC',
     'hut_buy',
     'payroll',
     'django_cleanup',
