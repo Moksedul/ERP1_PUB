@@ -17,32 +17,33 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='HutBuy',
+            name='LC',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('hut_name', models.CharField(max_length=20)),
-                ('date', models.DateField(default=django.utils.timezone.now)),
-                ('date_time_stamp', models.DateTimeField(auto_now=True)),
-                ('posted_by', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                ('lc_number', models.CharField(max_length=10, unique=True)),
+                ('bank_name', models.CharField(max_length=100)),
+                ('opening_date', models.DateField(default=django.utils.timezone.now)),
+                ('date_time_stamp', models.DateTimeField(default=django.utils.timezone.now)),
+                ('added_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='HutProduct',
+            name='LCProduct',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('weight', models.FloatField()),
-                ('price', models.FloatField()),
-                ('hut_buy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='hut_buy.hutbuy')),
-                ('name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.products')),
+                ('rate', models.FloatField()),
+                ('lc', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='LC.lc')),
+                ('name', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='products.products')),
             ],
         ),
         migrations.CreateModel(
-            name='Expense',
+            name='LCExpense',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('amount', models.FloatField()),
-                ('hut_buy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='hut_buy.hutbuy')),
+                ('lc', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='LC.lc')),
             ],
         ),
     ]
