@@ -17,24 +17,24 @@ def lc_create(request):
     form3set = expense_set(request.POST or None, request.FILES, prefix='expense')
     if request.method == 'POST':
         if form1.is_valid():
-            buy = form1.save(commit=False)
-            buy.posted_by = request.user
-            print(buy)
-            buy.save()
+            lc = form1.save(commit=False)
+            lc.added_by = request.user
+            print(lc)
+            lc.save()
             for form2 in form2set:
                 product = form2.save(commit=False)
                 print(product)
-                product.hut_buy = buy
+                product.lc = lc
                 product.save()
 
             for form3 in form3set:
                 expense = form3.save(commit=False)
-                expense.hut_buy = buy
+                expense.lc = lc
                 expense.save()
                 print(expense)
             return redirect('/lc_list')
     else:
-        form1 = LCForm(prefix='hut')
+        form1 = LCForm(prefix='lc')
         form2set = product_set(prefix='product')
         form3set = expense_set(prefix='expense')
 
@@ -52,11 +52,11 @@ def lc_create(request):
 
 class LCList(LoginRequiredMixin, ListView):
     model = LC
-    template_name = 'hut_buy/hut_buy_list.html'
+    template_name = 'lc/lc_list.html'
     context_object_name = 'lc'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tittle'] = 'techAlong Business|Hut Buy List'
+        context['tittle'] = 'techAlong Business|LC List'
 
         return context

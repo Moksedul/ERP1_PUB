@@ -1,35 +1,84 @@
 {% extends 'main/base.html' %}
-
+{% load techAlong_extras %}
+{% load humanize %}
+{% load indian_numbers_tags %}
 {% block content %}
-<!--<div class="card card-body">-->
-<div>
+<form method="GET" id="search">
+		<div class="form-row">
+			<div class="col-md-2 mb-1">
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'new-lc'%}">OPEN LC</a>
+			</div>
+				<!--search form-->
+                <div class="form-group col-md-3">
+					<select id="name" class="form-control" name="name">
+						<option selected>{{ name_selected }}</option>
+						  {% for name in names %}
+						<option>{{ name }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                    <select id="phone_no" class="form-control" name="phone_no">
+                    <option selected>{{ phone_no_selected }}</option>
+					  {% for name in names %}
+                    <option>{{ name.contact_number }}</option>
+					  {% endfor %}
+                  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="voucher_no" class="form-control" name="voucher_no">
+                    <option selected>{{ voucher_selected }}</option>
+					  {% for voucher in voucher_selection %}
+                    <option>{{ voucher.sale_no }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'local-sale-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
 
-</div>
-<a class="btn btn-sm btn-info" href="#">Search</a>
 	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'new-hut-buy'%}">New Buy</a>
-			<table class="table table-sm table-striped table-bordered">
+			<h5 class="text-center">Local Sale List</h5>
+			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Date</th>
-					<th>Hut Name</th>
-                    <th>Product Wight</th>
-					<th>Product Cost</th>
-					<th>Expense</th>
-					<th>Detail</th>
-					<th>Update</th>
-					<th>Delete</th>
+					<th>LC Number</th>
+					<th>Bank</th>
+					<th>Rate</th>
+					<th>Opening Date</th>
+					<th>Posted By</th>
+					<th>&#128195;</th>
+					<th><i class="fa fa-edit"></i></th>
+					<th><i class="fa fa-trash"></i></th>
 				</tr>
 
-				{% for item in hut_buy %}
+				{% for lc in lc %}
 					<tr>
-						<td>{{ item.date }}</td>
-						<td>{{ item.hut_name }}</td>
-						<td>{{ item.weight }}</td>
-						<td>{{ item.cost }}</td>
-						<td>{{ item.Expense }}</td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'detail-hut-buy' item.id %}">Details</a></td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'update-hut-buy' item.id %}">Update</a></td>
-						<td><a class="btn btn-sm btn-danger" href="{% url 'delete-hut-buy' item.id %}">Delete</a></td>
+						<td>{{ lc.lc_number }}</td>
+						<td>{{ lc.bank_name }}</td>
+						<td>{{ lc.company_name }}</td>
+						<td>{{ lc.opening_date }}</td>
+						<td>{{ lc.added_by.first_name }} {{ lc.added_by.last_name }}</td>
+						<td><a href="##">&#128195;</a></td>
+
+						{% if user.is_staff %}
+							<td><a href="##"><i class="fa fa-edit"></i></a></td>
+							{% if sale.date_time_stamp.date == today %}
+							<td><a href="##"><i class="fa fa-trash"></i></a></td>
+							{%else%}
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+							{%endif%}
+						{% elif sale.date_time_stamp.date == today %}
+							<td><a href="##"><i class="fa fa-edit"></i></a></td>
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+						{%else%}
+							<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+						{%endif%}
+
+
 					</tr>
 				{% endfor %}
 
@@ -40,26 +89,35 @@
 		        {% if is_paginated %}
 
 					{% if page_obj.has_previous %}
-						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
 					{% endif %}
 
 					{% for num in page_obj.paginator.page_range %}
 						{% if page_obj.number == num %}
-							<a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% endif %}
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
 					{% endif %}
 
         		{% endif %}
 		</div>
 
-
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ()
+{
+    $("#name").select2({});
+    $("#voucher_no").select2({});
+    $("#phone_no").select2({});
+});
+</script>
 
 {% endblock content %}
