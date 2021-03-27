@@ -64,13 +64,13 @@
 						<td><a href="##">&#128195;</a></td>
 
 						{% if user.is_staff %}
-							<td><a href="##"><i class="fa fa-edit"></i></a></td>
-							{% if sale.date_time_stamp.date == today %}
-							<td><a href="##"><i class="fa fa-trash"></i></a></td>
+							<td><a href="{% url 'update-lc' lc.id %}""><i class="fa fa-edit"></i></a></td>
+							{% if lc.date_time_stamp.date == today.date %}
+							<td><a href="{% url 'delete-lc' lc.id %}"><i class="fa fa-trash"></i></a></td>
 							{%else%}
 							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
 							{%endif%}
-						{% elif sale.date_time_stamp.date == today %}
+						{% elif lc.date_time_stamp.date == today.date %}
 							<td><a href="##"><i class="fa fa-edit"></i></a></td>
 							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
 						{%else%}
