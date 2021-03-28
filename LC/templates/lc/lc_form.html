@@ -21,7 +21,20 @@
                     <div id="form_set">
                         {% for form2 in form2set.forms %}
                             <div class='no_error'>
-                                {{ form2.as_table }}
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        {{ form2.name|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        {{ form2.bags|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        {{ form2.weight|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        {{ form2.rate|as_crispy_field }}
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
@@ -41,7 +54,14 @@
                     <div id="form_set1">
                         {% for form3 in form3set.forms %}
                             <div class='no_error'>
-                                {{ form3.as_table }}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ form3.name|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ form3.amount|as_crispy_field }}
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>

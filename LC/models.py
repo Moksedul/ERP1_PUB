@@ -18,6 +18,7 @@ class LC(models.Model):
 class LCProduct(models.Model):
     name = models.ForeignKey(Products, on_delete=models.PROTECT)
     lc = models.ForeignKey(LC, on_delete=models.CASCADE)
+    bags = models.FloatField(default=0)
     weight = models.FloatField()
     rate = models.FloatField()
 
