@@ -1,7 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import formset_factory, inlineformset_factory
+from django.forms import formset_factory, inlineformset_factory, modelformset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.timezone import now
 from django.views.generic import ListView, DeleteView, UpdateView
 
@@ -24,7 +27,6 @@ def lc_create(request):
             lc.save()
             for form2 in form2set:
                 product = form2.save(commit=False)
-                print(product)
                 product.lc = lc
                 product.save()
 
@@ -32,7 +34,6 @@ def lc_create(request):
                 expense = form3.save(commit=False)
                 expense.lc = lc
                 expense.save()
-                print(expense)
             return redirect('/lc_list')
     else:
         form1 = LCForm(prefix='lc')
@@ -61,7 +62,6 @@ class LCList(LoginRequiredMixin, ListView):
         today = now()
         context['tittle'] = 'techAlong Business|LC List'
         context['today'] = today
-        print(today)
         return context
 
 
@@ -83,7 +83,7 @@ def lc_update(request, pk):
     buy = LC.objects.get(pk=pk)
     form1 = LCForm(instance=buy)
     ProductFormSet = inlineformset_factory(
-                    LC, LCProduct, fields=('name', 'weight', 'price'), extra=1
+                    LC, LCProduct, fields=('name', 'weight', 'rate',), extra=1
                     )
     ExpenseFormSet = inlineformset_factory(
         LC, LCExpense, fields=('name', 'amount',), extra=1
@@ -102,7 +102,7 @@ def lc_update(request, pk):
                 form2set.save()
             if form3set.is_valid():
                 form3set.save()
-            return redirect('/hut_buy_list')
+            return redirect('/lc_list')
     else:
         form1 = form1
         form2set = form2set
@@ -117,4 +117,4 @@ def lc_update(request, pk):
         'tittle': 'techAlong Business|LC Update',
     }
 
-    return render(request, 'hut_buy/hut_buy_form.html', context)
+    return render(request, 'lc/lc_form.html', context)
