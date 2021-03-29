@@ -16,7 +16,7 @@ from LC.models import LC, LCProduct, LCExpense
 def lc_create(request):
     form1 = LCForm(request.POST or None, prefix='lc')
     product_set = formset_factory(ProductForm,)
-    expense_set = formset_factory(ExpenseForm, extra=3)
+    expense_set = formset_factory(ExpenseForm,)
     form2set = product_set(request.POST or None, request.FILES, prefix='product')
     form3set = expense_set(request.POST or None, request.FILES, prefix='expense')
     if request.method == 'POST':
