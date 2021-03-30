@@ -99,16 +99,16 @@ def lc_update(request, pk):
             buy.posted_by = request.user
             buy.save()
             print('ok')
-            print(form2set)
+
             for form2 in form2set:
                 print('ok go')
                 # form2.save()
 
             if form2set.is_valid():
                 form2set.save()
-                print('ok3')
-            if form3set.is_valid():
                 print('ok2')
+            if form3set.is_valid():
+                print('ok3')
                 form3set.save()
             return redirect('/lc_list')
     else:
