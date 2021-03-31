@@ -29,13 +29,13 @@
                   <select id="voucher_no" class="form-control" name="voucher_no">
                     <option selected>{{ voucher_selected }}</option>
 					  {% for voucher in voucher_selection %}
-                    <option>{{ voucher.sale_no }}</option>
+                    <option>{{ voucher }}</option>
 					  {% endfor %}
                   </select>
                 </div>
 				<div class="col-md-2">
 					<button type="submit" class="btn btn-sm btn-info">Search</button>
-					<a href="{% url 'local-sale-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+					<a href="{% url 'lc-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
 				</div>
 			</div>
         </form>

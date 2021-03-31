@@ -10,6 +10,7 @@ from django.views.generic import ListView, DeleteView, UpdateView
 
 from LC.forms import LCForm, ProductForm, ExpenseForm
 from LC.models import LC, LCProduct, LCExpense
+from organizations.models import Persons
 
 
 @login_required
@@ -59,10 +60,55 @@ class LCList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        voucher_selection = LC.objects.all()
+
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Lc Number'
+        bank_contains = self.request.GET.get('bank_name')
+        if bank_contains is None:
+            name_contains = 'Bank Name'
+
         today = now()
+
+        context['names'] = names
+        context['voucher_selected'] = voucher_contains
+        context['voucher_selection'] = voucher_selection
+        context['bank_typed'] = bank_contains
+
         context['tittle'] = 'techAlong Business|LC List'
         context['today'] = today
         return context
+
+    def get_queryset(self):
+        vouchers = LC.objects.all().order_by('-date_time_stamp')
+        order = self.request.GET.get('orderby')
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Lc Number'
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+        phone_no_contains = self.request.GET.get('phone_no')
+
+        if phone_no_contains is None or phone_no_contains == '':
+            phone_no_contains = 'Select Phone No'
+
+        # checking name from input
+        if name_contains != 'Select Name':
+            person = Persons.objects.get(person_name=name_contains)
+            vouchers = vouchers.filter(buyer_name=person.id)
+
+        # checking phone no from input
+        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
+            person = Persons.objects.get(contact_number=phone_no_contains)
+            vouchers = vouchers.filter(buyer_name=person.id)
+
+        # checking voucher number from input
+        if voucher_contains != '' and voucher_contains != 'Select Lc Number':
+            vouchers = vouchers.filter(lc_number=voucher_contains)
+
+        return vouchers
 
 
 class LCDelete(LoginRequiredMixin, DeleteView):
