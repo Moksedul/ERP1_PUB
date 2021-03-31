@@ -99,7 +99,6 @@ def lc_update(request, pk):
             buy.posted_by = request.user
             buy.save()
             print('ok')
-            print(form2set)
             for form2 in form2set:
                 print('ok go')
                 # form2.save()

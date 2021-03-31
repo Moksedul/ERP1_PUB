@@ -16,12 +16,16 @@
                     {{ form1.opening_date|as_crispy_field }}
                 </div>
                 <div class="col-12 border border-info">
+                    {% if button_name == 'Save' %}
                     <input type="button" value="Add Product" id="add_more" class="m-2">
+                    {%endif%}
                     {{ form2set.management_form }}
                     <div id="form_set">
                         {% for form2 in form2set.forms %}
                             <div class='no_error'>
-<!--                                {{ form2 }}-->
+                                {% if button_name == 'Update' %}
+                                    <div style="display:none">{{form2.as_table}}</div>
+                                {%endif%}
                                <div class="form-row">
                                     <div class="form-group col-md-3">
                                         {{ form2.name|as_crispy_field }}
@@ -46,7 +50,7 @@
                     </div>
                     <div id="empty_form" style="display:none">
                         <div class='no_error'>
-                           <!-- <div class="form-row">
+                           <div class="form-row">
                                     <div class="form-group col-md-3">
                                         {{ form2set.empty_form.name|as_crispy_field }}
                                     </div>
@@ -64,7 +68,7 @@
                                         {{ form2set.empty_form.DELETE|as_crispy_field }}
                                 </div>
                                 {% endif %}
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -73,12 +77,17 @@
                     <hr>
                 </div>
                 <div class="col-12 border border-info">
+                    {% if button_name == 'Save' %}
                     <input type="button" value="Add Expense" id="add_more1" class="m-2">
+                    {%endif%}
                     {{ form3set.management_form }}
                     <div id="form_set1">
                         {% for form3 in form3set.forms %}
                             <div class='no_error'>
-                               <!-- <div class="form-row">
+                                {% if button_name == 'Update' %}
+                                    <div style="display:none">{{form3.as_table}}</div>
+                                {%endif%}
+                               <div class="form-row">
                                     <div class="form-group col-md-6">
                                         {{ form3.name|as_crispy_field }}
                                     </div>
@@ -90,7 +99,7 @@
                                             {{ form3.DELETE|as_crispy_field }}
                                         </div>
                                     {% endif %}
-                                </div> -->
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
