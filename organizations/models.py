@@ -47,3 +47,10 @@ class Persons(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('person-list')
+
+
+class Bank(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.name)

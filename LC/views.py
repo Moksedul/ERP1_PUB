@@ -10,7 +10,7 @@ from django.views.generic import ListView, DeleteView, UpdateView
 
 from LC.forms import LCForm, ProductForm, ExpenseForm
 from LC.models import LC, LCProduct, LCExpense
-from organizations.models import Persons
+from organizations.models import Persons, Bank
 
 
 @login_required
@@ -57,58 +57,69 @@ class LCList(LoginRequiredMixin, ListView):
     model = LC
     template_name = 'lc/lc_list.html'
     context_object_name = 'lc'
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        voucher_selection = LC.objects.all()
+        lc_selection = LC.objects.all()
+        banks = Bank.objects.all()
 
-        voucher_contains = self.request.GET.get('voucher_no')
-        if voucher_contains is None:
-            voucher_contains = 'Select Lc Number'
-        bank_contains = self.request.GET.get('bank_name')
-        if bank_contains is None:
-            name_contains = 'Bank Name'
+        lc_contains = self.request.GET.get('lc_number')
+        if lc_contains is None:
+            lc_contains = 'Select Lc Number'
+
+        bank_contains = self.request.GET.get('bank')
+
+        if bank_contains is None or bank_contains == '' or bank_contains == 'Select Bank':
+            bank = 'Select Bank'
+        else:
+            bank = Bank.objects.get(id=bank_contains)
+
+        order_contains = self.request.GET.get('order_by')
+        if order_contains is None:
+            order_contains = 'Select Order'
 
         today = now()
 
-        context['names'] = names
-        context['voucher_selected'] = voucher_contains
-        context['voucher_selection'] = voucher_selection
-        context['bank_typed'] = bank_contains
-
+        context['banks'] = banks
+        context['lc_selected'] = lc_contains
+        context['lc_selection'] = lc_selection
+        context['bank_selected'] = bank
+        context['order_selected'] = order_contains
         context['tittle'] = 'techAlong Business|LC List'
         context['today'] = today
         return context
 
     def get_queryset(self):
-        vouchers = LC.objects.all().order_by('-date_time_stamp')
-        order = self.request.GET.get('orderby')
-        voucher_contains = self.request.GET.get('voucher_no')
-        if voucher_contains is None:
-            voucher_contains = 'Select Lc Number'
-        name_contains = self.request.GET.get('name')
-        if name_contains is None:
-            name_contains = 'Select Name'
-        phone_no_contains = self.request.GET.get('phone_no')
+        order_contains = self.request.GET.get('order_by')
+        print(order_contains)
+        if order_contains is None:
+            order_contains = 'Select Order'
+            lc = LC.objects.all().order_by('-date_time_stamp')
+        elif order_contains == 'LC Number':
+            lc = LC.objects.all().order_by('lc_number')
+        elif order_contains == 'Bank':
+            lc = LC.objects.all().order_by('bank_name')
+        else:
+            lc = LC.objects.all().order_by('-opening_date')
 
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
+        lc_contains = self.request.GET.get('lc_number')
+        if lc_contains is None:
+            lc_contains = 'Select Lc Number'
 
-        # checking name from input
-        if name_contains != 'Select Name':
-            person = Persons.objects.get(person_name=name_contains)
-            vouchers = vouchers.filter(buyer_name=person.id)
+        bank_contains = self.request.GET.get('bank')
+        if bank_contains is None:
+            bank_contains = 'Select Bank'
 
-        # checking phone no from input
-        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
-            person = Persons.objects.get(contact_number=phone_no_contains)
-            vouchers = vouchers.filter(buyer_name=person.id)
+        # checking bank_name from input
+        if bank_contains != 'Select Bank' and bank_contains !='':
+            lc = lc.filter(bank_name=bank_contains)
 
-        # checking voucher number from input
-        if voucher_contains != '' and voucher_contains != 'Select Lc Number':
-            vouchers = vouchers.filter(lc_number=voucher_contains)
+        # checking lc number from input
+        if lc_contains != '' and lc_contains != 'Select Lc Number':
+            lc = lc.filter(lc_number=lc_contains)
 
-        return vouchers
+        return lc
 
 
 class LCDelete(LoginRequiredMixin, DeleteView):

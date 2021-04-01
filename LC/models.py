@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
+
+from organizations.models import Bank
 from products.models import Products
 
 
 class LC(models.Model):
     lc_number = models.CharField(max_length=10, unique=True)
-    bank_name = models.CharField(max_length=100)
+    bank_name = models.ForeignKey(Bank, on_delete=models.PROTECT)
     added_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     opening_date = models.DateField(default=now)
     date_time_stamp = models.DateTimeField(default=now)

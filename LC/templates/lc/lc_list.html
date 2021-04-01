@@ -10,27 +10,27 @@
 			</div>
 				<!--search form-->
                 <div class="form-group col-md-3">
-					<select id="name" class="form-control" name="name">
-						<option selected>{{ name_selected }}</option>
-						  {% for name in names %}
-						<option>{{ name }}</option>
+					<select id="bank" class="form-control" name="bank">
+						<option value="{{bank_selected.id}}" selected>{{ bank_selected }}</option>
+						  {% for bank in banks %}
+						<option value="{{bank.id}}">{{ bank }}</option>
 						  {% endfor %}
 					  </select>
             	</div>
                 <div class="form-group col-md-2">
-                    <select id="phone_no" class="form-control" name="phone_no">
-                    <option selected>{{ phone_no_selected }}</option>
-					  {% for name in names %}
-                    <option>{{ name.contact_number }}</option>
+                  <select id="lc_number" class="form-control" name="lc_number">
+                    <option selected>{{ lc_selected }}</option>
+					  {% for lc in lc_selection %}
+                    <option>{{ lc }}</option>
 					  {% endfor %}
                   </select>
-            	</div>
-                <div class="form-group col-md-2">
-                  <select id="voucher_no" class="form-control" name="voucher_no">
-                    <option selected>{{ voucher_selected }}</option>
-					  {% for voucher in voucher_selection %}
-                    <option>{{ voucher }}</option>
-					  {% endfor %}
+                </div>
+				<div class="form-group col-md-2">
+                  <select id="order_by" class="form-control" name="order_by">
+                    <option selected>{{ order_selected }}</option>
+                    <option>LC Number</option>
+					<option>Bank</option>
+					<option>Date Opened</option>
                   </select>
                 </div>
 				<div class="col-md-2">
@@ -114,9 +114,9 @@
 <script>
     $(document).ready(function ()
 {
-    $("#name").select2({});
-    $("#voucher_no").select2({});
-    $("#phone_no").select2({});
+    $("#bank").select2({});
+    $("#lc_number").select2({});
+    $("#order_by").select2({});
 });
 </script>
 
