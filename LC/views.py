@@ -24,7 +24,6 @@ def lc_create(request):
         if form1.is_valid():
             lc = form1.save(commit=False)
             lc.added_by = request.user
-            print(lc)
             lc.save()
             for form2 in form2set:
                 product = form2.save(commit=False)
@@ -35,6 +34,7 @@ def lc_create(request):
                 expense = form3.save(commit=False)
                 expense.lc = lc
                 expense.save()
+
             return redirect('/lc_list')
     else:
         form1 = LCForm(prefix='lc')
