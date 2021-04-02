@@ -1,16 +1,16 @@
-from django.contrib import messages
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import formset_factory, inlineformset_factory, modelformset_factory
-from django.http import HttpResponseRedirect
+from django.forms import formset_factory, inlineformset_factory
+
 from django.shortcuts import render, redirect
-from django.urls import reverse
+
 from django.utils.timezone import now
-from django.views.generic import ListView, DeleteView, UpdateView
+from django.views.generic import ListView, DeleteView
 
 from LC.forms import LCForm, ProductForm, ExpenseForm
 from LC.models import LC, LCProduct, LCExpense
-from organizations.models import Persons, Bank
+from organizations.models import Bank
 
 
 @login_required
@@ -92,7 +92,7 @@ class LCList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         order_contains = self.request.GET.get('order_by')
-        print(order_contains)
+
         if order_contains is None:
             order_contains = 'Select Order'
             lc = LC.objects.all().order_by('-date_time_stamp')
@@ -118,7 +118,7 @@ class LCList(LoginRequiredMixin, ListView):
         # checking lc number from input
         if lc_contains != '' and lc_contains != 'Select Lc Number':
             lc = lc.filter(lc_number=lc_contains)
-
+        print(lc.count())
         return lc
 
 

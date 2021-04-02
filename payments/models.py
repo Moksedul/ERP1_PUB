@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 
+from LC.models import LC
 from bkash.models import BkashTransaction
 from organizations.models import Persons
 from vouchers.models import BuyVoucher
@@ -38,8 +39,9 @@ def increment_payment_number():
 
 class Payment(models.Model):
     payment_no = models.CharField(max_length=50, unique=True, default=increment_payment_number)
-    payment_for_person = models.ForeignKey(Persons, null=True, on_delete=models.CASCADE)
+    payment_for_person = models.ForeignKey(Persons, null=True, on_delete=models.CASCADE, blank=True)
     voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE, blank=True)
+    lc_number = models.ForeignKey(LC, null=True, blank=True, on_delete=models.CASCADE)
     payed_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     payed_to = models.CharField(max_length=50, null=True, blank=True)
     payment_date = models.DateField(default=now)
@@ -51,6 +53,7 @@ class Payment(models.Model):
     payment_from_account = models.ForeignKey(Accounts, default=default_account, null=True, on_delete=models.CASCADE)
     transaction = models.ForeignKey(BkashTransaction, on_delete=models.CASCADE, null=True)
     remarks = models.CharField(max_length=50, blank=True)
+    date_time_stamp = models.DateTimeField(default=now)
 
     def __str__(self):
         return str(self.payment_no)

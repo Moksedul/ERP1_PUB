@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
+from LC.models import LC
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
 from collection.models import Collection

@@ -1,7 +1,9 @@
 {% extends "main/base.html" %}
-
+{% load indian_numbers_tags %}
 {% block content %}
-<div class="container">
+
+<div class="container card">
+
     <div class="row ">
         <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
         {% if payment.transaction  %}
@@ -11,6 +13,8 @@
         {%endif%}
 
     </div>
+    <h3 class="text-center">M/S FATEMA ENTERPRISE</h3>
+    <h5 class="text-center">Payment Details</h5>
     <hr>
     <div class="row mb-5">
         <div class="col-3"><strong>Payment Number</strong></div>
@@ -23,17 +27,28 @@
     <div class="row mb-5">
         <div class="col-3"><strong>Payed To</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ payment.payed_to }}</div>
+        {% if payment.lc_number %}
+            <div class="col-3">{{ payment.lc_number.bank_name }}</div>
+        {% else %}
+            <div class="col-3">{{ payment.payment_for_person }}</div>
+        {% endif %}
+
+
     </div>
     <div class="row mb-5">
         <div class="col-3"><strong>Payed Against Voucher</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ payment.voucher_no }}</div>
+        {% if payment.lc_number %}
+            <div class="col-3">{{ payment.lc_number }}</div>
+        {% else %}
+            <div class="col-3">{{ payment.voucher_no }}</div>
+        {% endif %}
+
     </div>
     <div class="row mb-5">
         <div class="col-3"><strong>Payed By</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ payment.payed_by }}</div>
+        <div class="col-3">{{ payment.payed_by.first_name }} {{ payment.payed_by.last_name }}</div>
     </div>
     <div class="row mb-5">
         <div class="col-3"><strong>Payment Mode</strong></div>
@@ -54,7 +69,7 @@
     <div class="row mb-5">
         <div class="col-3"><strong>Payment Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ payment.payment_amount }} BDT.</div>
+        <div class="col-3">{{ payment.payment_amount|floatcomma_indian }} BDT.</div>
     </div>
         <div class="row mb-5">
         <div class="col-3"><strong>Amount in Words</strong></div>

@@ -2,11 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.utils.timezone import now
 from datetime import timedelta, datetime
-
+from LC.models import LC
 from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
-from core.views import local_sale_total_amount, sale_total_amount, buy_total_amount
+from core.views import local_sale_total_amount, sale_total_amount, buy_total_amount, lc_total_amount
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
 from payroll.models import SalaryPayment
@@ -21,6 +21,7 @@ def ledger(request):
     date1 = now()
     date2 = now()
     dd = request.POST.get('date')
+    lcs = LC.objects.all()
     buys = BuyVoucher.objects.all()
     sales = SaleVoucher.objects.all()
     local_sales = LocalSale.objects.all()
@@ -96,6 +97,21 @@ def ledger(request):
         'voucher': []
 
     }
+
+    for voucher in lcs:
+        amount = lc_total_amount(voucher.id)
+        key = "voucher"
+        ledgers.setdefault(key, [])
+        ledgers[key].append({
+            'date': voucher.opening_date,
+            'name': voucher.bank_name,
+            'voucher_no': voucher.lc_number,
+            'descriptions': ' LC ' + str(voucher.id),
+            'credit_amount': amount,
+            'debit_amount': 0,
+            'url1': '#',
+            'url2': '#'
+        })
 
     for voucher in buys:
         amount = buy_total_amount(voucher.id)
@@ -286,6 +302,7 @@ def create_account_ledger(data):
         salary_payment=data['salary_payment'],
     )
     account_ledger.save()
+    print(account_ledger)
 
 
 def update_account_ledger(data, pk):

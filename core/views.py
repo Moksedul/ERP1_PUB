@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.shortcuts import render
 
+from LC.models import LC, LCProduct, LCExpense
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
 from collection.models import Collection
@@ -19,6 +20,24 @@ def load_person_image(request):
         'person': person,
     }
     return render(request, 'main/person_image.html', context)
+
+
+def lc_total_amount(pk):
+    lc = LC.objects.get(id=pk)
+    products = LCProduct.objects.filter(lc=lc.id)
+    expenses = LCExpense.objects.filter(lc=lc.id)
+    product_total = 0
+    expense_total = 0
+
+    for product in products:
+        product_total += product.rate * product.weight
+
+    for expense in expenses:
+        expense_total += expense.amount
+
+    lc_total = product_total + expense_total
+
+    return lc_total
 
 
 def sale_total_amount(pk):

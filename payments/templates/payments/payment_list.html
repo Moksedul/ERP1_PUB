@@ -1,14 +1,67 @@
 {% extends 'main/base.html' %}
-
+{% load techAlong_extras %}
+{% load indian_numbers_tags %}
 {% block content %}
-<!--<div class="card card-body">-->
-<div>
+<form method="GET" id="search">
+		<div class="form-row">
+			<div class="col-md-1 mb-1">
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+			  Menu
+			</button>
 
-</div>
-<a class="btn btn-sm btn-info" href="{% url 'payment-search' %}">Search</a>
-<a class="btn btn-sm btn-info" href="{% url 'payment-report' %}">Report</a>
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h6 class="modal-title" id="exampleModalLabel">Payment Menu</h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'payment-report' %}">Report</a>
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'add-payment'%}">Add Buy Payment</a>
+					<a class="btn btn-sm btn-info btn-block" href="{% url 'add-lc-payment'%}">Add LC Payment</a>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			</div>
+				<!--search form-->
+                <div class="form-group col-md-3">
+					<select id="name" class="form-control" name="name" onchange="this.form.submit()">
+						<option selected>{{ name_selected }}</option>
+						  {% for name in names %}
+						<option>{{ name }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                    <select id="phone_no" class="form-control" name="phone_no" onchange="this.form.submit()">
+                    <option selected>{{ phone_no_selected }}</option>
+					  {% for name in names %}
+                    <option>{{ name.contact_number }}</option>
+					  {% endfor %}
+                  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="voucher_no" class="form-control" name="voucher_no" onchange="this.form.submit()">
+                    <option selected>{{ voucher_selected }}</option>
+					  {% for voucher in sale_voucher_selection %}
+                    <option>{{ voucher.voucher_no }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'payment-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
 	<div class=" card card-body">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-payment'%}">New Payment</a>
+		<h5 class="text-center">{{tittle}}</h5>
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Payment Number</th>
@@ -16,29 +69,46 @@
 					<th>Payment To</th>
 					<th>Payed Amount</th>
 					<th>Payed Date</th>
-					<th>Remarks</th>
-					<th>Detail</th>
-					<th>Update</th>
-					<th>Delete</th>
+					<th>&#128195;</th>
+					<th><i class="fa fa-edit"></i></th>
+					<th><i class="fa fa-trash"></i></th>
 				</tr>
 
 				{% for payment in payments %}
 					<tr>
 						<td>{{ payment.payment_no }}</td>
-						<td>{{ payment.voucher_no }}</td>
-						<td>{{ payment.payed_to }}</td>
-						<td>{{ payment.payment_amount }} TK</td>
+						{% if payment.lc_number %}
+							<td>{{ payment.lc_number }}</td>
+							<td>{{ payment.lc_number.bank_name }}</td>
+						{%else%}
+							<td>{{ payment.voucher_no }}</td>
+							<td>{{ payment.payment_for_person }}</td>
+						{%endif%}
+						<td>{{ payment.payment_amount|floatcomma_indian }} TK</td>
 						<td>{{ payment.payment_date }}</td>
-						<td>{{ payment.remarks }} </td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'payment-detail' payment.id%}">Detail</a></td>
+						<td><a href="{% url 'payment-detail' payment.id%}">&#128195;</a></td>
 
 						{% if payment.transaction  %}
-								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+								<td><a  onclick="alertEdit()" href="#"><i class="fa fa-edit"></i></a></td>
+								<td><a  onclick="alertDelete()" href="#"><i class="fa fa-trash"></i></a></td>
 						{% else %}
-								<td><a class="btn btn-sm btn-info" href="{% url 'payment-update' payment.id%}">Edit</a></td>
-								<td><a class="btn btn-sm btn-danger" href="{% url 'payment-delete' payment.id%}">Delete</a></td>
-						{%endif%}
+							{% if admin or payment.date_time_stamp == today.date %}
+								{% if payment.lc_number %}
+									<td><a  href="{% url 'lc-payment-update' payment.id%}"><i class="fa fa-edit"></i></a></td>
+								{% else %}
+									<td><a  href="{% url 'payment-update' payment.id%}"><i class="fa fa-edit"></i></a></td>
+								{% endif %}
+							{% else %}
+								<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
+							{% endif %}
+
+							{% if admin and payment.date_time_stamp == today.date %}
+								<td><a  href="{% url 'payment-delete' payment.id%}"><i class="fa fa-trash"></i></a></td>
+							{%else%}
+								<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+							{% endif %}
+
+						{% endif %}
 
 					</tr>
 				{% endfor %}
@@ -50,21 +120,21 @@
 		        {% if is_paginated %}
 
 					{% if page_obj.has_previous %}
-						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
 					{% endif %}
 
 					{% for num in page_obj.paginator.page_range %}
 						{% if page_obj.number == num %}
-							<a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-sm btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% endif %}
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
 					{% endif %}
 
         		{% endif %}
@@ -79,5 +149,26 @@ function alertEdit() {
 function alertDelete() {
   alert("Payment With Bkash Transaction Can't be canceled");
 }
+</script>
+
+
+<script>
+function alertEdit() {
+  alert("Can not be edited after Collection Success");
+}
+
+function alertDelete() {
+  alert("Can not be deleted after Collection Success");
+}
+</script>
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ()
+{
+    $("#name").select2({});
+    $("#voucher_no").select2({});
+    $("#phone_no").select2({});
+});
 </script>
 {% endblock content %}
