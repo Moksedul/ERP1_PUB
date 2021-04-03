@@ -231,16 +231,28 @@ def ledger(request):
     for voucher in payments:
         key = "voucher"
         ledgers.setdefault(key, [])
-        ledgers[key].append({
-            'date': voucher.payment_date,
-            'name': voucher.payment_for_person,
-            'voucher_no': voucher.payment_no,
-            'descriptions': str(voucher.voucher_no) + ' Payment',
-            'debit_amount': voucher.payment_amount,
-            'credit_amount': 0,
-            'url1': 'payment/' + str(voucher.id) + '/detail',
-            'url2': 'buy/' + str(voucher.voucher_no_id) + '/detail'
-        })
+        if voucher.lc_number:
+            ledgers[key].append({
+                'date': voucher.payment_date,
+                'name': voucher.payment_for_person,
+                'voucher_no': voucher.payment_no,
+                'descriptions': str(voucher.lc_number) + ' Payment',
+                'debit_amount': voucher.payment_amount,
+                'credit_amount': 0,
+                'url1': 'payment/' + str(voucher.id) + '/detail',
+                'url2': '/lc_list'
+            })
+        else:
+            ledgers[key].append({
+                'date': voucher.payment_date,
+                'name': voucher.payment_for_person,
+                'voucher_no': voucher.payment_no,
+                'descriptions': str(voucher.voucher_no) + ' Payment',
+                'debit_amount': voucher.payment_amount,
+                'credit_amount': 0,
+                'url1': 'payment/' + str(voucher.id) + '/detail',
+                'url2': 'buy/' + str(voucher.voucher_no_id) + '/detail'
+            })
 
     if ledgers['voucher']:
         def my_function(e):
@@ -436,7 +448,7 @@ def account_ledger_report(request):
                         'url1': '/payment/' + str(payment.id) + '/detail',
                         'url2': '/buy/' + str(buy_voucher.id) + '/detail'
                     })
-                else:
+                elif payment.payment_for_person:
                     key = "voucher"
                     ledgers.setdefault(key, [])
                     ledgers[key].append({
@@ -448,8 +460,23 @@ def account_ledger_report(request):
                         'debit_amount': payment.payment_amount,
                         'credit_amount': 0,
                         'url1': '/payment/' + str(payment.id) + '/detail',
+                        'url2': '/lc_list'
+                    })
+                else:
+                    key = "voucher"
+                    ledgers.setdefault(key, [])
+                    ledgers[key].append({
+                        'date': account_ledger.date,
+                        'name': payment.lc_number.bank_name,
+                        'voucher_no': payment.payment_no,
+                        'type': 'payment for',
+                        'descriptions': account_ledger.description + '',
+                        'debit_amount': payment.payment_amount,
+                        'credit_amount': 0,
+                        'url1': '/payment/' + str(payment.id) + '/detail',
                         'url2': '#'
                     })
+
         # for investment
         if account_ledger.type == 'I':
             investment_credit = Investment.objects.filter(investing_to_account_id=selected_account)
