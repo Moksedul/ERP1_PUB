@@ -14,4 +14,4 @@ class ChallanForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['challan_no'].widget.attrs['readonly'] = False
+        self.fields['challan_no'].widget.attrs['readonly'] = True

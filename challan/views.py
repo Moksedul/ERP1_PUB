@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from organizations.models import Persons, Companies
 from .models import Challan
@@ -55,7 +57,67 @@ class ChallanListView(LoginRequiredMixin, ListView):
     model = Challan
     template_name = 'challan/challan_list.html'
     context_object_name = 'challan'
-    paginate_by = 20
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        challan_selection = Challan.objects.all()
+        names = Persons.objects.all()
+        company_names = Companies.objects.all()
+
+        challan_contains = self.request.GET.get('challan_no')
+        if challan_contains is None:
+            challan_contains = 'Select Challan'
+
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+
+        company_name_contains = self.request.GET.get('company_name')
+        if company_name_contains is None or company_name_contains == '':
+            company_name_contains = 'Select Company Name'
+
+        today = now()
+
+        context['names'] = names
+        context['company_names'] = company_names
+        context['challan_selected'] = challan_contains
+        context['challan_selection'] = challan_selection
+        context['name_selected'] = name_contains
+        context['company_name_selected'] = company_name_contains
+        context['tittle'] = 'Challan List'
+        context['today'] = today
+        return context
+
+    def get_queryset(self):
+        challans = Challan.objects.all().order_by('-date_added')
+        order = self.request.GET.get('orderby')
+        challan_contains = self.request.GET.get('voucher_no')
+        if challan_contains is None:
+            challan_contains = 'Select Challan'
+
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+
+        company_name_contains = self.request.GET.get('company_name')
+        if company_name_contains is None or company_name_contains == '':
+            company_name_contains = 'Select Company Name'
+
+        # checking name from input
+        if name_contains != 'Select Name':
+            person = Persons.objects.get(person_name=name_contains)
+            challans = challans.filter(buyer_name=person.id)
+
+        # checking phone no from input
+        if company_name_contains != 'Select Company Name' and company_name_contains != 'None':
+            company = Companies.objects.get(name_of_company=company_name_contains)
+            challans = challans.filter(company_name=company.id)
+
+        # checking voucher number from input
+        if challan_contains != '' and challan_contains != 'Select Challan':
+            challans = challans.filter(challan_no=challan_contains)
+        return challans
 
 
 class ChallanDeleteView(LoginRequiredMixin, DeleteView):
@@ -69,3 +131,11 @@ class ChallanDeleteView(LoginRequiredMixin, DeleteView):
         context['tittle'] = 'Challan Delete'
         context['cancel_url'] = '/challan_list'
         return context
+
+
+@login_required
+def challan_detail(request, pk):
+    context = {
+        'objects': 'OK'
+    }
+    return render(request, 'challan/challan_detail.html', context=context)

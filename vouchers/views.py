@@ -63,7 +63,7 @@ class BuyListView(LoginRequiredMixin, ListView):
         context['voucher_selection'] = voucher_selection
         context['name_selected'] = name_contains
         context['phone_no_selected'] = phone_no_contains
-        context['tittle'] = 'Local Sale List'
+        context['tittle'] = 'Buy List'
         context['today'] = today
         return context
 

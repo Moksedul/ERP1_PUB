@@ -1,33 +1,84 @@
 {% extends 'main/base.html' %}
-
+{% load techAlong_extras %}
+{% load indian_numbers_tags %}
 {% block content %}
-<!--<div class="card card-body">-->
+<form method="GET" id="search">
+		<div class="form-row">
+			<div class="col-md-2 mb-1">
+			<!-- Button trigger modal -->
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-challan'%}">New Challan</a>
+			</div>
+				<!--search form-->
+                <div class="form-group col-md-3">
+					<select id="name" class="form-control" name="name" onchange="this.form.submit()">
+						<option selected>{{ name_selected }}</option>
+						  {% for name in names %}
+						<option>{{ name }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                    <select id="company_name" class="form-control" name="company_name" onchange="this.form.submit()">
+                    <option selected>{{ company_name_selected }}</option>
+					  {% for company_name in company_names %}
+                    <option>{{ company_name.name_of_company }}</option>
+					  {% endfor %}
+                  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="challan_no" class="form-control" name="challan_no" onchange="this.form.submit()">
+                    <option selected>{{ challan_selected }}</option>
+					  {% for challan in challan_selection %}
+                    <option>{{ challan.challan_no }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'challan-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
+
 	<div class=" card card-body">
-		<input class="form-control-sm" id="myInput" type="text" placeholder="Type to Search..">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-challan'%}">Add Challan</a>
+			<div class="text-center"><h5>{{tittle}}</h5></div>
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Challan Number</th>
+					<th>Challan No</th>
+					<th>Challan SL</th>
+					<th>Business Name</th>
 					<th>Buyer Name</th>
 					<th>Company Name</th>
 					<th>Product Name</th>
 					<th>Weight</th>
 					<th>Date</th>
-					<th>Update</th>
-					<th>Remove</th>
+					<th>&#128195;</th>
+					<th><i class="fa fa-edit"></i></th>
+					<th><i class="fa fa-trash"></i></th>
 				</tr>
 
 				{% for item in challan %}
 					<tr>
 						<td>{{ item.challan_no }}</td>
-						<td>{{ item.buyer_name }}</td>
-						<td>{{ item.company_name }}</td>
-						<td>{{ item.product_name }}</td>
-						<td>{{ item.weight }}</td>
+						<td>{{ item.challan_serial }}</td>
+						<td width="200">{{ item.business_name }}</td>
+						<td width="250">{{ item.buyer_name }}</td>
+						<td width="250">{{ item.company_name }}</td>
+						<td width="200">{{ item.product_name }}</td>
+						<td>{{ item.weight|floatcomma_indian }}</td>
 						<td>{{ item.challan_date }}</td>
-						<td><a class="btn btn-sm btn-info" href="{% url 'challan-update' item.id%}">Edit</a></td>
+						<td><a href="{% url 'challan-detail' item.id%}">&#128195;</a></td>
+						{% if user.is_staff or item.date_added == today.date %}
+								<td><a  href="{% url 'challan-update' item.id%}"><i class="fa fa-edit"></i></a></td>
+						{% else %}
+								<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
+						{% endif %}
 
-						<td><a class="btn btn-sm btn-danger" href="{% url 'challan-delete' item.id%}">Delete</a></td>
+						{% if user.is_staff and item.date_added == today.date %}
+								<td><a  href="{% url 'challan-update' item.id%}"><i class="fa fa-trash"></i></a></td>
+						{%else%}
+								<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+						{% endif %}
 
 					</tr>
 
@@ -40,36 +91,33 @@
 		        {% if is_paginated %}
 
 					{% if page_obj.has_previous %}
-						<a class="btn btn-outline-info mb-4"  href="?page=1">First</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.previous_number }}">Previous</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
 					{% endif %}
 
 					{% for num in page_obj.paginator.page_range %}
 						{% if page_obj.number == num %}
-							<a class="btn btn-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-outline-info mb-4"  href="?page={{ num }}">{{ num }}</a>
+							<a class="btn btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% endif %}
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.next_page_number }}">Next</a>
-						<a class="btn btn-outline-info mb-4"  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
 					{% endif %}
 
         		{% endif %}
 		</div>
-
-
+<!-- search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
+    $(document).ready(function ()
+{
+    $("#name").select2({});
+    $("#challan_no").select2({});
+    $("#company_name").select2({});
 });
 </script>
 {% endblock content %}

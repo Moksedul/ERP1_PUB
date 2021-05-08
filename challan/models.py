@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 from products.models import Products
-from organizations.models import Persons, Companies
+from organizations.models import Persons, Companies, Organization
 
 
 # model for challan
@@ -29,6 +29,8 @@ def increment_challan_number():
 
 class Challan(models.Model):
     challan_no = models.CharField(max_length=10, unique=True, default=increment_challan_number)
+    business_name = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    challan_serial = models.CharField(max_length=10, unique=True, null=True)
     buyer_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
@@ -37,7 +39,7 @@ class Challan(models.Model):
     number_of_vehicle = models.IntegerField(blank=True, null=True)
     name_of_driver = models.CharField(max_length=200, blank=True, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
-    date_added = models.DateTimeField(default=now)
+    date_added = models.DateTimeField(auto_now=True)
     challan_date = models.DateField(default=now)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     remarks = models.CharField(max_length=500, blank=True)
