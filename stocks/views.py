@@ -3,13 +3,13 @@ from django.http import HttpResponse
 from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Stocks, Rooms
+from .models import Stocks
 
 
 # Create your views here.
 class StockCreateView(LoginRequiredMixin, CreateView):
     model = Stocks
-    template_name = 'stocks/stock_add_form.html'
+    template_name = 'stocks/stock_form.html'
     fields = ('room_no', 'number_of_bag', 'weight',
               'name_of_product', 'product_condition', 'remarks',)
 
@@ -45,28 +45,3 @@ class StockDeleteView(LoginRequiredMixin, DeleteView):
     model = Stocks
     template_name = 'stocks/stock_confirm_delete.html'
     success_url = '/stock_list'
-
-
-class RoomCreateView(LoginRequiredMixin, CreateView):
-    model = Rooms
-    template_name = 'stocks/room_add_form.html'
-    fields = '__all__'
-
-
-class RoomListView(LoginRequiredMixin, ListView):
-    model = Rooms
-    template_name = 'stocks/room_list.html'
-    context_object_name = 'rooms'
-    paginate_by = 5
-
-
-class RoomUpdateView(LoginRequiredMixin, UpdateView):
-    model = Rooms
-    template_name = 'stocks/room_update_form.html'
-    fields = '__all__'
-
-
-class RoomDeleteView(LoginRequiredMixin, DeleteView):
-    model = Rooms
-    template_name = 'stocks/room_confirm_delete.html'
-    success_url = '/room_list'
