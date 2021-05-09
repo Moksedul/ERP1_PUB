@@ -11,7 +11,7 @@ class LC(models.Model):
     bank_name = models.ForeignKey(Bank, on_delete=models.PROTECT)
     added_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     opening_date = models.DateField(default=now)
-    date_time_stamp = models.DateTimeField(default=now)
+    date_time_stamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.lc_number)
