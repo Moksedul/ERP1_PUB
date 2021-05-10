@@ -35,6 +35,7 @@ class Investment(models.Model):
                                                null=True, blank=True, related_name='investing_from_account')
     added_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     date_added = models.DateTimeField(default=now, blank=True)
+    date = models.DateField(default=now)
     remarks = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
