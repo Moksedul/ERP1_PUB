@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from core.views import account_balance_calc
 from ledger.views import create_account_ledger
+from .forms import InvestmentForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 
@@ -119,9 +120,8 @@ class OtherAccountDelete(LoginRequiredMixin, DeleteView):
 
 
 class InvestmentCreateView(LoginRequiredMixin, CreateView):
-    model = Investment
-    template_name = 'accounts/investment_add_form.html'
-    fields = ('source_of_investment', 'investing_amount', 'investing_from_account', 'investing_to_account', 'remarks',)
+    form_class = InvestmentForm
+    template_name = 'accounts/investment_form.html'
     success_url = '/investment_list'
 
     def form_valid(self, form):
@@ -138,11 +138,18 @@ class InvestmentCreateView(LoginRequiredMixin, CreateView):
             'investment_no': investment_save,
             'description': description,
             'type': 'I',
-            'date': investment_save.date_added,
+            'date': investment_save.date,
             'salary_payment': None
         }
         create_account_ledger(data)
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Add Investment'
+        context['tittle'] = 'Add Investment'
+        context['button_name'] = 'Save'
+        return context
 
 
 class InvestmentList(LoginRequiredMixin, ListView):
@@ -153,16 +160,29 @@ class InvestmentList(LoginRequiredMixin, ListView):
     paginate_by = 20
 
 
-@login_required()
-def delete_investment(request, pk):
-    investment = Investment.objects.get(id=pk)
-    if request.method == "POST":
-        url = investment.get_absolute_url()
-        investment.delete()
+class InvestmentDelete(LoginRequiredMixin, DeleteView):
+    model = Investment
+    template_name = 'main/confirm_delete.html'
+    success_url = '/investment_list'
 
-        return HttpResponseRedirect(url)
-    context = {
-        'investment': investment,
-        'account': 'n/a'
-    }
-    return render(request, "accounts/investment_delete.html", context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Investment'
+        context['cancel_url'] = '/investment_list'
+        context['tittle'] = 'Investment Delete'
+
+        return context
+
+
+class InvestmentUpdate(LoginRequiredMixin, UpdateView):
+    model = Investment
+    form_class = InvestmentForm
+    template_name = 'accounts/investment_form.html'
+    success_url = '/investment_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_name'] = 'Investment Update'
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Investment Update'
+        return context

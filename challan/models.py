@@ -30,11 +30,12 @@ def increment_challan_number():
 class Challan(models.Model):
     challan_no = models.CharField(max_length=10, unique=True, default=increment_challan_number)
     business_name = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
-    challan_serial = models.CharField(max_length=10, unique=True, null=True)
-    buyer_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
+    challan_serial = models.CharField(max_length=10, null=True)
+    # buyer_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
-    weight = models.FloatField(max_length=10)
+    weight_adjusted = models.FloatField(max_length=10)
+    weight_of_each_bag = models.FloatField(default=0)
     number_of_bag = models.FloatField(max_length=10)
     number_of_vehicle = models.IntegerField(blank=True, null=True)
     name_of_driver = models.CharField(max_length=200, blank=True, null=True)
@@ -50,3 +51,11 @@ class Challan(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('challan-list')
+
+    @property
+    def total_weight(self):
+        bag_no = self.number_of_bag
+        bag_weight = self.weight_of_each_bag
+        adjust = self.weight_adjusted
+        total = (bag_no * bag_weight) + adjust
+        return total

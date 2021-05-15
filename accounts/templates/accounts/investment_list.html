@@ -1,26 +1,33 @@
 {% extends 'main/base.html' %}
-
+{% load techAlong_extras %}
+{% load indian_numbers_tags %}
 {% block content %}
 <!--<div class="card card-body">-->
 	<div class=" card card-body">
 			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-investment'%}">Add Investment</a>
-			<table class="table table-sm table-striped">
+			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Source of Investment</th>
 					<th>Invested Amount</th>
 					<th>Invested to Account</th>
 					<th>Remarks</th>
-					<th>Delete</th>
+					<th><i class="fa fa-edit"></i></th>
+					<th><i class="fa fa-trash"></i></th>
 				</tr>
 
 				{% for investment in investments %}
 					<tr>
-						<td>{{ investment.source_of_investment }}</td>
-						<td>{{ investment.investing_amount }}</td>
-						<td>{{ investment.investing_to_account }}</td>
+						<td width="">{{ investment.source_of_investment }}</td>
+						<td width="100">{{ investment.investing_amount|floatcomma_indian }}</td>
+						<td width="">{{ investment.investing_to_account }}</td>
 						<td>{{ investment.remarks }}</td>
-						<td><a class="btn btn-sm btn-danger" href="{% url 'investment-delete' investment.id %}">Delete</a></td>
-
+						{% if user.is_staff %}
+							<td><a href="{% url 'investment-update' investment.id %}"><i class="fa fa-edit"></i></a></td>
+							<td><a href="{% url 'investment-delete' investment.id %}"><i class="fa fa-trash"></i></a></td>
+						{% else %}
+							<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
+							<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
+						{% endif %}
 					</tr>
 				{% endfor %}
 

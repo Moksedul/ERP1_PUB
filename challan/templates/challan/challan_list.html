@@ -10,10 +10,10 @@
 			</div>
 				<!--search form-->
                 <div class="form-group col-md-3">
-					<select id="name" class="form-control" name="name" onchange="this.form.submit()">
-						<option selected>{{ name_selected }}</option>
-						  {% for name in names %}
-						<option>{{ name }}</option>
+					<select id="business" class="form-control" name="business" onchange="this.form.submit()">
+						<option selected>{{ business_selected }}</option>
+						  {% for business in business %}
+						<option>{{ business }}</option>
 						  {% endfor %}
 					  </select>
             	</div>
@@ -47,7 +47,6 @@
 					<th>Challan No</th>
 					<th>Challan SL</th>
 					<th>Business Name</th>
-					<th>Buyer Name</th>
 					<th>Company Name</th>
 					<th>Product Name</th>
 					<th>Weight</th>
@@ -62,10 +61,9 @@
 						<td>{{ item.challan_no }}</td>
 						<td>{{ item.challan_serial }}</td>
 						<td width="200">{{ item.business_name }}</td>
-						<td width="250">{{ item.buyer_name }}</td>
 						<td width="250">{{ item.company_name }}</td>
 						<td width="200">{{ item.product_name }}</td>
-						<td>{{ item.weight|floatcomma_indian }}</td>
+						<td>{{ item.total_weight|floatcomma_indian }}</td>
 						<td>{{ item.challan_date }}</td>
 						<td><a href="{% url 'challan-detail' item.id%}">&#128195;</a></td>
 						{% if user.is_staff or item.date_added == today.date %}
@@ -115,7 +113,7 @@
 <script>
     $(document).ready(function ()
 {
-    $("#name").select2({});
+    $("#business").select2({});
     $("#challan_no").select2({});
     $("#company_name").select2({});
 });

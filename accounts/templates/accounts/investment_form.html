@@ -1,0 +1,32 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="Card card-body">
+        <h5 class="text-center">{{form_name}}</h5>
+        <hr>
+        <form method="post" >
+            {% csrf_token %}
+            <div class="form-row">
+            <div class="form-group col-md-4 mb-0" >
+                {{ form.source_of_investment|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4 mb-0" >
+                {{ form.investing_from_account|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-4 mb-0" >
+                {{ form.investing_to_account|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-2 mb-0" >
+                {{ form.date|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-2 mb-0" >
+                {{ form.investing_amount|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-8 mb-0" >
+                {{ form.remarks|as_crispy_field }}
+            </div>
+            </div>
+                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
+        </form>
+    </div>
+{% endblock content %}

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from organizations.models import Persons, Companies
+from organizations.models import Persons, Companies, Organization
 from .models import Challan
 from .forms import ChallanForm
 
@@ -62,16 +62,16 @@ class ChallanListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         challan_selection = Challan.objects.all()
-        names = Persons.objects.all()
+        business = Organization.objects.all()
         company_names = Companies.objects.all()
 
         challan_contains = self.request.GET.get('challan_no')
         if challan_contains is None:
             challan_contains = 'Select Challan'
 
-        name_contains = self.request.GET.get('name')
-        if name_contains is None:
-            name_contains = 'Select Name'
+        business_contains = self.request.GET.get('business')
+        if business_contains is None:
+            business_contains = 'Select Business'
 
         company_name_contains = self.request.GET.get('company_name')
         if company_name_contains is None or company_name_contains == '':
@@ -79,11 +79,11 @@ class ChallanListView(LoginRequiredMixin, ListView):
 
         today = now()
 
-        context['names'] = names
+        context['business'] = business
         context['company_names'] = company_names
         context['challan_selected'] = challan_contains
         context['challan_selection'] = challan_selection
-        context['name_selected'] = name_contains
+        context['business_selected'] = business_contains
         context['company_name_selected'] = company_name_contains
         context['tittle'] = 'Challan List'
         context['today'] = today
@@ -96,18 +96,18 @@ class ChallanListView(LoginRequiredMixin, ListView):
         if challan_contains is None:
             challan_contains = 'Select Challan'
 
-        name_contains = self.request.GET.get('name')
-        if name_contains is None:
-            name_contains = 'Select Name'
+        business_contains = self.request.GET.get('business')
+        if business_contains is None:
+            business_contains = 'Select Business'
 
         company_name_contains = self.request.GET.get('company_name')
         if company_name_contains is None or company_name_contains == '':
             company_name_contains = 'Select Company Name'
 
         # checking name from input
-        if name_contains != 'Select Name':
-            person = Persons.objects.get(person_name=name_contains)
-            challans = challans.filter(buyer_name=person.id)
+        if business_contains != 'Select Business':
+            business = Organization.objects.get(name=business_contains)
+            challans = challans.filter(business_name=business.id)
 
         # checking phone no from input
         if company_name_contains != 'Select Company Name' and company_name_contains != 'None':

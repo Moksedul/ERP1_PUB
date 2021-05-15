@@ -14,5 +14,6 @@ urlpatterns = [
     path('other_account/<int:pk>/delete', OtherAccountDelete.as_view(), name='other-account-delete'),
     path('add_investment', InvestmentCreateView.as_view(), name='add-investment'),
     path('investment_list', InvestmentList.as_view(), name='investment-list'),
-    path('investment/<int:pk>/delete/', delete_investment, name='investment-delete'),
+    path('investment/<int:pk>/delete/', InvestmentDelete.as_view(), name='investment-delete'),
+    path('investment/<int:pk>/update/', InvestmentUpdate.as_view(), name='investment-update'),
 ]

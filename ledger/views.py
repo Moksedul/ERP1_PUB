@@ -488,7 +488,7 @@ def account_ledger_report(request):
                 key = "voucher"
                 ledgers.setdefault(key, [])
                 ledgers[key].append({
-                    'date': account_ledger.date,
+                    'date': investment.date,
                     'name': investment.added_by,
                     'voucher_no': '',
                     'type': 'Investment from',
