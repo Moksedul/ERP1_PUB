@@ -38,6 +38,7 @@ class Challan(models.Model):
     number_of_bag = models.FloatField(max_length=10)
     number_of_vehicle = models.IntegerField(blank=True, null=True)
     name_of_driver = models.CharField(max_length=200, blank=True, null=True)
+    driver_phone_no = models.CharField(max_length=20, null=True, blank=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateTimeField(auto_now=True)
     challan_date = models.DateField(default=now)

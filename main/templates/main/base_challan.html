@@ -1,0 +1,94 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="shortcut icon" href="{%  static 'main/favicon.png' %}">
+    <link href="https://fonts.maateen.me/bangla/font.css" rel="stylesheet">
+        <title>{{tittle}}</title>
+<style>
+@font-face {
+  font-family: SutonnyMJ;
+  src: url(fonts/SutonnyMJ-Regular.ttf);
+}
+
+.bangla-number{
+    font-family: SutonnyMJ !important;
+}
+
+body {
+    font-family: 'Bangla', Arial, sans-serif !important;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+   font-family: 'Bangla', Arial, sans-serif !important;
+
+
+}
+ th, td {
+ font-size: 14pt;
+  padding: 5px;
+  text-align: center;
+}
+
+body {
+    width: 210mm;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center {
+  margin: auto;
+  width: auto;
+  padding: 10px;
+}
+
+.schedule td,th {
+    font-size: 14pt;
+    height: 10;
+    font-family: Arial;
+    padding: 5px;
+    vertical-align: middle;
+}
+table.no-border td {
+    border: none;
+}
+.no-border{
+border: none;
+}
+
+table.left td {
+   text-align: left;
+}
+.left{
+text-align: left;
+}
+
+.signature{
+height: 118px;
+width: 150px;
+background-image: url('{{ object.business_name.signature.url }}');
+}
+
+.pad{
+background-image: url('{{ object.business_name.pad.url }}');
+}
+
+@page
+{
+    margin-top: 50mm;
+    margin-bottom: 25mm;
+    margin-left: 25mm;
+    margin-right: 15mm;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

@@ -58,6 +58,26 @@ class Bank(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    proprietor = models.CharField(max_length=50, default='N/A')
+    signature = models.ImageField(upload_to='company_docs', blank=True)
+    pad = models.ImageField(upload_to='company_docs', blank=True)
 
     def __str__(self):
         return str(self.name)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.pad:
+            pad_img = Image.open(self.pad.path)
+            if pad_img.height > 1748 or pad_img.width > 1240:
+                output_size = (1240, 1748)
+                pad_img.thumbnail(output_size)
+                pad_img.save(self.pad.path)
+
+        if self.signature:
+            signature_img = Image.open(self.signature.path)
+            if signature_img.height > 118 or signature_img.width > 150:
+                output_size = (150, 118)
+                signature_img.thumbnail(output_size)
+                signature_img.save(self.signature.path)

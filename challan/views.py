@@ -90,7 +90,7 @@ class ChallanListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        challans = Challan.objects.all().order_by('-challan_serial')
+        challans = Challan.objects.all().order_by('-challan_date')
         order = self.request.GET.get('orderby')
         challan_contains = self.request.GET.get('voucher_no')
         if challan_contains is None:
@@ -145,7 +145,16 @@ class ChallanDeleteView(LoginRequiredMixin, DeleteView):
 
 @login_required
 def challan_detail(request, pk):
+    challan = Challan.objects.get(id=pk)
+    driver_name = challan.name_of_driver
+    challan_serial = challan.challan_serial.split('-')[-1]
+
+    if driver_name is None:
+        driver_name = ''
     context = {
-        'objects': 'OK'
+        'object': challan,
+        'driver_name': driver_name,
+        'challan_serial': challan_serial
+
     }
-    return render(request, 'challan/challan_detail.html', context=context)
+    return render(request, 'challan/challan_detail_no_bg.html', context=context)

@@ -10,11 +10,12 @@ CONDITION_CHOICES = [
 
 
 class Stocks(models.Model):
+
     number_of_bag = models.FloatField()
     weight = models.FloatField()
     name_of_product = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
     product_condition = models.CharField(max_length=50, choices=CONDITION_CHOICES, default='Processed')
-    added_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    added_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     remarks = models.CharField(max_length=200, blank=True)
 
     def __str__(self):

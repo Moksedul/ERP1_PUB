@@ -70,13 +70,13 @@
 
 				{% for item in challan %}
 					<tr>
-						<td>{{ item.challan_no }}</td>
-						<td>{{ item.challan_serial }}</td>
+						<td width="100">{{ item.challan_no }}</td>
+						<td width="100">{{ item.challan_serial }}</td>
 						<td width="200">{{ item.business_name }}</td>
 						<td width="250">{{ item.company_name }}</td>
 						<td width="200">{{ item.product_name }}</td>
-						<td>{{ item.total_weight|floatcomma_indian }}</td>
-						<td>{{ item.challan_date }}</td>
+						<td><div style="width: 75; word-wrap: break-word;">{{ item.total_weight|floatcomma_indian }}</div></td>
+						<td width="150">{{ item.challan_date }}</td>
 						<td><a href="{% url 'challan-detail' item.id%}">&#128195;</a></td>
 						{% if user.is_staff or item.date_added == today.date %}
 								<td><a  href="{% url 'challan-update' item.id%}"><i class="fa fa-edit"></i></a></td>
