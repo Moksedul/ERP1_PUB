@@ -90,7 +90,7 @@ class ChallanListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        challans = Challan.objects.all().order_by('-date_added')
+        challans = Challan.objects.all().order_by('-challan_serial')
         order = self.request.GET.get('orderby')
         challan_contains = self.request.GET.get('voucher_no')
         if challan_contains is None:
@@ -118,6 +118,16 @@ class ChallanListView(LoginRequiredMixin, ListView):
         if challan_contains != '' and challan_contains != 'Select Challan':
             challans = challans.filter(challan_no=challan_contains)
         return challans
+
+    def get_paginate_by(self, queryset):
+        page = self.request.GET.get("paginated_by")
+        if page is None:
+            print(page)
+        elif page == 'None':
+            self.paginate_by = None
+        else:
+            self.paginate_by = page
+        return self.paginate_by
 
 
 class ChallanDeleteView(LoginRequiredMixin, DeleteView):

@@ -1,9 +1,10 @@
-from django.forms import ModelForm, TextInput
+from django.forms import ModelForm, TextInput, DateField
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import Challan
 
 
 class ChallanForm(ModelForm):
+
     class Meta:
         model = Challan
         fields = '__all__'

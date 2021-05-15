@@ -33,6 +33,18 @@
 					  {% endfor %}
                   </select>
                 </div>
+				<div class="form-group col-md-1">
+                  <select id="paginated_by" class="form-control" name="paginated_by" onchange="this.form.submit()">
+                    <option  selected>---</option>
+					<option value="5">5/Page</option>
+					<option value="10">10/Page</option>
+					<option value="15">15/Page</option>
+					<option value="20">20/Page</option>
+					<option value="25">25/Page</option>
+					<option value="30">30/Page</option>
+                    <option value="None">All</option>
+                  </select>
+                </div>
 				<div class="col-md-2">
 					<button type="submit" class="btn btn-sm btn-info">Search</button>
 					<a href="{% url 'challan-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
@@ -85,25 +97,28 @@
 
 			</table>
 		</div>
-		<div class="mt-3 float-right">
+		<div class="mt-3 float-right mb-3">
+
+
+
 		        {% if is_paginated %}
 
 					{% if page_obj.has_previous %}
-						<a class="btn btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
 					{% endif %}
 
 					{% for num in page_obj.paginator.page_range %}
 						{% if page_obj.number == num %}
-							<a class="btn btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+							<a class="btn btn-sm btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+							<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
 						{% endif %}
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
-						<a class="btn btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
 					{% endif %}
 
         		{% endif %}
@@ -116,6 +131,7 @@
     $("#business").select2({});
     $("#challan_no").select2({});
     $("#company_name").select2({});
+    $("#paginated_by").select2({});
 });
 </script>
 {% endblock content %}
