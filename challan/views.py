@@ -148,13 +148,20 @@ def challan_detail(request, pk):
     challan = Challan.objects.get(id=pk)
     driver_name = challan.name_of_driver
     challan_serial = challan.challan_serial.split('-')[-1]
+    mode = request.GET.get('mode')
+
+    template = 'challan/challan_detail_no_bg.html'
+    if mode == 'pad':
+        template = 'challan/challan_detail_bg.html'
 
     if driver_name is None:
         driver_name = ''
+
     context = {
         'object': challan,
         'driver_name': driver_name,
-        'challan_serial': challan_serial
+        'challan_serial': challan_serial,
+        'mode': mode
 
     }
-    return render(request, 'challan/challan_detail_no_bg.html', context=context)
+    return render(request, template, context=context)

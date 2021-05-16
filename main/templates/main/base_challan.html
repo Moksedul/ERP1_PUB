@@ -26,15 +26,17 @@ table, th, td {
 
 }
  th, td {
- font-size: 14pt;
+ font-size: 16pt;
   padding: 5px;
   text-align: center;
 }
 
 body {
     width: 210mm;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    padding: 0;
+    border: 0;
+    outline: 0;
 }
 
 .center {
@@ -59,6 +61,7 @@ border: none;
 
 table.left td {
    text-align: left;
+
 }
 .left{
 text-align: left;
@@ -71,16 +74,24 @@ background-image: url('{{ object.business_name.signature.url }}');
 }
 
 .pad{
+height: 297mm;
+width: 210mm;
 background-image: url('{{ object.business_name.pad.url }}');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 210mm 297mm;
 }
 
-@page
-{
-    margin-top: 50mm;
-    margin-bottom: 25mm;
-    margin-left: 25mm;
-    margin-right: 15mm;
+.border{
+  padding-right: 6mm;
+  padding-left: 15mm;
+
 }
+
+.content{
+
+}
+
 
 
 
