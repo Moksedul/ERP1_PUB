@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-
+{% load indian_numbers_tags %}
 {% block content %}
 
 <div class="container">
@@ -88,9 +88,9 @@
                             <a id="{{item.descriptions}}" onclick="newWindow(this.id)"
                                name="{{ item.url2 }}">{{ item.descriptions }}</a>
                         </td>
-						<td>{{ item.debit_amount }}</td>
-						<td>{{ item.credit_amount }}</td>
-						<td>{{ item.balance }}</td>
+						<td>{{ item.debit_amount|floatcomma_indian }}</td>
+						<td>{{ item.credit_amount|floatcomma_indian }}</td>
+						<td>{{ item.balance|floatcomma_indian }}</td>
 					</tr>
 				{% endfor %}
 

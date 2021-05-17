@@ -41,7 +41,7 @@ class Orders(models.Model):
     rate_per_kg = models.FloatField(max_length=10)
     percentage_of_fotka = models.FloatField(max_length=10)
     percentage_of_moisture = models.FloatField(max_length=10)
-    delivery_deadline = models.DateField(default=now)
+    delivery_deadline = models.DateTimeField(default=now)
     date_ordered = models.DateTimeField(default=now)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     order_status = models.CharField(max_length=20, null=True, choices=ORDER_STATUS_CHOICES, default='Processing')

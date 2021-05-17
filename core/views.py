@@ -54,7 +54,7 @@ def sale_total_amount(pk):
     for challan in challan:
         pass
 
-    challan_weight = challan.weight
+    challan_weight = challan.total_weight
     total_challan_amount = challan_weight * sale.rate
 
     total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag

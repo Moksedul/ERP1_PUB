@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, DateField
+from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import Challan
 

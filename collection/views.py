@@ -9,7 +9,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from ledger.views import create_account_ledger, update_account_ledger
 from local_sale.models import LocalSale
-from .filters import CollectionFilter
+
 from .models import Collection
 from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required

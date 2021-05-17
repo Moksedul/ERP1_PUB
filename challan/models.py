@@ -30,6 +30,7 @@ def increment_challan_number():
 class Challan(models.Model):
     challan_no = models.CharField(max_length=10, unique=True, default=increment_challan_number)
     business_name = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    sub_dealer = models.ForeignKey(Persons, on_delete=models.Empty, null=True, blank=True)
     challan_serial = models.CharField(max_length=10, unique=True, null=True)
     company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)

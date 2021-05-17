@@ -34,7 +34,7 @@ def ledger(request):
     salary_payments = SalaryPayment.objects.all()
     name = request.POST.get('name')
     selected_name = 'Select Name'
-
+    print(dd)
     if dd is not None and dd != 'None' and dd != '':
         dd = datetime.strptime(dd, "%d-%m-%Y")
         date1 = dd
@@ -135,7 +135,7 @@ def ledger(request):
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.date_added,
-            'name': challan.buyer_name,
+            'name': challan.company_name,
             'voucher_no': voucher.voucher_number,
             'descriptions': ' Sale ' + str(voucher.id),
             'debit_amount': amount,
