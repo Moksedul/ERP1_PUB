@@ -5,26 +5,10 @@
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">
-            <div class="form-group col-md-4 mb-0">
-                {{ form.room_no|as_crispy_field }}
-            </div>
-                <div class="form-group col-md-4 mb-0">
-                {{ form.number_of_bag|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-4 mb-0">
-                {{ form.weight|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0">
-                {{ form.name_of_product|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-6 mb-0">
-                {{ form.product_condition|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-12 mb-0">
-                {{ form.remarks|as_crispy_field }}
-                </div>
+            {{form.as_p}}
             </div>
                 <button class="btn btn-outline-info" type="submit">Save</button>
         </form>
     </div>
+
 {% endblock content %}

@@ -10,8 +10,7 @@ from .models import Stocks
 class StockCreateView(LoginRequiredMixin, CreateView):
     model = Stocks
     template_name = 'stocks/stock_form.html'
-    fields = ('room_no', 'number_of_bag', 'weight',
-              'name_of_product', 'product_condition', 'remarks',)
+    fields = '__all__'
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user
