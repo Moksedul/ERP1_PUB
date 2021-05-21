@@ -9,7 +9,7 @@
 			{% csrf_token %}
 			<div class="form-row">
                 <div class="form-group  col-md-4">
-                  <select id="name" class="form-control" name="name">
+                  <select onchange="this.form.submit()" id="name" class="form-control" name="name">
                     <option selected>{{ selected_name }}</option>
 					  {% for person in persons %}
                     <option>{{person}}</option>
@@ -61,7 +61,7 @@
 </div>
 	<div class="card card-body">
 			<div class="d-flex justify-content-center bg-steel text-white p-1"><h6>Ledger (খতিয়ান)</h6></div>
-			<div class="d-flex justify-content-center p-1"><h6>Name: {{ selected_name }}</h6></div>
+			<div  class="d-flex justify-content-center p-1"><h6>Name: {{ selected_name }}</h6></div>
 			<div class="d-flex justify-content-center">Date: {{date_criteria}}</div>
 		<hr>
 			<table class="table table-sm table-striped table-bordered">
@@ -88,9 +88,9 @@
                             <a id="{{item.descriptions}}" onclick="newWindow(this.id)"
                                name="{{ item.url2 }}">{{ item.descriptions }}</a>
                         </td>
-						<td>{{ item.debit_amount|floatcomma_indian }}</td>
-						<td>{{ item.credit_amount|floatcomma_indian }}</td>
-						<td>{{ item.balance|floatcomma_indian }}</td>
+						<td>{{ item.debit_amount }}</td>
+						<td>{{ item.credit_amount }}</td>
+						<td>{{ item.balance }}</td>
 					</tr>
 				{% endfor %}
 

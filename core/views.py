@@ -59,7 +59,7 @@ def sale_total_amount(pk):
 
     total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag
 
-    if sale.fotka_weight is not None:
+    if sale.fotka_weight is not None and sale.fotka_rate is not None:
         fotka_weight = sale.fotka_weight
         fotka_amount = fotka_weight * sale.fotka_rate
 
