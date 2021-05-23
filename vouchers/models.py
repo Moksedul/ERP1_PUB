@@ -82,14 +82,18 @@ def increment_sale_number():
 class SaleVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_sale_number)
     challan_no = models.OneToOneField(Challan, on_delete=models.CASCADE, null=True)
-    per_bag_unloading_cost = models.FloatField(blank=True, null=True, default=0)
-    measuring_cost_per_kg = models.FloatField(blank=True, null=True, default=0)
-    weight_of_each_bag = models.FloatField(blank=True, null=True, default=0)
-    rate = models.FloatField(max_length=10)
-    fotka_weight = models.FloatField(null=True, blank=True, default=0)
-    fotka_rate = models.FloatField(null=True, blank=True, default=0)
-    moisture_weight = models.FloatField(null=True, blank=True, default=0)
-    seed_weight = models.FloatField(null=True, blank=True, default=0)
+    per_bag_unloading_cost = models.FloatField(default=0)
+    measuring_cost_per_kg = models.FloatField(default=0)
+    weight_of_each_bag = models.FloatField(default=0)
+    rate = models.FloatField(default=0)
+    spot_weight = models.FloatField(default=0)
+    spot_percentage = models.FloatField(default=0)
+    spot_rate = models.FloatField(default=0)
+    moisture_weight = models.FloatField(default=0)
+    moisture_percentage = models.FloatField(default=0)
+    seed_weight = models.FloatField(default=0)
+    seed_percentage = models.FloatField(default=0)
+    seed_rate = models.FloatField(default=0)
     date_added = models.DateField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
     status = models.BooleanField(default=False)
@@ -101,6 +105,15 @@ class SaleVoucher(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('sale-list')
+
+
+class SaleExpense(models.Model):
+    name = models.CharField(max_length=50)
+    sale = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE)
+    amount = models.FloatField()
+
+    def __str__(self):
+        return str(self.name)
 
 
 def increment_general_voucher_number():

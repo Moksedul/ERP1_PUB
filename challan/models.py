@@ -47,7 +47,7 @@ class Challan(models.Model):
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
-        return str(self.challan_no)
+        return str(self.challan_no) + "-" + str(self.challan_serial)
 
     @staticmethod
     def get_absolute_url():

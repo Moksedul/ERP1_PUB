@@ -15,6 +15,10 @@ class SaleForm(ModelForm):
             'status': 'Confirm',
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['voucher_number'].widget.attrs['readonly'] = True
+
 
 class BuyForm(ModelForm):
     class Meta:

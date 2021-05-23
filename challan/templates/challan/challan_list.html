@@ -29,7 +29,7 @@
                   <select id="challan_no" class="form-control" name="challan_no" onchange="this.form.submit()">
                     <option selected>{{ challan_selected }}</option>
 					  {% for challan in challan_selection %}
-                    <option>{{ challan.challan_no }}</option>
+                    <option>{{ challan.challan_serial }}</option>
 					  {% endfor %}
                   </select>
                 </div>

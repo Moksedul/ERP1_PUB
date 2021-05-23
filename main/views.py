@@ -13,7 +13,6 @@ from organizations.models import Persons
 from payments.models import Payment
 from payroll.models import Employee, Attendance, Day
 from vouchers.models import SaleVoucher, BuyVoucher
-from stocks.models import Stocks
 
 
 # Create your views here.
