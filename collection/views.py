@@ -177,7 +177,8 @@ class CollectionListView(LoginRequiredMixin, ListView):
         # checking name from input
         if name_contains != 'Select Name':
             person = Persons.objects.get(person_name=name_contains)
-            collections = collections.filter(collected_from=person.id)
+            local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
+            collections = collections.filter(local_sale_voucher_no__in=local_sale_vouchers)
 
         # checking phone no from input
         if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':

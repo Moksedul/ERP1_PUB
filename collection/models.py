@@ -44,7 +44,6 @@ def increment_collection_number():
 # Create your models here.
 class Collection(models.Model):
     collection_no = models.CharField(max_length=10, unique=True, default=increment_collection_number)
-    collected_from = models.ForeignKey(Persons, on_delete=models.CASCADE)
     sale_type = models.CharField(max_length=10, choices=SALE_TYPES, default=SALE_TYPES[1])
     sale_voucher_no = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE, null=True)
     local_sale_voucher_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE, null=True)

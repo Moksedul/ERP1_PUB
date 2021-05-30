@@ -32,7 +32,7 @@
 			</div>
 				<!--search form-->
                 <div class="form-group col-md-3">
-					<select id="name" class="form-control" name="name">
+					<select id="name" class="form-control" name="name" onchange="this.form.submit()">
 						<option selected>{{ name_selected }}</option>
 						  {% for name in names %}
 						<option>{{ name }}</option>
@@ -40,7 +40,7 @@
 					  </select>
             	</div>
                 <div class="form-group col-md-2">
-                    <select id="phone_no" class="form-control" name="phone_no">
+                    <select id="phone_no" class="form-control" name="phone_no" onchange="this.form.submit()">
                     <option selected>{{ phone_no_selected }}</option>
 					  {% for name in names %}
                     <option>{{ name.contact_number }}</option>
@@ -48,7 +48,7 @@
                   </select>
             	</div>
                 <div class="form-group col-md-2">
-                  <select id="voucher_no" class="form-control" name="voucher_no">
+                  <select id="voucher_no" class="form-control" name="voucher_no" onchange="this.form.submit()">
                     <option selected>{{ voucher_selected }}</option>
 					  {% for voucher in sale_voucher_selection %}
                     <option>{{ voucher.voucher_no }}</option>
@@ -86,10 +86,12 @@
 						<td>{{ collection.collection_no }}</td>
 						{% if collection.sale_voucher_no %}
 							<td>{{ collection.sale_voucher_no }}</td>
+							<td>{{ collection.sale_voucher_no.challan_no }}</td>
 						{% else %}
 							<td>{{ collection.local_sale_voucher_no }}</td>
+							<td>{{ collection.local_sale_voucher_no.buyer_name }}</td>
 						{% endif %}
-						<td>{{ collection.collected_from }}</td>
+
 						<td>{{ collection.collection_amount }} TK</td>
 						<td>{{ collection.collection_date }}</td>
 						<td>{% if collection.collection_status %}
