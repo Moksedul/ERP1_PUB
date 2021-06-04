@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.forms import formset_factory
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.digit2words import d2w
 from ledger.views import create_account_ledger
@@ -140,6 +141,38 @@ class SaleCreateView(LoginRequiredMixin, CreateView):
         context['button_name'] = 'Save'
         context['tittle'] = 'New Sale'
         return context
+
+
+@login_required
+def sale_create(request):
+    form = SaleForm(request.POST or None, prefix='sale')
+    expense_set = formset_factory(ExpenseForm,)
+    sale_formset = expense_set(request.POST or None, request.FILES, prefix='expense')
+    if request.method == 'POST':
+        if form.is_valid():
+            sale = form.save(commit=False)
+            sale.added_by = request.user
+            sale.save()
+
+            for form in sale_formset:
+                expense = form.save(commit=False)
+                expense.sale = sale
+                expense.save()
+
+            return redirect('/sale_list')
+    else:
+        form = SaleForm(prefix='sale')
+        sale_formset = expense_set(prefix='expense')
+
+    context = {
+        'form': form,
+        'sale_formset': sale_formset,
+        'form_name': 'New Sale',
+        'tittle': 'TUB | New Sale',
+        'button_name': 'Save',
+    }
+
+    return render(request, 'vouchers/salevoucher_form.html', context)
 
 
 class SaleListView(LoginRequiredMixin, ListView):

@@ -75,7 +75,51 @@
                 <div class="form-group col-md-8 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
-
+                <div class="col-12 border border-info">
+                    {% if button_name == 'Save' %}
+                    <input type="button" value="Add Product" id="add_more1" class="m-2">
+                    {%endif%}
+                    {{ sale_formset.management_form }}
+                    <div id="form_set1">
+                        {% for form2 in sale_formset.forms %}
+                            <div class='no_error'>
+                                {% if button_name == 'Update' %}
+                                    <div style="display:none">{{form2.as_table}}</div>
+                                {%endif%}
+                               <div class="form-row">
+                                    <div class="form-group col-md-5">
+                                        {{ form2.expanse_name|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ form2.amount|as_crispy_field }}
+                                    </div>
+                                    {% if button_name == 'Update' %}
+                                     <div class="form-group col-md-1">
+                                        {{ form2.DELETE|as_crispy_field }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div id="empty_form1" style="display:none">
+                        <div class='no_error'>
+                           <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        {{ sale_formset.empty_form.expanse_name|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        {{ sale_formset.empty_form.amount|as_crispy_field }}
+                                    </div>
+                                {% if button_name == 'Update' %}
+                                <div class="form-group col-md-1">
+                                        {{ sale_formset.empty_form.DELETE|as_crispy_field }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+            </div>
             </div>
                 <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
         </form>
@@ -87,5 +131,25 @@
 {
     $("#id_challan_no").select2({});
 });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $('#add_more').click(function() {
+        var form_idx = $('#id_product-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_product-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_product-" + form_idx + "-name"
+        console.log(id);
+        // $(id).select2({});
+    });
+
+    $('#add_more1').click(function() {
+        var form_idx = $('#id_expense-TOTAL_FORMS').val();
+        $('#form_set1').append($('#empty_form1').html().replace(/__prefix__/g, form_idx));
+        $('#id_expense-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_expense-" + form_idx + "-name"
+        console.log(id);
+    });
 </script>
 {% endblock content %}

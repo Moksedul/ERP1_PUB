@@ -69,7 +69,7 @@ def ledger(request):
         payments = payments.filter(payment_for_person_id=person)
         local_sales = local_sales.filter(buyer_name_id=person)
         general_vouchers = general_vouchers.filter(person_name_id=person)
-        collections = collections.filter(collected_from_id=person)
+        collections = collections.filter(local_sale_voucher_no__in=local_sales)
         challan_no = Challan.objects.filter(sub_dealer_id=person)
         for challan in challan_no:
             challan_id.append(challan.id)

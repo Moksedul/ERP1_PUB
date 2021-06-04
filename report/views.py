@@ -30,7 +30,7 @@ def payment_report(request):
     # filter payments by name
     if name_contains_query != '' and name_contains_query is not None:
         persons = persons.filter(person_name__contains=name_contains_query)
-        print(persons)
+
         v_id = []
         for person in persons:
             buy_voucher = buy_vouchers.filter(seller_name=person.id)
@@ -101,6 +101,9 @@ def collection_report(request):
     sale_vouchers = SaleVoucher.objects.all()
     local_sale_vouchers = LocalSale.objects.all()
     collections = Collection.objects.all()
+    challan_month = request.GET.get('challan_month')
+    if challan_month is None:
+        challan_month = 'challan(ex.FS0521)'
     voucher_contains = request.GET.get('voucher_no')
     if voucher_contains is None:
         voucher_contains = 'Select Voucher'
@@ -108,10 +111,10 @@ def collection_report(request):
     if name_contains is None:
         name_contains = 'Select Name'
     phone_no_contains = request.GET.get('phone_no')
-    print(phone_no_contains)
+
     if phone_no_contains is None or phone_no_contains == '':
         phone_no_contains = 'Select Phone No'
-        print(phone_no_contains)
+
 
     total_receivable = 0
     voucher_list = {
@@ -135,28 +138,27 @@ def collection_report(request):
         'voucher': []
     }
 
+    # checking challan month
+    if challan_month != 'challan(ex.FS0521)' and challan_month is not None:
+        challan = Challan.objects.filter(challan_serial__contains=challan_month)
+        sale_vouchers = sale_vouchers.filter(challan_no__in=challan)
+        local_sale_vouchers = local_sale_vouchers.none()
+        collections = collections.filter(sale_voucher_no__in=sale_vouchers)
+        print('hit')
+
     # checking name from input
     if name_contains != 'Select Name':
         person = Persons.objects.get(person_name=name_contains)
-        challans = Challan.objects.filter(buyer_name=person.id)
-        v_id = []
-        for challan in challans:
-            v_id.append(challan.id)
-        sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
         local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
-        collections = collections.filter(collected_from=person.id)
+        collections = collections.filter(local_sale_voucher_no__in=local_sale_vouchers)
+        sale_vouchers = sale_vouchers.filter(id=0)
 
     # checking phone no from input
     if phone_no_contains != 'Select Phone No':
-        print(phone_no_contains)
         person = Persons.objects.get(contact_number=phone_no_contains)
-        challans = Challan.objects.filter(buyer_name=person.id)
-        v_id = []
-        for challan in challans:
-            v_id.append(challan.id)
-        sale_vouchers = sale_vouchers.filter(challan_no__in=v_id)
         local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
-        collections = collections.filter(collected_from=person.id)
+        collections = collections.filter(local_sale_voucher_no__in=local_sale_vouchers)
+        sale_vouchers = sale_vouchers.filter(id=0)
 
     # checking voucher number from input
     if voucher_contains != '' and voucher_contains != 'Select Voucher':
@@ -177,7 +179,7 @@ def collection_report(request):
 
     # sale voucher list
     for voucher in sale_vouchers:
-        challan = Challan.objects.get(challan_no=voucher.challan_no)
+        challan = Challan.objects.get(id=voucher.challan_no.id)
         total_amount = sale_total_amount(voucher.id)
         total_receivable += total_amount
 
@@ -185,7 +187,7 @@ def collection_report(request):
         sale_list.setdefault(key, [])
         sale_list[key].append({
             'date': voucher.date_added,
-            'name': challan.buyer_name,
+            'name': challan.company_name,
             'voucher_no': voucher.voucher_number,
             'total_amount': total_amount,
             'sale_type': 'Sale',
@@ -217,11 +219,12 @@ def collection_report(request):
         collection_due = total_receivable
         total_collected = 0
     context = {
+        'challan_month': challan_month,
         'collections': collections,
         'vouchers': sale_list['voucher'],
-        'total_collected': total_collected,
-        'total_receivable': total_receivable,
-        'collection_due': collection_due,
+        'total_collected': round(total_collected, 2),
+        'total_receivable': round(total_receivable, 2),
+        'collection_due': round(collection_due, 2),
         'sale_voucher_selection': voucher_list['voucher'],
         'voucher_selected': voucher_contains,
         'names': names,

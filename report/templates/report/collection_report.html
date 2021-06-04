@@ -1,43 +1,56 @@
 {% extends "main/base.html" %}
 {% block content %}
-    <div class="container">
+
+<style>
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.card-body{
+    padding-bottom: 2px;
+}
+</style>
+
         <form method="GET" id="search">
             <div class="form-row">
-                <div class="form-group col-md-4">
-                <select id="name" class="form-control" name="name">
-                    <option selected>{{ name_selected }}</option>
+                <div class="form-group col-md-2">
+                <select id="name" class="form-control" name="name" onchange="this.form.submit()">
+                    <option selected>{{ name_selected }} </option>
 					  {% for name in names %}
                     <option>{{ name }}</option>
 					  {% endfor %}
                   </select>
             </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <select id="phone_no" class="form-control" name="phone_no">
                     <option selected>{{ phone_no_selected }}</option>
 					  {% for name in names %}
                     <option>{{ name.contact_number }}</option>
 					  {% endfor %}
                   </select>
-            </div>
-                <div class="form-group col-md-4">
-                  <select id="voucher_no" class="form-control" name="voucher_no">
+                </div>
+                <div class="form-group col-md-2">
+                  <select id="voucher_no" class="form-control" name="voucher_no" onchange="this.form.submit()">
                     <option selected>{{ voucher_selected }}</option>
 					  {% for voucher in sale_voucher_selection %}
                     <option>{{ voucher.voucher_no }}</option>
 					  {% endfor %}
                   </select>
                 </div>
+                <div class="form-group col-md-3">
+                  <input id="challan_month" placeholder="{{ challan_month }}" class="form-control" name="challan_month" onchange="this.form.submit()">
+                </div>
+                <button type="submit" class="btn btn-sm btn-info">Search</button>
+                <a href="{% url 'collection-report' %}" class="ml-3 btn btn-sm btn-info"> &#x21BB;</a>
             </div>
-            <button type="submit" class="btn btn-sm btn-info">Search</button>
-            <a href="{% url 'collection-report' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
-        </form>
-        <a target="_new" class="btn btn-info  btn-sm " href="{% url 'add-buy-voucher'%}">New Sale</a>
-        <a target="_new" class="btn btn-info  btn-sm " href="{% url 'add-buy-voucher'%}">New Sale</a>
-        <a target="_new" class="btn btn-info  btn-sm " href="{% url 'add-payment'%}">New Collection</a>
 
+        </form>
     <div class="row">
+
         <div class=" card card-body col-md-6">
             <h6 class="text-center">Sale Vouchers</h6>
+            <div class="table-container">
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Sale No</th>
@@ -61,10 +74,12 @@
 					</tr>
 				{% endfor %}
 			</table>
+            </div>
         </div>
 
         <div class=" card card-body col-md-6">
                     <h6 class="text-center">Collections</h6>
+                    <div class="table-container">
                     <table class="table table-sm table-striped table-bordered">
                         <tr>
                             <th>Collection No</th>
@@ -88,7 +103,8 @@
 
 
                     </table>
-                    <div class="container">
+                    </div>
+                    <div class="container" style="font-size: 13px;">
                         <div class="float-right">
                             <div>Total Receivable : {{total_receivable}} BDT. </div>
                             <div>Total Collected  : {{total_collected}} BDT. </div>
@@ -98,7 +114,6 @@
                 </div>
     </div>
 
-</div>
 
 
 <!-- search options function-->
@@ -109,6 +124,8 @@
     $("#name").select2({});
     $("#voucher_no").select2({});
     $("#phone_no").select2({});
+    $("#challan_from").select2({});
+    $("#challan_to").select2({});
 });
 </script>
 {% endblock content %}

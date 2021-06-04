@@ -20,6 +20,16 @@ class SaleForm(ModelForm):
         self.fields['voucher_number'].widget.attrs['readonly'] = True
 
 
+class ExpenseForm(ModelForm):
+    class Meta:
+        model = SaleExpense
+        fields = '__all__'
+        exclude = ('sale',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class BuyForm(ModelForm):
     class Meta:
         model = BuyVoucher
