@@ -59,4 +59,5 @@ class Challan(models.Model):
         bag_weight = self.weight_of_each_bag
         adjust = self.weight_adjusted
         total = (bag_no * bag_weight) + adjust
-        return total
+
+        return round(total, 2)

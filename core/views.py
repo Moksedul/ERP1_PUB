@@ -10,7 +10,7 @@ from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
-from vouchers.models import *
+from vouchers.models import SaleVoucher, Persons, GeneralVoucher, BuyVoucher
 
 
 def load_person_image(request):
@@ -42,7 +42,6 @@ def lc_total_amount(pk):
 
 def sale_total_amount(pk):
     sale = SaleVoucher.objects.get(id=pk)
-    challan = Challan.objects.filter(challan_no=sale.challan_no)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
@@ -51,17 +50,14 @@ def sale_total_amount(pk):
     fotka_weight = 0
     fotka_amount = 0
 
-    for challan in challan:
-        pass
-
-    challan_weight = challan.total_weight
+    challan_weight = sale.challan_no.total_weight
     total_challan_amount = challan_weight * sale.rate
 
-    total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag
+    total_self_weight_of_bag = sale.challan_no.number_of_bag * sale.weight_of_each_bag
 
-    if sale.fotka_weight is not None and sale.fotka_rate is not None:
-        fotka_weight = sale.fotka_weight
-        fotka_amount = fotka_weight * sale.fotka_rate
+    if sale.spot_weight is not None and sale.spot_rate is not None:
+        spot_weight = sale.spot_weight
+        fotka_amount = spot_weight * sale.spot_rate
 
     if sale.moisture_weight is not None:
         moisture_weight = sale.moisture_weight
@@ -112,8 +108,16 @@ def buy_total_amount(pk):
     if buy.measuring_cost_per_kg is not None:
         total_measuring_cost = buy.measuring_cost_per_kg*total_weight
 
+    rate = 0
+    if buy.rate_per_kg is not None and buy.rate_per_kg !=0:
+        rate = buy.rate_per_kg
+    elif buy.rate_per_mann is not None and buy.rate_per_mann !=0:
+        rate = buy.rate_per_mann/40.0
+    else:
+        rate = rate
+
     weight_after_deduction = total_weight - total_self_weight_of_bag
-    total_amount_without_bag = buy.rate * weight_after_deduction
+    total_amount_without_bag = rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
     if not buy.previous_amount:
         buy.previous_amount = 0

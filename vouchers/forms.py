@@ -29,6 +29,12 @@ class BuyForm(ModelForm):
             'date_added': AdminDateWidget(),
         }
 
+        labels = {
+            'number_of_vehicle': 'গাড়ির সংখ্যা',
+            'rate_per_kg': 'মূল্য/কেজি',
+            'rate_per_mann': 'মূল্য/মণ',
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['voucher_number'].widget.attrs['readonly'] = True

@@ -4,10 +4,10 @@ from django.utils.timezone import now
 
 from local_sale.models import LocalSale
 from organizations.models import Persons
-from vouchers.models import SaleVoucher
+
 from django.contrib.auth.models import User
 from accounts.models import Accounts
-
+from vouchers.models import SaleVoucher
 
 COLLECTION_MODE_CHOICES = [
     ('Cheque', 'Cheque'),

@@ -39,7 +39,8 @@ class BuyVoucher(models.Model):
     weight_of_each_bag = models.FloatField(blank=True, null=True)
     number_of_bag = models.FloatField(max_length=10)
     number_of_vehicle = models.IntegerField(blank=True, null=True)
-    rate = models.FloatField(max_length=10)
+    rate_per_kg = models.FloatField(default=0)
+    rate_per_mann = models.FloatField(default=0)
     bazar_or_company_name = models.ForeignKey(Companies, on_delete=models.CASCADE, null=True)
     vehicle_plate_number = models.CharField(max_length=50, blank=True, null=True)
     date_added = models.DateField(default=now)
@@ -57,7 +58,14 @@ class BuyVoucher(models.Model):
 
     @property
     def total_amount(self):
-        return self.rate * self.weight
+        rate = 0
+        if self.rate_per_kg is not None and self.rate_per_kg != 0:
+            rate = self.rate_per_kg
+        elif self.rate_per_mann is not None and self.rate_per_mann != 0:
+            rate = self.rate_per_mann / 40.0
+        else:
+            rate = rate
+        return rate * self.weight
 
 
 def increment_sale_number():

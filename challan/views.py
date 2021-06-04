@@ -57,7 +57,7 @@ class ChallanListView(LoginRequiredMixin, ListView):
     model = Challan
     template_name = 'challan/challan_list.html'
     context_object_name = 'challan'
-    paginate_by = 5
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

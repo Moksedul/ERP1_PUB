@@ -1,4 +1,33 @@
+.table-container{
+height: 375px;
+overflow-y: auto;
+overflow-x: auto;
+}
 
+.table-title{
+border-bottom: 2px solid blue;
+
+}
+.form-title{
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+background: #1a143c;
+color: white;
+border-bottom: 2px solid blue;
+
+}
+.form-control{
+    height: 28px;
+}
+
+label {
+    font-size: 14px;
+    display: inline-block;
+    margin-bottom: 0px;
+}
+.card-body {
+    padding-top: 5px;
+}
 
 #preloader {
   position: fixed;
@@ -47,13 +76,23 @@ padding: 5px 0;
 }
 
 form {
-  background-color: #dee9f7;
-  padding: 15px;
-  border-radius: .25rem;
+    background-color: #dee9f7;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    border-radius: .25rem;
 }
+
+.form-group {
+    margin-bottom: 5px;
+}
+
 .container main{
 display: table;
-
+padding: 0;
+margin: 0;
 }
 
 @media screen and (max-width: 600px) {
@@ -70,7 +109,7 @@ width: 100%;
 
 .table td, .table th, .table tr {
     vertical-align: middle;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 td .fa-edit{
@@ -112,7 +151,7 @@ display:inline;
 
 body {
  overflow: hidden;
-  margin-top: 5rem;
+  margin-top: 65px;
   background-color: #002933;
   font-family: 'Arial', monospace;
 }
@@ -124,7 +163,7 @@ body {
 
 .bg-top {
     background-color: #e6e6fa29;
-    padding: 1rem;
+    padding: 4px;
     border-radius: .45rem;
 }
 

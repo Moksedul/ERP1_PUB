@@ -7,7 +7,7 @@
 		<div class="form-row">
 			<div class="col-md-2 mb-1">
 			<!-- Button trigger modal -->
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-buy-voucher'%}">New Voucher</a>
+			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-buy-voucher'%}">+</a>
 			</div>
 				<!--search form-->
                 <div class="form-group col-md-3">
@@ -42,14 +42,15 @@
         </form>
 
 	<div class=" card card-body">
-	<div class="text-center"><h5>Buy Voucher list</h5></div>
+	<div class="text-center table-title">{{tittle}}</div>
+		<div class="table-container">
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Voucher No</th>
 					<th>Seller Name</th>
 					<th>Product</th>
 					<th>Weight</th>
-					<th>Rate</th>
+					<th>Rate (BDT.)</th>
 					<th>Amount</th>
 					<th>Bazar</th>
 					<th>Date</th>
@@ -66,8 +67,10 @@
 						<td>{{ voucher.voucher_number }}</td>
 						<td>{{ voucher.seller_name }}</td>
 						<td>{{ voucher.product_name }}</td>
-						<td>{{ voucher.weight }}</td>
-						<td>{{ voucher.rate|floatcomma_indian }}</td>
+						<td>{{ voucher.weight|floatcomma_indian }}</td>
+						<td>{{ voucher.rate_per_kg|floatcomma_indian }}/kg,
+							{{ voucher.rate_per_mann|floatcomma_indian }}/Mann
+						</td>
 						<td>{{ voucher.total_amount|floatcomma_indian }}</td>
 						<td>{{ voucher.bazar_or_company_name }}</td>
 						<td>{{ voucher.date_added }}</td>
@@ -86,6 +89,7 @@
 
 			</table>
 		</div>
+	</div>
 		<div class="mt-3 float-right">
 		        {% if is_paginated %}
 

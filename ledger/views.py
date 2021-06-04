@@ -207,7 +207,7 @@ def ledger(request):
             ledgers.setdefault(key, [])
             ledgers[key].append({
                 'date': voucher.collection_date,
-                'name': voucher.collected_from,
+                'name': voucher.sale_voucher_no.challan_no.company_name,
                 'voucher_no': voucher.collection_no,
                 'descriptions': str(voucher.sale_voucher_no) + ' Collection',
                 'credit_amount': voucher.collection_amount,
@@ -219,7 +219,7 @@ def ledger(request):
             ledgers.setdefault(key, [])
             ledgers[key].append({
                 'date': voucher.collection_date,
-                'name': voucher.collected_from,
+                'name': voucher.local_sale_voucher_no.buyer_name,
                 'voucher_no': voucher.collection_no,
                 'descriptions': str(voucher.local_sale_voucher_no) + ' Collection',
                 'credit_amount': voucher.collection_amount,
