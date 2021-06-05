@@ -411,15 +411,29 @@ def sale_details(request, pk):
         seed_weight = sale.seed_weight + ((sale.seed_percentage/100) * challan_weight)
         seed_amount = seed_weight * sale.seed_rate
 
-    weight_after_deduction = challan_weight - moisture_weight - total_self_weight_of_bag
+    weight_after_deduction = challan_weight - moisture_weight - total_self_weight_of_bag - seed_weight - spot_weight
+    weight_with_spot_and_seed = weight_after_deduction + spot_weight + seed_weight
     amount_after_deduction = weight_after_deduction * sale.rate
-    net_amount = amount_after_deduction + spot_amount
+    net_amount = amount_after_deduction + spot_amount + seed_amount
     net_amount = round(net_amount, 2)
     net_amount_in_words = d2w(net_amount)
+
+    # profit analysis
+    sale_expanses = SaleExpense.objects.filter(sale=sale)
+    total_expanse = 0
+    for expanse in sale_expanses:
+        total_expanse += expanse.amount
+
+    total_unloading_cost = sale.challan_no.number_of_bag * sale.per_bag_unloading_cost
+    total_measuring_cost = challan_weight * sale.measuring_cost_per_kg
+
     context = {
         'sale': sale,
+        'sale_expanses': sale_expanses,
+        'total_expanse': total_expanse,
         'total_weight': challan_weight,
         'weight_after_deduction': round(weight_after_deduction, 2),
+        'weight_with_spot_and_seed': round(weight_with_spot_and_seed, 2),
         'amount_after_deduction': round(amount_after_deduction, 2),
         'total_challan_amount': round(total_challan_amount, 2),
         'spot_weight': round(spot_weight, 2),
@@ -429,6 +443,7 @@ def sale_details(request, pk):
         'fotka_amount': spot_amount,
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost,
+        'total_unloading_cost': total_unloading_cost,
         'net_amount': net_amount,
         'net_amount_in_words': net_amount_in_words
     }

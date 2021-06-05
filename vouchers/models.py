@@ -121,7 +121,7 @@ class SaleExpense(models.Model):
     amount = models.FloatField()
 
     def __str__(self):
-        return str(self.name)
+        return str(self.expanse_name)
 
 
 def increment_general_voucher_number():
