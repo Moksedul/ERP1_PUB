@@ -136,28 +136,45 @@
         <div class="text-center"><strong>Profit Analysis</strong></div>
         <hr>
         <div>
-            <div>
 
-            </div>
-            <div class="text-center">Other Expanses</div>
             <table class="table table-sm table-striped table-bordered">
                 <tr>
                     <th>Expanse Name</th>
                     <th>Amount</th>
                 </tr>
+                <tr>
+                    <td>Measuring Cost</td>
+                    <td>{{ total_measuring_cost|floatcomma_indian }}</td>
+                </tr>
+                <tr>
+                    <td>Unloading Cost</td>
+                    <td>{{ total_unloading_cost|floatcomma_indian }}</td>
+                </tr>
                 {% for expanse in sale_expanses %}
                 <tr>
                     <td>{{ expanse.expanse_name }}</td>
-                    <td>{{ expanse.amount }}</td>
+                    <td>{{ expanse.amount|floatcomma_indian }}</td>
                 </tr>
                 {% endfor %}
                 <tr>
                     <td><strong></strong>Total</strong></td>
-                    <td><strong>{{ total_expanse }}</strong></td>
+                    <td><strong>{{ total_expanse|floatcomma_indian }}</strong></td>
                 </tr>
             </table>
         </div>
-
+        <hr>
+        <div style="float: right;">
+            <table class="table table-sm">
+                <tr>
+                    <td>Actual Rate Receivable</td>
+                    <td>: {{actual_rate_receivable|floatcomma_indian}}</td>
+                </tr>
+                <tr>
+                    <td>Actual Revenue Receivable</td>
+                    <td>: {{actual_revenue_receivable|floatcomma_indian}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
     <!-- Profit Analysis  -->
 </div>

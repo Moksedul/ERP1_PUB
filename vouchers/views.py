@@ -426,12 +426,17 @@ def sale_details(request, pk):
 
     total_unloading_cost = sale.challan_no.number_of_bag * sale.per_bag_unloading_cost
     total_measuring_cost = challan_weight * sale.measuring_cost_per_kg
+    total_expanse += total_measuring_cost + total_unloading_cost
+    actual_revenue_receivable = net_amount - total_expanse
+    actual_rate_receivable = actual_revenue_receivable / challan_weight
 
     context = {
         'sale': sale,
         'sale_expanses': sale_expanses,
-        'total_expanse': total_expanse,
+        'total_expanse': round(total_expanse, 2),
         'total_weight': challan_weight,
+        'actual_revenue_receivable': round(actual_revenue_receivable, 2),
+        'actual_rate_receivable': round(actual_rate_receivable, 2),
         'weight_after_deduction': round(weight_after_deduction, 2),
         'weight_with_spot_and_seed': round(weight_with_spot_and_seed, 2),
         'amount_after_deduction': round(amount_after_deduction, 2),
@@ -439,11 +444,11 @@ def sale_details(request, pk):
         'spot_weight': round(spot_weight, 2),
         'moisture_weight': round(moisture_weight, 2),
         'seed_weight': round(seed_weight, 2),
-        'seed_amount': seed_amount,
-        'fotka_amount': spot_amount,
+        'seed_amount': round(seed_amount, 2),
+        'fotka_amount': round(spot_amount, 2),
         'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': total_measuring_cost,
-        'total_unloading_cost': total_unloading_cost,
+        'total_measuring_cost': round(total_measuring_cost, 2),
+        'total_unloading_cost': round(total_unloading_cost, 2),
         'net_amount': net_amount,
         'net_amount_in_words': net_amount_in_words
     }
