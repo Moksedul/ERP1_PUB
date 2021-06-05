@@ -46,13 +46,12 @@ def sale_total_amount(pk):
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
     moisture_weight = 0
+    weight_for_moisture_percentage = 0
     seed_weight = 0
     fotka_weight = 0
     fotka_amount = 0
 
     challan_weight = sale.challan_no.total_weight
-    total_challan_amount = challan_weight * sale.rate
-
     total_self_weight_of_bag = sale.challan_no.number_of_bag * sale.weight_of_each_bag
 
     if sale.spot_weight is not None and sale.spot_rate is not None:
@@ -61,6 +60,10 @@ def sale_total_amount(pk):
 
     if sale.moisture_weight is not None:
         moisture_weight = sale.moisture_weight
+
+    if sale.moisture_percentage is not None:
+        weight_for_moisture_percentage = (sale.moisture_percentage/100) * challan_weight
+        moisture_weight = moisture_weight + weight_for_moisture_percentage
 
     if sale.seed_weight is not None:
         seed_weight = sale.seed_weight

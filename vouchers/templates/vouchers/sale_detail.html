@@ -23,27 +23,22 @@
     <div class="row mb-3">
         <div class="col-3"><strong>Buyer Name</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ challan.buyer_name }}</div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-3"><strong>Company Name</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ challan.company_name }}</div>
+        <div class="col-3">{{ sale.challan_no.company_name }}</div>
     </div>
     <div class="row mb-3">
         <div class="col-3"><strong>Product Name</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ challan.product_name }}</div>
+        <div class="col-3">{{ sale.challan_no.product_name }}</div>
     </div>
     <div class="row mb-2">
         <div class="col-3"><strong>Weight</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ challan.weight|floatcomma_indian }} Kg.</div>
+        <div class="col-3">{{ sale.challan_no.total_weight|floatcomma_indian }} Kg.</div>
     </div>
     <div class="row mb-2">
         <div class="col-3"><strong>Number Bags</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ challan.number_of_bag|floatcomma_indian }} Nos.</div>
+        <div class="col-3">{{ sale.challan_no.number_of_bag|floatcomma_indian }} Nos.</div>
     </div>
         <div class="row mb-2">
         <div class="col-3"><strong>Rate (Per Kg.)</strong></div>
@@ -56,27 +51,30 @@
         <div class="col-3">{{ total_challan_amount|floatcomma_indian }} BDT.</div>
     </div>
     <div class="row mb-3">
-        <div class="col-3"><strong>Weight of Fotka</strong></div>
+        <div class="col-3"><strong>Weight of Fotka</strong> ({{ sale.spot_percentage }}% + {{sale.spot_weight}})</div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.fotka_weight|floatcomma_indian }} Kg.</div>
-        <div class="col-2"><strong>F.Rate : </strong> {{ sale.fotka_rate|floatcomma_indian }} Tk.</div>
+        <div class="col-2">{{ spot_weight|floatcomma_indian }} Kg.</div>
+        <div class="col-2"><strong>F.Rate : </strong> {{ sale.spot_rate|floatcomma_indian }} Tk.</div>
         <div class="col-1"><strong>F.Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ fotka_amount|floatcomma_indian }} Tk.</div>
     </div>
     <div class="row mb-3">
-        <div class="col-3"><strong>Seed Weight </strong></div>
+        <div class="col-3"><strong>Weight of Seed</strong> ({{ sale.seed_percentage }}% + {{sale.seed_weight}})</div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.seed_weight|floatcomma_indian }} Kg.</div>
-        <div class="col-3"><strong>Moisture Weight</strong></div>
+        <div class="col-2">{{ seed_weight|floatcomma_indian }} Kg.</div>
+        <div class="col-2"><strong>S.Rate : </strong> {{ sale.seed_rate|floatcomma_indian }} Tk.</div>
+        <div class="col-1"><strong>S.Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.moisture_weight|floatcomma_indian }} Kg.</div>
+        <div class="col-2">{{ seed_amount|floatcomma_indian }} Tk.</div>
     </div>
     <div class="row mb-3">
-        <div class="col-3"><strong>Self Weight of Each Bag</strong></div>
+        <div class="col-3"><strong>Moisture Weight </strong>({{ sale.moisture_percentage }}% + {{sale.moisture_weight}})</div>
         <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ sale.weight_of_each_bag|floatcomma_indian }} Kg.</div>
-        <div class="col-3"><strong>Total Self Weight of Bags</strong></div>
+        <div class="col-2">{{ moisture_weight|floatcomma_indian }} Kg.</div>
+
+
+        <div class="col-3"><strong>Self Weight of Bags</strong>({{ sale.weight_of_each_bag }} x {{sale.challan_no.number_of_bag}})</div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ total_self_weight_of_bag|floatcomma_indian }} Kg.</div>
     </div>

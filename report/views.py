@@ -115,7 +115,6 @@ def collection_report(request):
     if phone_no_contains is None or phone_no_contains == '':
         phone_no_contains = 'Select Phone No'
 
-
     total_receivable = 0
     voucher_list = {
         'voucher': []

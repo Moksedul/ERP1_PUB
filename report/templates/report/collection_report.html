@@ -1,4 +1,5 @@
 {% extends "main/base.html" %}
+{% load indian_numbers_tags %}
 {% block content %}
 
 <style>
@@ -69,7 +70,7 @@
                             {% endif %}
                         </td>
 						<td>{{ voucher.name }}</td>
-                        <td>{{ voucher.total_amount }}</td>
+                        <td>{{ voucher.total_amount|floatcomma_indian }}</td>
 						<td>{{ voucher.date }}</td>
 					</tr>
 				{% endfor %}
@@ -96,7 +97,7 @@
                                 {% else %}
                                     <td>{{ collection.local_sale_voucher_no }}</td>
                                 {% endif %}
-                                <td>{{ collection.collection_amount }} TK</td>
+                                <td>{{ collection.collection_amount|floatcomma_indian }} TK</td>
                                 <td>{{ collection.collection_date }}</td>
                             </tr>
                         {% endfor %}
@@ -106,9 +107,9 @@
                     </div>
                     <div class="container" style="font-size: 13px;">
                         <div class="float-right">
-                            <div>Total Receivable : {{total_receivable}} BDT. </div>
-                            <div>Total Collected  : {{total_collected}} BDT. </div>
-                            <div>Collection Due   : {{collection_due}} BDT. </div>
+                            <div>Total Receivable : {{total_receivable|floatcomma_indian}} BDT. </div>
+                            <div>Total Collected  : {{total_collected|floatcomma_indian}} BDT. </div>
+                            <div>Collection Due   : {{collection_due|floatcomma_indian}} BDT. </div>
                         </div>
                     </div>
                 </div>

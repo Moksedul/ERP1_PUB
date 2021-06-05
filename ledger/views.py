@@ -97,7 +97,6 @@ def ledger(request):
         'voucher': []
 
     }
-
     for voucher in lcs:
         amount = lc_total_amount(voucher.id)
         key = "voucher"

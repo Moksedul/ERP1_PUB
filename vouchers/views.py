@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.digit2words import d2w
@@ -170,6 +170,41 @@ def sale_create(request):
         'form_name': 'New Sale',
         'tittle': 'TUB | New Sale',
         'button_name': 'Save',
+    }
+
+    return render(request, 'vouchers/salevoucher_form.html', context)
+
+
+@login_required
+def sale_update(request, pk):
+    sale = SaleVoucher.objects.get(pk=pk)
+    form1 = SaleForm(instance=sale)
+
+    ExpenseFormSet = inlineformset_factory(
+        SaleVoucher, SaleExpense, fields=('expanse_name', 'amount',), extra=1
+    )
+    form3set = ExpenseFormSet(instance=sale)
+    if request.method == 'POST':
+        form1 = SaleForm(request.POST or None, instance=sale)
+        form3set = ExpenseFormSet(request.POST, instance=sale)
+        if form1.is_valid():
+            sale = form1.save(commit=False)
+            sale.posted_by = request.user
+            sale.save()
+
+            if form3set.is_valid():
+                form3set.save()
+            return redirect('/sale_list')
+    else:
+        form1 = form1
+        form3set = form3set
+
+    context = {
+        'form': form1,
+        'sale_formset': form3set,
+        'form_name': 'Sale Update',
+        'button_name': 'Update',
+        'tittle': 'TUB|Sale Update',
     }
 
     return render(request, 'vouchers/salevoucher_form.html', context)
@@ -351,46 +386,47 @@ class GeneralVoucherDeleteView(LoginRequiredMixin, DeleteView):
 @login_required()
 def sale_details(request, pk):
     sale = SaleVoucher.objects.get(id=pk)
-    challan = Challan.objects.filter(challan_no=sale.challan_no)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
     moisture_weight = 0
     seed_weight = 0
-    fotka_weight = 0
-    fotka_amount = 0
-    
-    for challan in challan:
-        pass
+    spot_weight = 0
+    spot_amount = 0
+    seed_amount = 0
 
-    challan_weight = challan.weight
+    challan_weight = sale.challan_no.total_weight
     total_challan_amount = challan_weight*sale.rate
 
-    total_self_weight_of_bag = challan.number_of_bag * sale.weight_of_each_bag
+    total_self_weight_of_bag = sale.challan_no.number_of_bag * sale.weight_of_each_bag
 
-    if sale.fotka_weight is not None:
-        fotka_weight = sale.fotka_weight
-        fotka_amount = fotka_weight * sale.fotka_rate
+    if sale.spot_weight is not None:
+        spot_weight = sale.spot_weight + ((sale.spot_percentage/100) * challan_weight)
+        spot_amount = spot_weight * sale.spot_rate
 
     if sale.moisture_weight is not None:
-        moisture_weight = sale.moisture_weight
+        moisture_weight = sale.moisture_weight + ((sale.moisture_percentage/100) * challan_weight)
 
     if sale.seed_weight is not None:
-        seed_weight = sale.seed_weight
+        seed_weight = sale.seed_weight + ((sale.seed_percentage/100) * challan_weight)
+        seed_amount = seed_weight * sale.seed_rate
 
-    weight_after_deduction = challan_weight - moisture_weight - seed_weight - fotka_weight - total_self_weight_of_bag
+    weight_after_deduction = challan_weight - moisture_weight - total_self_weight_of_bag
     amount_after_deduction = weight_after_deduction * sale.rate
-    net_amount = amount_after_deduction + fotka_amount
+    net_amount = amount_after_deduction + spot_amount
     net_amount = round(net_amount, 2)
     net_amount_in_words = d2w(net_amount)
     context = {
         'sale': sale,
-        'challan': challan,
         'total_weight': challan_weight,
         'weight_after_deduction': round(weight_after_deduction, 2),
         'amount_after_deduction': round(amount_after_deduction, 2),
         'total_challan_amount': round(total_challan_amount, 2),
-        'fotka_amount': fotka_amount,
+        'spot_weight': round(spot_weight, 2),
+        'moisture_weight': round(moisture_weight, 2),
+        'seed_weight': round(seed_weight, 2),
+        'seed_amount': seed_amount,
+        'fotka_amount': spot_amount,
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost,
         'net_amount': net_amount,
