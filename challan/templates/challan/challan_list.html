@@ -58,6 +58,7 @@
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Challan No</th>
+					<th>Reference No</th>
 					<th>Challan SL</th>
 					<th>Business Name</th>
 					<th>Company Name</th>
@@ -72,6 +73,7 @@
 				{% for item in challan %}
 					<tr>
 						<td >{{ item.challan_no }}</td>
+						<td>{{ item.reference }}</td>
 						<td>{{ item.challan_serial }}</td>
 						<td >{{ item.business_name }}</td>
 						<td>{{ item.company_name }}</td>
@@ -111,8 +113,8 @@
 								<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
 						{% endif %}
 
-						{% if user.is_staff and item.date_added == today.date %}
-								<td><a  href="{% url 'challan-update' item.id%}"><i class="fa fa-trash"></i></a></td>
+						{% if user.is_staff or item.date_added == today.date %}
+								<td><a  href="{% url 'challan-delete' item.id%}"><i class="fa fa-trash"></i></a></td>
 						{%else%}
 								<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
 						{% endif %}
