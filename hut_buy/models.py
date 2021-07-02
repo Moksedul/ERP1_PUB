@@ -4,6 +4,11 @@ from django.utils.timezone import now
 from products.models import Products
 
 
+class HandCash(models.Model):
+    date = models.DateField(default=now)
+    amount = models.FloatField()
+
+
 class HutBuy(models.Model):
     hut_name = models.CharField(max_length=20)
     date = models.DateField(default=now)

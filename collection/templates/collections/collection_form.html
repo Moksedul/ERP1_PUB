@@ -1,4 +1,5 @@
 {% extends "main/base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
@@ -12,34 +13,26 @@
               novalidate>
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.collection_no|as_crispy_field }}
                 </div>
 
-
-                <div class="col-md-4 mb-0" >
-                    <div class="row">
-                        <div class="form-group col-10 pr-0" >{{ form.collected_from|as_crispy_field }}</div>
-                        <div class="col-2 mt-3 pt-3 pl-1"><a class="btn btn-sm btn-info" href="{% url 'add-person-collection' %}">Add</a></div>
-                    </div>
-                </div>
-
                 {% if form.sale_voucher_no %}
-                    <div class="form-group col-md-2 mb-0" >
+                    <div class="form-group col-md-3 mb-0" >
                        {{ form.sale_voucher_no|as_crispy_field }}
                     </div>
                 {% endif %}
 
                 {% if form.local_sale_voucher_no %}
-                    <div class="form-group col-md-2 mb-0" >
+                    <div class="form-group col-md-3 mb-0" >
                        {{ form.local_sale_voucher_no|as_crispy_field }}
                     </div>
                 {% endif %}
 
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.collection_date|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.collection_mode|as_crispy_field }}
                 </div>
 
@@ -64,7 +57,7 @@
                 </div>
                 {% if user.is_staff %}
                 <div class="form-group col-md-2 mb-0" >
-                    <h7>Collection Status</h7>
+                    <h6>Collection Status</h6>
                    {{ form.collection_status|as_crispy_field }}
                 </div>
                 {% endif %}
@@ -76,74 +69,9 @@
         </form>
     </div>
 
-
-
-<script>
-function showChequeDetails() {
-  var x = document.getElementById("id_collection_mode").value;
-  if (x == "Cheque" || x == "Online" || x == "Pay Order") {
-    document.getElementById("demo").style.display = "block";
-  }
-  else{document.getElementById("demo").style.display = "none";}
-
-}
-</script>
 <!-- for voucher option load by seller name and search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-$(document).ready(function ()
-{
-   var $select1 = $('#id_collected_from'),
-       $select2 = $('#id_local_sale_voucher_no'),
-       $select3 = $('#id_sale_voucher_no'),
-       $options1 = $select2.find('option');
-       $options2 = $select3.find('option');
-       $select1.on('change',function()
-       {
-            var url1 = $("#collectionForm").attr("data-vouchers-url2");
-            var url2 = $("#collectionForm").attr("data-image-url");
-            var url3 = $("#collectionForm").attr("data-vouchers-url1");
-            var nameId = $(this).val();
-            $.ajax({
-                        url: url1,
-                        data: {
-                          'name': nameId
-                        },
-                        success: function (data) {
-                          $("#id_local_sale_voucher_no").html(data);
-                        }
-                  });
 
-            $.ajax({
-                        url: url3,
-                        data: {
-                          'name': nameId
-                        },
-                        success: function (data) {
-                          $("#id_sale_voucher_no").html(data);
-                        }
-                  });
-
-             $.ajax({
-                        url: url2,
-                        data: {
-                          'name': nameId
-                        },
-                        success: function (data) {
-                          $("#person_image").html(data);
-                        }
-                  });
-       }).trigger('change');
-});
-</script>
-<script>
-    $(document).ready(function ()
-{
-    $("#id_collected_from").select2({});
-    $("#id_collection_to_account").select2({});
-    $("#id_sale_voucher_no").select2({});
-    $("#id_local_sale_voucher_no").select2({});
-});
-</script>
+<script src="{% static 'collections/script.js' %}"></script>
 
 {% endblock content %}
