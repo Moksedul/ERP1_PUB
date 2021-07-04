@@ -91,8 +91,14 @@ form {
 
 .container main{
 display: table;
-padding: 0;
-margin: 0;
+
+
+}
+
+.responsive-table{
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 @media screen and (max-width: 600px) {
@@ -164,7 +170,7 @@ body {
 .bg-top {
     background-color: #e6e6fa29;
     padding: 4px;
-    border-radius: .45rem;
+    border: 1px solid rgba(225,225,225,0.5);
 }
 
 .rectangle {
@@ -193,6 +199,11 @@ ul {
 
 .bg-steel {
   background-color: #005266;
+}
+
+.navbar {
+
+    padding: .1rem 1rem;
 }
 
 .site-header .navbar-nav .nav-link {

@@ -20,12 +20,9 @@ from core.views import sale_total_amount
 
 def load_sale_vouchers(request):
     name = request.GET.get('name')
-    challan = Challan.objects.filter(buyer_name=name)
-    v_id = []
-    # for challan in challan:
-    #     sale = SaleVoucher.objects.get(challan_no_id=challan.id)
-    #     v_id.append(sale.voucher_number)
-    # vouchers = SaleVoucher.objects.filter(voucher_number__in=v_id).order_by('voucher_number')
+    challan = []
+    if name != '':
+        challan = Challan.objects.filter(company_name=name)
     vouchers = SaleVoucher.objects.filter(challan_no__in=challan)
     context = {
         'vouchers': vouchers,
@@ -35,7 +32,10 @@ def load_sale_vouchers(request):
 
 def load_local_sale_vouchers(request):
     name = request.GET.get('name')
-    vouchers = LocalSale.objects.filter(buyer_name=name).order_by('sale_no')
+    if name != '':
+        vouchers = LocalSale.objects.filter(buyer_name=name).order_by('sale_no')
+    else:
+        vouchers = []
     context = {
         'vouchers': vouchers,
     }
@@ -67,6 +67,8 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        companies = Companies.objects.all()
+        context['companies'] = companies
         context['form_name'] = 'Sale Collection'
         context['button_name'] = 'Save'
         context['tittle'] = 'Sale Collection'
@@ -117,7 +119,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
     template_name = 'collections/collection_list.html'
     context_object_name = 'collections'
     ordering = '-collection_date'
-    paginate_by = 5
+    paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

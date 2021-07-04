@@ -13,7 +13,7 @@ function showChequeDetails() {
 //for loading image and voucher numbers
 $(document).ready(function ()
 {
-   var $select1 = $('#id_collected_from'),
+   var $select1 = $('#company'),
        $select2 = $('#id_local_sale_voucher_no'),
        $select3 = $('#id_sale_voucher_no'),
        $options1 = $select2.find('option');
@@ -62,7 +62,7 @@ $(document).ready(function ()
 $(document).ready(function ()
 {
     $("#id_collected_from").select2({});
-    $("#id_collection_to_account").select2({});
+    $("#company").select2({});
     $("#id_sale_voucher_no").select2({});
     $("#id_local_sale_voucher_no").select2({});
 });

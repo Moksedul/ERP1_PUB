@@ -15,7 +15,11 @@ from vouchers.models import SaleVoucher, Persons, GeneralVoucher, BuyVoucher
 
 def load_person_image(request):
     name = request.GET.get('name')
-    person = Persons.objects.get(id=name)
+
+    try:
+        person = Persons.objects.get(id=name)
+    except:
+        person = []
     context = {
         'person': person,
     }

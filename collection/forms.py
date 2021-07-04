@@ -1,13 +1,15 @@
-from django.forms import ModelForm
+from django import forms
 from django.contrib.admin.widgets import AdminDateWidget, AdminSplitDateTime
 
 from challan.models import Challan
 from local_sale.models import LocalSale
 from vouchers.models import SaleVoucher
+from organizations.models import Companies
 from .models import Collection
 
 
-class CollectionFormSale(ModelForm):
+class CollectionFormSale(forms.ModelForm):
+
     class Meta:
         model = Collection
         fields = '__all__'
@@ -24,7 +26,7 @@ class CollectionFormSale(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['sale_voucher_no'].queryset = SaleVoucher.objects.none()
+        # self.fields['sale_voucher_no'].queryset = SaleVoucher.objects.none()
         self.fields['collection_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
         self.fields['collection_no'].widget.attrs['readonly'] = True
 
@@ -45,7 +47,7 @@ class CollectionFormSale(ModelForm):
         #     self.fields['voucher_no'].queryset = self.instance.voucher_number.voucher_no_set.order_by('voucher_number')
 
 
-class CollectionFormLocalSale(ModelForm):
+class CollectionFormLocalSale(forms.ModelForm):
     class Meta:
         model = Collection
         fields = '__all__'
