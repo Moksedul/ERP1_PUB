@@ -60,9 +60,45 @@ $(document).ready(function ()
 
 //for search function in options/selections
 $(document).ready(function ()
-{
+{   // for collection form
     $("#id_collected_from").select2({});
     $("#company").select2({});
     $("#id_sale_voucher_no").select2({});
     $("#id_local_sale_voucher_no").select2({});
+
+    // for collection list
+    $("#name").select2({});
+    $("#voucher_no").select2({});
+    $("#company_name").select2({});
 });
+
+//for search menu hide and show
+$(document).ready(function(){
+	$("#search").hide();
+	$("#showSearch1").hide();
+
+  	$("#showSearch").click(function()
+		{
+			$("#search").show(300);
+			$("#showSearch").hide();
+			$("#showSearch1").show();
+		});
+
+	$("#showSearch1").click(function()
+		{
+			$("#search").hide(300);
+			$("#showSearch").show();
+			$("#showSearch1").hide();
+		});
+});
+//for search menu hide and show
+
+
+//alerts for collection edit and delete
+function alertEdit() {
+  alert("Can not be edited after Collection Success");
+}
+
+function alertDelete() {
+  alert("Can not be deleted after Collection Success");
+}

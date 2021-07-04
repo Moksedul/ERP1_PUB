@@ -125,6 +125,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         admin = self.request.user.is_staff
         names = Persons.objects.all()
+        companies = Companies.objects.all()
         sale_vouchers_selection = SaleVoucher.objects.all()
         local_sale_voucher_selection = LocalSale.objects.all()
         voucher_contains = self.request.GET.get('voucher_no')
@@ -133,9 +134,9 @@ class CollectionListView(LoginRequiredMixin, ListView):
         name_contains = self.request.GET.get('name')
         if name_contains is None:
             name_contains = 'Select Name'
-        phone_no_contains = self.request.GET.get('phone_no')
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
+        company_contains = self.request.GET.get('company_name')
+        if company_contains is None or company_contains == '':
+            company_contains = 'Select Company'
 
         voucher_list = {'voucher': []}
         for sale in sale_vouchers_selection:
@@ -147,11 +148,12 @@ class CollectionListView(LoginRequiredMixin, ListView):
             voucher_list.setdefault(key, [])
             voucher_list[key].append({'voucher_no': local_sale.sale_no})
 
+        context['companies'] = companies
         context['names'] = names
         context['sale_voucher_selection'] = voucher_list['voucher']
         context['voucher_selected'] = voucher_contains
         context['name_selected'] = name_contains
-        context['phone_no_selected'] = phone_no_contains
+        context['company_selected'] = company_contains
         context['form_name'] = 'Update Sale Collection'
         context['button_name'] = 'Update'
         context['tittle'] = 'Collection List'
@@ -164,17 +166,17 @@ class CollectionListView(LoginRequiredMixin, ListView):
         collections = Collection.objects.all().order_by('-collection_date')
         order = self.request.GET.get('orderby')
         voucher_contains = self.request.GET.get('voucher_no')
-        # name_contains = self.request.GET.get('name')
-        # phone_no_contains = self.request.GET.get('phone_no')
+
         if voucher_contains is None:
             voucher_contains = 'Select Voucher'
+
         name_contains = self.request.GET.get('name')
         if name_contains is None:
             name_contains = 'Select Name'
-        phone_no_contains = self.request.GET.get('phone_no')
 
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
+        company_contains = self.request.GET.get('company_name')
+        if company_contains is None or company_contains == '':
+            company_contains = 'Select Company'
 
         # checking name from input
         if name_contains != 'Select Name':
@@ -182,10 +184,12 @@ class CollectionListView(LoginRequiredMixin, ListView):
             local_sale_vouchers = local_sale_vouchers.filter(buyer_name=person.id)
             collections = collections.filter(local_sale_voucher_no__in=local_sale_vouchers)
 
-        # checking phone no from input
-        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
-            person = Persons.objects.get(contact_number=phone_no_contains)
-            collections = collections.filter(collected_from=person.id)
+        # checking company from input
+        if company_contains != 'Select Company' and company_contains != 'None':
+            company = Companies.objects.get(name_of_company=company_contains)
+            challan = Challan.objects.filter(company_name=company)
+            sale = SaleVoucher.objects.filter(challan_no__in=challan)
+            collections = collections.filter(sale_voucher_no__in=sale)
 
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':

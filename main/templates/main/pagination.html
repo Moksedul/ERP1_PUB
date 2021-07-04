@@ -1,0 +1,24 @@
+{% load techAlong_extras %}
+<div class="mt-1 mb-1 float-right">
+		        {% if is_paginated %}
+
+					{% if page_obj.has_previous %}
+						<a class="btn btn-sm btn-outline-info"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+						<a class="btn btn-sm btn-outline-info"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+					{% endif %}
+
+					{% for num in page_obj.paginator.page_range %}
+						{% if page_obj.number == num %}
+							<a class="btn btn-sm btn-info"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+							<a class="btn btn-sm btn-outline-info"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+						{% endif %}
+					{% endfor %}
+
+					{% if page_obj.has_next %}
+						<a class="btn btn-sm btn-outline-info"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-sm btn-outline-info"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+					{% endif %}
+
+        		{% endif %}
+		</div>

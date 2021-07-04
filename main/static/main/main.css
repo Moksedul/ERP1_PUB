@@ -26,7 +26,10 @@ label {
     margin-bottom: 0px;
 }
 .card-body {
-    padding-top: 5px;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0em .5em 0em .5em;
 }
 
 #preloader {
@@ -78,6 +81,26 @@ padding: 5px 0;
 form {
     background-color: #dee9f7;
     padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    border-radius: .25rem;
+}
+
+#searchForm{
+    background-color: #00ffff00;
+    padding-top: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    border-radius: .25rem;
+}
+
+#menuButtons{
+    background-color: #00ffff00;
+    padding-top: 3px;
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 3px;
