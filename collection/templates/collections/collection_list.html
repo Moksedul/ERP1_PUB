@@ -3,18 +3,15 @@
 {% load techAlong_extras %}
 {% block content %}
 
-
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
+		|||
+	</button>
+	<a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+	<span id="showSearch" class="btn btn-sm btn-info">></span>
+	<span id="showSearch1" class="btn btn-sm btn-info"><</span>
 	<form method="GET" id="searchForm">
 		<div class="form-row">
-					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
-			  			|||
-					</button>
-					<a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
-					<span id="showSearch" class="btn btn-sm btn-info">></span>
-					<span id="showSearch1" class="btn btn-sm btn-info"><</span>
-					
-
 				<!--search form-->
                 <div class="form-group col-md-3">
 					<select id="name" class="form-control" name="name" onchange="this.form.submit()">

@@ -74,19 +74,19 @@ $(document).ready(function ()
 
 //for search menu hide and show
 $(document).ready(function(){
-	$("#search").hide();
+	$("#searchForm").hide();
 	$("#showSearch1").hide();
 
   	$("#showSearch").click(function()
 		{
-			$("#search").show(300);
+			$("#searchForm").show(300);
 			$("#showSearch").hide();
 			$("#showSearch1").show();
 		});
 
 	$("#showSearch1").click(function()
 		{
-			$("#search").hide(300);
+			$("#searchForm").hide(300);
 			$("#showSearch").show();
 			$("#showSearch1").hide();
 		});
