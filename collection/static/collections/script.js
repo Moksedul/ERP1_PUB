@@ -78,17 +78,19 @@ $(document).ready(function(){
 	$("#showSearch1").hide();
 
   	$("#showSearch").click(function()
-		{
-			$("#searchForm").show(300);
+		{   $("#search-form-container").css("height", "auto");
+			$("#searchForm").show();
 			$("#showSearch").hide();
 			$("#showSearch1").show();
+
 		});
 
 	$("#showSearch1").click(function()
-		{
-			$("#searchForm").hide(300);
+		{   $("#search-form-container").css("height", "35px");
+			$("#searchForm").hide();
 			$("#showSearch").show();
 			$("#showSearch1").hide();
+
 		});
 });
 //for search menu hide and show

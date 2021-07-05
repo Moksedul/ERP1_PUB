@@ -2,15 +2,23 @@
 {% load static %}
 {% load techAlong_extras %}
 {% block content %}
-
-	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
-		|||
-	</button>
+	<div style="float: left;" >
+		<div class="dropdown show mr-1" style="float: left;">
+		  <a class="btn btn-sm btn-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			|||
+		  </a>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+			<a class="dropdown-item" href="{% url 'collection-report' %}">Report</a>
+			<a class="dropdown-item" href="{% url 'add-collection-sale'%}">Collection Company</a>
+			<a class="dropdown-item" href="{% url 'add-collection-local-sale'%}">Collection Local</a>
+		  </div>
+		</div>
 	<a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
-	<span id="showSearch" class="btn btn-sm btn-info">></span>
+	<span id="showSearch" class="btn btn-sm btn-info"><i class="fas fa-search"></i> </span>
 	<span id="showSearch1" class="btn btn-sm btn-info"><</span>
-	<form method="GET" id="searchForm">
+	</div>
+	<div style="width: 100%; height: 35px" class="mb-1" id="search-form-container">
+		<form method="GET" id="searchForm">
 		<div class="form-row">
 				<!--search form-->
                 <div class="form-group col-md-3">
@@ -38,22 +46,13 @@
                   </select>
                 </div>
 				<div class="col-md-2">
-					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<button type="submit" class="btn btn-sm btn-info"><i class="fas fa-search"></i></button>
 				</div>
 			</div>
         </form>
-<!--	<form id="menuButtons">-->
-<!--	<div class="form-row">-->
-<!--	<div class="ml-1">-->
-<!--	<button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">-->
-<!--			  Menu-->
-<!--	</button>-->
+	</div>
 
-<!--	<a href="{% url 'collection-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>-->
-<!--	<span id="showSearch" class="btn btn-sm btn-info"> > </span>-->
-<!--	</div>-->
-<!--	</div>-->
-<!--	</form>-->
+
 	<div class=" card card-body">
 		<div class="text-center form-title">{{tittle}}</div>
 		<div class="responsive-table">

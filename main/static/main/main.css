@@ -89,6 +89,7 @@ form {
 }
 
 #searchForm{
+
     background-color: #00ffff00;
     padding-top: 3px;
     padding-left: 15px;
@@ -96,6 +97,10 @@ form {
     padding-bottom: 3px;
     margin-bottom: 3px;
     border-radius: .25rem;
+}
+
+.modal-header{
+
 }
 
 #menuButtons{
