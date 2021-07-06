@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 {% load indian_numbers_tags %}
 {% block content %}
-<div class="container card">
+<div class="container card" style="font-size: 14px;">
     <div class="row ">
         <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
         <a href="{% url 'buy-update' buy.id%}"><button id="edit" class="btn-xs btn-info">E</button></a>
@@ -10,7 +10,7 @@
     <hr>
     <hr>
 
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Voucher Number</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.voucher_number }}</div>
@@ -18,47 +18,47 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.date_added }}</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Seller Name</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.seller_name }}</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Company/Bazar Name</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.bazar_or_company_name }}</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Product Name</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.product_name }}</div>
     </div>
-    <div class="row mb-2">
+    <div class="row mb-1">
         <div class="col-3"><strong>Weight</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.weight }} Kg.</div>
     </div>
-    <div class="row mb-2">
+    <div class="row mb-1">
         <div class="col-3"><strong>Number Bags</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.number_of_bag }} Nos.</div>
     </div>
-    <div class="row mb-2">
+    <div class="row mb-1">
         <div class="col-3"><strong>Total Weight</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ total_weight }} Kg.</div>
     </div>
-        <div class="row mb-2">
+        <div class="row mb-1">
         <div class="col-3"><strong>Rate (Per Kg.)</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.rate|floatcomma_indian }} BDT.</div>
     </div>
-    <div class="row mb-2">
+    <div class="row mb-1">
         <div class="col-3"><strong>Total Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ total_amount|floatcomma_indian }} BDT.</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Self Weight of Each Bag</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.weight_of_each_bag }} Kg.</div>
@@ -67,7 +67,7 @@
         <div class="col-2">{{ total_self_weight_of_bag }} Kg.</div>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Unloading Cost/bag</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.per_bag_unloading_cost }} BDT.</div>
@@ -75,7 +75,7 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ total_unloading_cost|floatcomma_indian }} BDT.</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-3"><strong>Measuring Cost/Kg</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.measuring_cost_per_kg }} BDT.</div>
@@ -87,35 +87,35 @@
 <hr>
 <hr>
 
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-6"></div>
         <div class="col-3"><strong>Total Weight After Deduction</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ weight_after_deduction }} Kg.</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-6"></div>
         <div class="col-3"><strong>Total Amount After Deduction</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ amount_after_deduction|floatcomma_indian }} BDT.</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-6"></div>
         <div class="col-3"><strong>Previous Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.previous_amount|floatcomma_indian }} BDT.</div>
     </div>
-     <div class="row mb-3">
+     <div class="row mb-1">
         <div class="col-6"></div>
         <div class="col-3"><strong>Grand Total Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ grand_total_amount|floatcomma_indian }} BDT.</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-2"><strong>In Words  </strong></div>
         <div class="col-10"><strong>:</strong> {{net_amount_in_words}} Taka only</div>
     </div>
-    <div class="row mb-3">
+    <div class="row mb-1">
         <div class="col-2"><strong>Remarks</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-10">{{ buy.remarks }}</div>

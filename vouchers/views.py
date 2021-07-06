@@ -462,8 +462,16 @@ def buy_details(request, pk):
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
 
+    rate = 0
+    if buy.rate_per_kg is not None and buy.rate_per_kg != 0:
+        rate = buy.rate_per_kg
+    elif buy.rate_per_mann is not None and buy.rate_per_mann != 0:
+        rate = buy.rate_per_mann / 40.0
+    else:
+        rate = rate
+
     total_weight = buy.weight
-    total_amount = total_weight*buy.rate
+    total_amount = total_weight*rate
 
     if buy.weight_of_each_bag is not None:
         total_self_weight_of_bag = buy.weight_of_each_bag*buy.number_of_bag
@@ -475,7 +483,7 @@ def buy_details(request, pk):
         total_measuring_cost = buy.measuring_cost_per_kg*total_weight
 
     weight_after_deduction = total_weight - total_self_weight_of_bag
-    total_amount_without_bag = buy.rate * weight_after_deduction
+    total_amount_without_bag = rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
     grand_total_amount = amount_after_deduction + buy.previous_amount
     net_amount_in_words = d2w(grand_total_amount)
