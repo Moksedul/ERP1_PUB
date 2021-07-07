@@ -99,7 +99,6 @@ def ledger(request):
         challans = challans.filter(company_name=selected_company)
 
         sales = sales.filter(challan_no__in=challans)
-        print(sales)
         collections = collections.filter(sale_voucher_no__in=sales)
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
@@ -318,9 +317,9 @@ def ledger(request):
         'selected_name': selected_name,
         'tittle': 'Ledger-(খতিয়ান)',
         'all_ledger': all_ledger,
-        'total_debit': total_debit,
-        'total_credit': total_credit,
-        'balance': balance,
+        'total_debit': round(total_debit, 2),
+        'total_credit': round(total_credit, 2),
+        'balance': round(balance, 2),
     }
 
     return render(request, 'ledger/ledger.html', context)
