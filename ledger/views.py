@@ -6,7 +6,7 @@ from LC.models import LC
 from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
-from core.views import local_sale_total_amount, sale_total_amount, buy_total_amount, lc_total_amount
+from core.views import local_sale_total_amount, sale_total_amount, buy_details_calc, lc_total_amount
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
 from payroll.models import SalaryPayment
@@ -32,8 +32,11 @@ def ledger(request):
     payments = Payment.objects.all()
     agent_payments = PaymentBkashAgent.objects.all()
     salary_payments = SalaryPayment.objects.all()
+    challans = Challan.objects.all()
     name = request.POST.get('name')
     selected_name = 'Select Name'
+    company = request.POST.get('company')
+    selected_company = 'Select Company'
     print(dd)
     if dd is not None and dd != 'None' and dd != '':
         dd = datetime.strptime(dd, "%d-%m-%Y")
@@ -70,7 +73,7 @@ def ledger(request):
         local_sales = local_sales.filter(buyer_name_id=person)
         general_vouchers = general_vouchers.filter(person_name_id=person)
         collections = collections.filter(local_sale_voucher_no__in=local_sales)
-        challan_no = Challan.objects.filter(sub_dealer_id=person)
+        challan_no = challans.filter(sub_dealer_id=person)
         for challan in challan_no:
             challan_id.append(challan.id)
         if challan_id:
@@ -84,6 +87,20 @@ def ledger(request):
             agent_payments = agent_payments.filter(agent_name_id__in=agent_id)
         else:
             agent_payments = PaymentBkashAgent.objects.none()
+
+    if company != 'Select Company' and company:
+        selected_company = Companies.objects.get(name_of_company=company)
+
+        buys = BuyVoucher.objects.none()
+        payments = Payment.objects.none()
+        local_sales = LocalSale.objects.none()
+        general_vouchers = GeneralVoucher.objects.none()
+        agent_payments = PaymentBkashAgent.objects.none()
+        challans = challans.filter(company_name=selected_company)
+
+        sales = sales.filter(challan_no__in=challans)
+        print(sales)
+        collections = collections.filter(sale_voucher_no__in=sales)
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
         payments = payments.filter(payment_date__range=[date1, date2])
@@ -113,7 +130,7 @@ def ledger(request):
         })
 
     for voucher in buys:
-        amount = buy_total_amount(voucher.id)
+        amount = buy_details_calc(voucher.id)
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
@@ -121,7 +138,7 @@ def ledger(request):
             'name': voucher.seller_name,
             'voucher_no': voucher.voucher_number,
             'descriptions': ' Buy ' + str(voucher.id),
-            'credit_amount': amount,
+            'credit_amount': amount['grand_total_amount'],
             'debit_amount': 0,
             'url1': 'buy/' + str(voucher.id) + '/detail',
             'url2': 'buy/' + str(voucher.id) + '/detail'
@@ -263,8 +280,12 @@ def ledger(request):
         'voucher': []
     }
     account_balance = 0
+    total_debit = 0
+    total_credit = 0
     for item in ledgers['voucher']:
         account_balance = account_balance - item['debit_amount'] + item['credit_amount']
+        total_debit += item['debit_amount']
+        total_credit += item['credit_amount']
         key = "voucher"
         report.setdefault(key, [])
         report[key].append({
@@ -286,15 +307,20 @@ def ledger(request):
     all_ledger = False
     if selected_name == 'Select Name':
         all_ledger = True
+    balance = total_credit - total_debit
     context = {
         'date_criteria': date_criteria,
         'date1': date1,
         'companies': companies,
+        'selected_company': selected_company,
         'ledgers': report['voucher'],
         'persons': persons,
         'selected_name': selected_name,
         'tittle': 'Ledger-(খতিয়ান)',
-        'all_ledger': all_ledger
+        'all_ledger': all_ledger,
+        'total_debit': total_debit,
+        'total_credit': total_credit,
+        'balance': balance,
     }
 
     return render(request, 'ledger/ledger.html', context)

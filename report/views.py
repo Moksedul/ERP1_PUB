@@ -11,7 +11,7 @@ from payments.models import Payment
 from vouchers.models import BuyVoucher, SaleVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
-from core.views import buy_total_amount, sale_total_amount, local_sale_total_amount
+from core.views import buy_details_calc, sale_total_amount, local_sale_total_amount
 
 
 @login_required()
@@ -56,7 +56,7 @@ def payment_report(request):
             payments = payments_all.filter(voucher_no_id=voucher.id)
 
     for voucher in buy_voucher:
-        voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
+        voucher_total_price = voucher_total_price + buy_details_calc(voucher.id)
 
     total_payed = payments.aggregate(Sum('payment_amount'))
     total_payed = total_payed['payment_amount__sum']
@@ -78,7 +78,7 @@ def payment_report(request):
             'voucher_no': item.voucher_number,
             'weight': item.weight,
             'rate': item.rate,
-            'total_amount': buy_total_amount(item.id),
+            'total_amount': buy_details_calc(item.id),
             'id': item.id
         })
 

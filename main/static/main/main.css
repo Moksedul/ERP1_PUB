@@ -94,8 +94,8 @@ form {
     padding-top: 3px;
     padding-left: 15px;
     padding-right: 15px;
-    padding-bottom: 3px;
-    margin-bottom: 3px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
     border-radius: .25rem;
 }
 
@@ -158,6 +158,15 @@ td .btn{
 display:inline;
 }
 
+.table-header th{
+background-color: red;
+}
+
+.table-footer td{
+background-color: lightslategrey;
+font-weight:bold;
+}
+
 #tableta {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -188,6 +197,10 @@ body {
   margin-top: 65px;
   background-color: #002933;
   font-family: 'Arial', monospace;
+}
+
+div{
+   font-size: 11pt;
 }
 .bg-ta {
   background-image: url("/media/backgrounds/home_bg1.png");

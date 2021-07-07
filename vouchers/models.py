@@ -57,15 +57,10 @@ class BuyVoucher(models.Model):
         return reverse('buy-list')
 
     @property
-    def total_amount(self):
-        rate = 0
-        if self.rate_per_kg is not None and self.rate_per_kg != 0:
-            rate = self.rate_per_kg
-        elif self.rate_per_mann is not None and self.rate_per_mann != 0:
-            rate = self.rate_per_mann / 40.0
-        else:
-            rate = rate
-        return rate * self.weight
+    def details(self):
+        from core.views import buy_details_calc
+        context = buy_details_calc(self.pk)
+        return context
 
 
 def increment_sale_number():

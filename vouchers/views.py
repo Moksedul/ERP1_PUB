@@ -4,6 +4,7 @@ from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.digit2words import d2w
+from core.views import buy_details_calc
 from ledger.views import create_account_ledger
 from .forms import *
 from challan.models import Challan
@@ -457,47 +458,5 @@ def sale_details(request, pk):
 
 @login_required()
 def buy_details(request, pk):
-    buy = BuyVoucher.objects.get(id=pk)
-    total_unloading_cost = 0
-    total_self_weight_of_bag = 0
-    total_measuring_cost = 0
-
-    rate = 0
-    if buy.rate_per_kg is not None and buy.rate_per_kg != 0:
-        rate = buy.rate_per_kg
-    elif buy.rate_per_mann is not None and buy.rate_per_mann != 0:
-        rate = buy.rate_per_mann / 40.0
-    else:
-        rate = rate
-
-    total_weight = buy.weight
-    total_amount = total_weight*rate
-
-    if buy.weight_of_each_bag is not None:
-        total_self_weight_of_bag = buy.weight_of_each_bag*buy.number_of_bag
-
-    if buy.per_bag_unloading_cost is not None:
-        total_unloading_cost = buy.per_bag_unloading_cost*buy.number_of_bag
-
-    if buy.measuring_cost_per_kg is not None:
-        total_measuring_cost = buy.measuring_cost_per_kg*total_weight
-
-    weight_after_deduction = total_weight - total_self_weight_of_bag
-    total_amount_without_bag = rate * weight_after_deduction
-    amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
-    grand_total_amount = amount_after_deduction + buy.previous_amount
-    net_amount_in_words = d2w(grand_total_amount)
-
-    context = {
-        'buy': buy,
-        'grand_total_amount': grand_total_amount,
-        'total_weight': total_weight,
-        'weight_after_deduction': weight_after_deduction,
-        'amount_after_deduction': amount_after_deduction,
-        'total_amount': total_amount,
-        'total_unloading_cost': total_unloading_cost,
-        'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': total_measuring_cost,
-        'net_amount_in_words': net_amount_in_words
-    }
+    context = buy_details_calc(pk)
     return render(request, 'vouchers/buy_detail.html', context)

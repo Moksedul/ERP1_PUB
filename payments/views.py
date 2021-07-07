@@ -18,7 +18,7 @@ from vouchers.models import BuyVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
 from .forms import PaymentForm
-from core.views import buy_total_amount
+from core.views import buy_details_calc
 
 
 def load_buy_vouchers(request):
@@ -255,7 +255,7 @@ def payment_search(request):
         payments = payments.filter(voucher_no_id__in=v_id)
 
     for voucher in buy_voucher:
-        voucher_total_price = voucher_total_price + buy_total_amount(voucher.id)
+        voucher_total_price = voucher_total_price + buy_details_calc(voucher.id)
 
     total_payed = payments.aggregate(Sum('payment_amount'))
     total_payed = total_payed['payment_amount__sum']

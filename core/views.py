@@ -6,6 +6,7 @@ from LC.models import LC, LCProduct, LCExpense
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
 from collection.models import Collection
+from core.digit2words import d2w
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
@@ -98,38 +99,56 @@ def local_sale_total_amount(pk):
     return grand_total_amount
 
 
-def buy_total_amount(pk):
+def buy_details_calc(pk):
     buy = BuyVoucher.objects.get(id=pk)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
-
-    total_weight = buy.weight
-
-    if buy.weight_of_each_bag is not None:
-        total_self_weight_of_bag = buy.weight_of_each_bag*buy.number_of_bag
-
-    if buy.per_bag_unloading_cost is not None:
-        total_unloading_cost = buy.per_bag_unloading_cost*buy.number_of_bag
-
-    if buy.measuring_cost_per_kg is not None:
-        total_measuring_cost = buy.measuring_cost_per_kg*total_weight
+    previous_amount = 0
 
     rate = 0
-    if buy.rate_per_kg is not None and buy.rate_per_kg !=0:
+    if buy.rate_per_kg is not None and buy.rate_per_kg != 0:
         rate = buy.rate_per_kg
-    elif buy.rate_per_mann is not None and buy.rate_per_mann !=0:
-        rate = buy.rate_per_mann/40.0
+    elif buy.rate_per_mann is not None and buy.rate_per_mann != 0:
+        rate = buy.rate_per_mann / 40.0
     else:
         rate = rate
+
+    total_weight = buy.weight
+    total_amount = total_weight * rate
+
+    if buy.weight_of_each_bag is not None:
+        total_self_weight_of_bag = buy.weight_of_each_bag * buy.number_of_bag
+
+    if buy.per_bag_unloading_cost is not None:
+        total_unloading_cost = buy.per_bag_unloading_cost * buy.number_of_bag
+
+    if buy.measuring_cost_per_kg is not None:
+        total_measuring_cost = buy.measuring_cost_per_kg * total_weight
+
+    if buy.previous_amount:
+        previous_amount = buy.previous_amount
 
     weight_after_deduction = total_weight - total_self_weight_of_bag
     total_amount_without_bag = rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
-    if not buy.previous_amount:
-        buy.previous_amount = 0
-    grand_total_amount = amount_after_deduction + buy.previous_amount
-    return grand_total_amount
+    grand_total_amount = amount_after_deduction + previous_amount
+    net_amount_in_words = d2w(grand_total_amount)
+
+    context = {
+        'buy': buy,
+        'grand_total_amount': grand_total_amount,
+        'total_weight': total_weight,
+        'weight_after_deduction': weight_after_deduction,
+        'amount_after_deduction': amount_after_deduction,
+        'total_amount': total_amount,
+        'total_unloading_cost': total_unloading_cost,
+        'total_self_weight_of_bag': total_self_weight_of_bag,
+        'total_measuring_cost': total_measuring_cost,
+        'net_amount_in_words': net_amount_in_words
+    }
+
+    return context
 
 
 def serial_no(initial, model_name):
