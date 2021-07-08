@@ -6,7 +6,7 @@ from LC.models import LC
 from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
-from core.views import local_sale_total_amount, sale_total_amount, buy_details_calc, lc_total_amount
+from core.views import local_sale_total_amount, sale_detail_calc, buy_details_calc, lc_total_amount
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
 from payroll.models import SalaryPayment
@@ -146,16 +146,16 @@ def ledger(request):
         })
 
     for voucher in sales:
-        challan = Challan.objects.get(id=voucher.challan_no_id)
-        amount = sale_total_amount(voucher.id)
+        detail = sale_detail_calc(voucher.id)
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.date_added,
-            'name': challan.company_name,
+            'name': voucher.challan_no.company_name,
             'voucher_no': voucher.voucher_number,
-            'descriptions': ' Weight ' + str(challan.weight),
-            'debit_amount': amount,
+            'descriptions': ' |Weight: ' + str(detail['weight_with_spot_and_seed']) +
+                            ' |Rate:'+ str(voucher.rate),
+            'debit_amount': detail['net_amount'],
             'credit_amount': 0,
             'url1': 'sale/' + str(voucher.id) + '/detail',
             'url2': 'sale/' + str(voucher.id) + '/detail'

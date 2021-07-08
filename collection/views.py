@@ -15,7 +15,7 @@ from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
 from challan.models import *
 from .forms import CollectionFormSale, CollectionFormLocalSale
-from core.views import sale_total_amount
+from core.views import sale_detail_calc
 
 
 def load_sale_vouchers(request):

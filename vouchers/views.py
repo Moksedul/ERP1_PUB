@@ -4,7 +4,7 @@ from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.digit2words import d2w
-from core.views import buy_details_calc
+from core.views import buy_details_calc, sale_detail_calc
 from ledger.views import create_account_ledger
 from .forms import *
 from challan.models import Challan
@@ -386,73 +386,7 @@ class GeneralVoucherDeleteView(LoginRequiredMixin, DeleteView):
 
 @login_required()
 def sale_details(request, pk):
-    sale = SaleVoucher.objects.get(id=pk)
-    total_unloading_cost = 0
-    total_self_weight_of_bag = 0
-    total_measuring_cost = 0
-    moisture_weight = 0
-    seed_weight = 0
-    spot_weight = 0
-    spot_amount = 0
-    seed_amount = 0
-
-    challan_weight = sale.challan_no.total_weight
-    total_challan_amount = challan_weight*sale.rate
-
-    total_self_weight_of_bag = sale.challan_no.number_of_bag * sale.weight_of_each_bag
-
-    if sale.spot_weight is not None:
-        spot_weight = sale.spot_weight + ((sale.spot_percentage/100) * challan_weight)
-        spot_amount = spot_weight * sale.spot_rate
-
-    if sale.moisture_weight is not None:
-        moisture_weight = sale.moisture_weight + ((sale.moisture_percentage/100) * challan_weight)
-
-    if sale.seed_weight is not None:
-        seed_weight = sale.seed_weight + ((sale.seed_percentage/100) * challan_weight)
-        seed_amount = seed_weight * sale.seed_rate
-
-    weight_after_deduction = challan_weight - moisture_weight - total_self_weight_of_bag - seed_weight - spot_weight
-    weight_with_spot_and_seed = weight_after_deduction + spot_weight + seed_weight
-    amount_after_deduction = weight_after_deduction * sale.rate
-    net_amount = amount_after_deduction + spot_amount + seed_amount
-    net_amount = round(net_amount, 2)
-    net_amount_in_words = d2w(net_amount)
-
-    # profit analysis
-    sale_expanses = SaleExpense.objects.filter(sale=sale)
-    total_expanse = 0
-    for expanse in sale_expanses:
-        total_expanse += expanse.amount
-
-    total_unloading_cost = sale.challan_no.number_of_bag * sale.per_bag_unloading_cost
-    total_measuring_cost = challan_weight * sale.measuring_cost_per_kg
-    total_expanse += total_measuring_cost + total_unloading_cost
-    actual_revenue_receivable = net_amount - total_expanse
-    actual_rate_receivable = actual_revenue_receivable / challan_weight
-
-    context = {
-        'sale': sale,
-        'sale_expanses': sale_expanses,
-        'total_expanse': round(total_expanse, 2),
-        'total_weight': challan_weight,
-        'actual_revenue_receivable': round(actual_revenue_receivable, 2),
-        'actual_rate_receivable': round(actual_rate_receivable, 2),
-        'weight_after_deduction': round(weight_after_deduction, 2),
-        'weight_with_spot_and_seed': round(weight_with_spot_and_seed, 2),
-        'amount_after_deduction': round(amount_after_deduction, 2),
-        'total_challan_amount': round(total_challan_amount, 2),
-        'spot_weight': round(spot_weight, 2),
-        'moisture_weight': round(moisture_weight, 2),
-        'seed_weight': round(seed_weight, 2),
-        'seed_amount': round(seed_amount, 2),
-        'fotka_amount': round(spot_amount, 2),
-        'total_self_weight_of_bag': total_self_weight_of_bag,
-        'total_measuring_cost': round(total_measuring_cost, 2),
-        'total_unloading_cost': round(total_unloading_cost, 2),
-        'net_amount': net_amount,
-        'net_amount_in_words': net_amount_in_words
-    }
+    context = sale_detail_calc(pk)
     return render(request, 'vouchers/sale_detail.html', context)
 
 
