@@ -9,10 +9,7 @@ from vouchers.models import BuyVoucher
 
 
 class Stocks(models.Model):
-    lc = models.ForeignKey(LC, null=True, blank=True, on_delete=models.CASCADE)
-    buy = models.ForeignKey(BuyVoucher, null=True, blank=True, on_delete=models.CASCADE)
-    hut_buy = models.ForeignKey(HutBuy, null=True, blank=True, on_delete=models.CASCADE)
-    product_name = models.ForeignKey(Products, on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=5)
     weight_loss = models.FloatField(default=0)
     seed_weight = models.FloatField(default=0)
     spot_weight = models.FloatField(default=0)

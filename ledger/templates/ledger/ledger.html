@@ -80,9 +80,9 @@
 						{% if all_ledger %}
 						<td>{{item.name}}</td>
 						{% endif %}
-						<td><a id="{{item.voucher_no}}" onclick="newWindow(this.id)"
+						<td>
+							<a id="{{item.voucher_no}}" onclick="newWindow(this.id)"
                                name="{{ item.url1 }}">{{ item.voucher_no }}</a>
-                               For:
                             <a id="{{item.descriptions}}" onclick="newWindow(this.id)"
                                name="{{ item.url2 }}">{{ item.descriptions }}</a>
                         </td>

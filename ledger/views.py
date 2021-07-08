@@ -136,7 +136,9 @@ def ledger(request):
             'date': voucher.date_added,
             'name': voucher.seller_name,
             'voucher_no': voucher.voucher_number,
-            'descriptions': ' Buy ' + str(voucher.id),
+            'descriptions': ' Weight: ' + str(voucher.weight) +
+                            ' Kg | Rate/Kg:' + str(voucher.rate_per_kg) +
+                            'Tk. | Rate/mann:'+ str(voucher.rate_per_kg) + 'Tk.',
             'credit_amount': amount['grand_total_amount'],
             'debit_amount': 0,
             'url1': 'buy/' + str(voucher.id) + '/detail',
@@ -152,7 +154,7 @@ def ledger(request):
             'date': voucher.date_added,
             'name': challan.company_name,
             'voucher_no': voucher.voucher_number,
-            'descriptions': ' Sale ' + str(voucher.id),
+            'descriptions': ' Weight ' + str(challan.weight),
             'debit_amount': amount,
             'credit_amount': 0,
             'url1': 'sale/' + str(voucher.id) + '/detail',
