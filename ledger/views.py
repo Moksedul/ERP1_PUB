@@ -153,7 +153,8 @@ def ledger(request):
             'date': voucher.date_added,
             'name': voucher.challan_no.company_name,
             'voucher_no': voucher.voucher_number,
-            'descriptions': ' |Weight: ' + str(detail['weight_with_spot_and_seed']) +
+            'descriptions': 'Challan: ' + str(voucher.challan_no.challan_serial) +
+                            ' |Weight: ' + str(detail['weight_with_spot_and_seed']) +
                             ' |Rate:'+ str(voucher.rate),
             'debit_amount': detail['net_amount'],
             'credit_amount': 0,
