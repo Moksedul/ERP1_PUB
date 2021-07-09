@@ -116,23 +116,48 @@ def sale_detail_calc(pk):
     return context
 
 
-def local_sale_total_amount(pk):
+def local_sale_detail_calc(pk):
     sale = LocalSale.objects.get(id=pk)
     products = Product.objects.filter(sale_no_id=sale.id)
     product_total = 0
 
+    product_list = {
+        'products': []
+
+    }
+
     for product in products:
         amount = product.rate * product.weight
         product_total += amount
+        key = "products"
+        product_list.setdefault(key, [])
+        product_list[key].append({
+            'name': product.name,
+            'rate': product.rate,
+            'weight': product.weight,
+            'amount': amount,
+        })
 
     if sale.transport_charge_payee == 'CUSTOMER':
+        sign_charge = '+'
         voucher_total = product_total + sale.transport_charge
     else:
+        sign_charge = '-'
         voucher_total = product_total - sale.transport_charge
 
     grand_total_amount = voucher_total + sale.previous_due - sale.discount
+    in_words = d2w(grand_total_amount)
+    context = {
+        'sale': sale,
+        'products': product_list['products'],
+        'grand_total': grand_total_amount,
+        'product_total': product_total,
+        'sign_charge': sign_charge,
+        'voucher_total': voucher_total,
+        'in_words': in_words,
+    }
 
-    return grand_total_amount
+    return context
 
 
 def buy_details_calc(pk):

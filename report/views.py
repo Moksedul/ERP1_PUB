@@ -11,7 +11,7 @@ from payments.models import Payment
 from vouchers.models import BuyVoucher, SaleVoucher
 from organizations.models import Persons
 from django.contrib.auth.decorators import login_required
-from core.views import buy_details_calc, sale_detail_calc, local_sale_total_amount
+from core.views import buy_details_calc, sale_detail_calc, local_sale_detail_calc
 
 
 @login_required()
@@ -195,7 +195,7 @@ def collection_report(request):
 
     # local sale voucher list
     for voucher in local_sale_vouchers:
-        total_amount = local_sale_total_amount(voucher.id)
+        total_amount = local_sale_detail_calc(voucher.id)
         total_receivable += total_amount
 
         key = "voucher"

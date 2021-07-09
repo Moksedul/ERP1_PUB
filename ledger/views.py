@@ -6,7 +6,7 @@ from LC.models import LC
 from accounts.models import Investment, Accounts
 from bkash.models import PaymentBkashAgent, BkashAgents
 from challan.models import Challan
-from core.views import local_sale_total_amount, sale_detail_calc, buy_details_calc, lc_total_amount
+from core.views import local_sale_detail_calc, sale_detail_calc, buy_details_calc, lc_total_amount
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale
 from payroll.models import SalaryPayment
@@ -162,15 +162,19 @@ def ledger(request):
         })
 
     for voucher in local_sales:
-        amount = local_sale_total_amount(voucher.id)
+        detail = local_sale_detail_calc(voucher.id)
+        products = detail['products']
+        product_list = []
+        for product in products:
+            product_list.append(str(product['name']) + ' ' + str(product['weight']) + ' Kg@' + str(product['rate']) + 'Tk.')
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.date,
             'name': voucher.buyer_name,
             'voucher_no': voucher.sale_no,
-            'descriptions':  'Local Sale' + str(voucher.id),
-            'debit_amount': amount,
+            'descriptions':  'Local Sale ' + str(product_list) + ' Prev. Due:' + str(voucher.previous_due),
+            'debit_amount': detail['grand_total'],
             'credit_amount': 0,
             'url1': 'local_sale/' + str(voucher.id) + '/detail',
             'url2': 'local_sale/' + str(voucher.id) + '/detail'
