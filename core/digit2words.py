@@ -13,10 +13,11 @@ def num2words(num):
     tens = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
     above_100 = {100: 'Hundred', 1000: 'Thousand', 100000: 'Lakhs', 10000000: 'Crore'}
 
-    if num < 20:
+    if 20 > num < num:
+        print(num)
         return under_20[num]
 
-    if num < 100:
+    if 100 > num < num:
         return tens[num // 10 - 2] + ('' if num % 10 == 0 else ' ' + under_20[num % 10])
 
     # find the appropriate pivot - 'Million' in 3,603,550, or 'Thousand' in 603,550
