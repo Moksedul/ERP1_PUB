@@ -2,6 +2,10 @@ import decimal
 
 
 def num2words(num):
+    minus = ''
+    if int(num)<0:
+        num = -num
+        minus = 'Minus '
     num = decimal.Decimal(num)
     decimal_part = num - int(num)
     num = int(num)
@@ -13,17 +17,17 @@ def num2words(num):
     tens = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
     above_100 = {100: 'Hundred', 1000: 'Thousand', 100000: 'Lakhs', 10000000: 'Crore'}
 
-    if 20 > num < num:
+    if num < 20:
         print(num)
         return under_20[num]
 
-    if 100 > num < num:
+    if num < 100:
         return tens[num // 10 - 2] + ('' if num % 10 == 0 else ' ' + under_20[num % 10])
 
     # find the appropriate pivot - 'Million' in 3,603,550, or 'Thousand' in 603,550
     pivot = max([key for key in above_100.keys() if key <= num])
 
-    return num2words(num // pivot) + ' ' + above_100[pivot] + ('' if num % pivot == 0 else ' ' + num2words(num % pivot))
+    return minus + num2words(num // pivot) + ' ' + above_100[pivot] + ('' if num % pivot == 0 else ' ' + num2words(num % pivot))
 
 
 def d2w(digits):
