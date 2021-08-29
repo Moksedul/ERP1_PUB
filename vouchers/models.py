@@ -29,6 +29,12 @@ def increment_buy_voucher_number():
     return new_voucher_no
 
 
+COST_PAYEE_CHOICES = (
+    ('Seller', 'Seller'),
+    ('Buyer', 'Buyer'),
+)
+
+
 class BuyVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_buy_voucher_number)
     seller_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
@@ -47,6 +53,9 @@ class BuyVoucher(models.Model):
     date_time_stamp = models.DateTimeField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
     previous_amount = models.FloatField(blank=True, null=True, default=0)
+    discount = models.FloatField(blank=True, default=0)
+    transport_cost = models.FloatField(blank=True, default=0)
+    transport_cost_payee = models.CharField(max_length=10, choices=COST_PAYEE_CHOICES, default='Buyer')
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

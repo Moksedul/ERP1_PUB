@@ -51,16 +51,25 @@
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.weight_of_each_bag|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.bazar_or_company_name|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.date_added|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.transport_cost|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-3 mb-0" >
+                   {{ form.transport_cost_payee|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.previous_amount|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
+                   {{ form.discount|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
 
