@@ -105,6 +105,18 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.previous_amount|floatcomma_indian }} BDT.</div>
     </div>
+    <div class="row mb-1">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Transport Cost</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ transport_cost|floatcomma_indian }} BDT.</div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-6"></div>
+        <div class="col-3"><strong>Discount</strong></div>
+        <div class="col-1"><strong>:</strong></div>
+        <div class="col-2">{{ buy.discount|floatcomma_indian }} BDT.</div>
+    </div>
      <div class="row mb-1">
         <div class="col-6"></div>
         <div class="col-3"><strong>Grand Total Amount</strong></div>

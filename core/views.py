@@ -193,23 +193,29 @@ def buy_details_calc(pk):
     if buy.previous_amount:
         previous_amount = buy.previous_amount
 
+    if buy.transport_cost_payee == 'Buyer':
+        transport_cost = buy.transport_cost
+    else:
+        transport_cost = -buy.transport_cost
+
     weight_after_deduction = total_weight - total_self_weight_of_bag
     total_amount_without_bag = rate * weight_after_deduction
     amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
-    grand_total_amount = amount_after_deduction + previous_amount
-    net_amount_in_words = d2w(grand_total_amount)
+    grand_total_amount = amount_after_deduction + previous_amount - buy.discount + transport_cost
+    net_amount_in_words = d2w(round(grand_total_amount, 2))
 
     context = {
         'buy': buy,
-        'grand_total_amount': grand_total_amount,
-        'total_weight': total_weight,
-        'weight_after_deduction': weight_after_deduction,
-        'amount_after_deduction': amount_after_deduction,
-        'total_amount': total_amount,
+        'grand_total_amount': round(grand_total_amount, 2),
+        'total_weight': round(total_weight, 2),
+        'weight_after_deduction': round(weight_after_deduction, 2),
+        'amount_after_deduction': round(amount_after_deduction, 2),
+        'total_amount': round(total_amount, 2),
         'total_unloading_cost': total_unloading_cost,
         'total_self_weight_of_bag': total_self_weight_of_bag,
         'total_measuring_cost': total_measuring_cost,
-        'net_amount_in_words': net_amount_in_words
+        'net_amount_in_words': net_amount_in_words,
+        'transport_cost': transport_cost,
     }
 
     return context
