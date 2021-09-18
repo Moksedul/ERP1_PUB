@@ -205,14 +205,23 @@
                   <option selected value="table">Table</option>
               </select>
                   <div>
-                  <label for="tds"> With TDS </label>
-                  <input id="tds" type="checkbox" name="tds">
-                  <label for="include_tds"> With TDS </label>
-                  <input id="include_tds" type="checkbox" name="include_tds">
-                  <label for="spot"> Deduct Spot </label>
-                  <input id="spot" type="checkbox" name="spot">
-                  <label for="seed"> Deduct Seed </label>
-                  <input id="seed" type="checkbox" name="seed">
+                      <span class="border border-primary">
+                          <label for="tds">With TDS </label>
+                          <input id="tds" type="checkbox" name="tds">
+                      </span>
+                      <span class="border border-primary" style="margin-left: 3px;">
+                          <label for="include_tds">Include TDS </label>
+                          <input id="include_tds" type="checkbox" name="include_tds">
+                      </span>
+                      <span class="border border-primary" style="margin-left: 3px;">
+                          <label for="spot">Deduct Spot </label>
+                          <input id="spot" type="checkbox" name="spot">
+                      </span>
+                      <span class="border border-primary" style="margin-left: 3px;">
+                          <label for="seed">Deduct Seed </label>
+                          <input id="seed" type="checkbox" name="seed">
+                      </span>
+
                   </div>
               </div>
               <button type="submit" class="btn btn-sm btn-info">OK</button>

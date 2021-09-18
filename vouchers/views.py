@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from core.digit2words import d2w
+from core.digit2words import d2w, d2wb
 from core.views import buy_details_calc, sale_detail_calc
 from ledger.views import create_account_ledger
 from .forms import *
@@ -309,7 +309,7 @@ def bill_print(request, pk):
         tds_text = ''
 
     total_amount = weight * rate
-    amount_in_word = d2w(total_amount)
+    amount_in_word = d2wb(total_amount)
 
     if style == 'table':
         template = 'vouchers/sale_bill_table.html'
