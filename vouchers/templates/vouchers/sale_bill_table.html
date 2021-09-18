@@ -23,67 +23,66 @@
 <table width="100%" class="no-border">
         <tr>
             <td class="left" style="font-size: 13pt;">{{object.challan_no}}/{{object.challan_serial}}</td>
-            <td class="bangla-number" style="text-align: right;">{{object.challan_date|date:"d-m-Y"}}</td>
+            <td class="" style="text-align: right;">{{object.challan_date|date:"d-m-Y"}}</td>
         </tr>
     </table>
 <div style="height: 50px;"></div>
 <div style="text-align: center;">
-    <div style="font-size: 20pt; text-decoration: underline;"><b>চালান নংঃ </b><b class="bangla-number">{{challan_serial}}</b></div>
+    <div style="font-size: 18pt; text-decoration: underline;"><b>Bill No: {{challan_serial}}</b></div>
 </div>
 
-<table class="no-border left" style="font-size: 16pt;">
-    <tr><td>বরাবর,</td></tr>
-    <tr><td>{{object.company_name.name_of_company}}</td></tr>
-    <tr><td>{{object.company_name.company_address}}</td></tr>
+<table class="no-border left" style="font-size: 16pt; margin-bottom: 25px;">
+    <tr><td>To,</td></tr>
+    <tr><td style="padding:0;">{{object.company_name.name_of_company}}</td></tr>
+    <tr><td style="padding:0;">{{object.company_name.company_address}}</td></tr>
 </table>
-<div style="height: 25px;"></div>
+<div class="english" style="font-weight: 920;">
+    Subject: Bill For The Supply <span></span>of {{ object.product_name }} ।
+</div>
 
-<table class="" width="90%">
+<table class="english" width="100%">
 
         <tr style="background-color: #dcc5c5;">
-             <th>পণ্যের বিবরন</th>
-             <th>ব্যাগ সংখ্যা</th>
-             <th>প্রতি ব্যাগে পণ্যের ওজন (কেজি)</th>
-             <th>মোট পরিমাণ (কেজি)</th>
+             <th>Product Descriptions</th>
+             <th>Delivered Weight (Kg)</th>
+             <th>Rate (BDT)/Kg</th>
+             <th>Total Amount (BDT)</th>
         </tr>
         <tr style="height: 125px;">
-            <td>{{ object.product_name }}</td>
-            <td class="bangla-number">{{ object.number_of_bag|floatcomma_indian }}</td>
-            <td class="bangla-number">{{ object.weight_of_each_bag|floatcomma_indian }}</td>
-            <td class="bangla-number">{{ object.total_weight|floatcomma_indian }}</td>
+            <td class="english">{{ object.product_name }}</td>
+            <td class="english">{{ weight|floatcomma_indian }}</td>
+            <td class="english">{{ rate }}</td>
+            <td class="english">{{ total_amount|floatcomma_indian }}</td>
          </tr>
 </table>
-<div style="height:50px;"></div>
-<table class="no-border left" >
-        <tr>
-             <td>ট্রাক নং</td><td>:</td><td >{{object.vehicle_plate_number}}</td>
-        </tr>
-        <tr>
-             <td>ড্রাইভারের নাম</td><td>:</td><td>{{driver_name}}</td>
-        </tr>
-        <tr>
-             <td>মোবাইল নং</td><td>:</td><td class="bangla-number">{{object.driver_phone_no}}</td>
-        </tr>
-</table>
+<div style="height:25px;"></div>
+<div class="english"><b>In Words: </b>{{amount_in_word}} Taka Only</div>
+    <div class="english">
+        <p>
+            If you need any further details, please contact us. We are eagerly waiting for here
+            from you soon.
+        </p>
+    </div>
 
-<div style="height: 50px;"></div>
-<table width="100%" class="no-border">
+<div style="height: 25px;"></div>
+<table width="100%" class="english no-border">
     <tr>
         <td style="padding:0;"></td>
-        <td style="padding:0;" width="200">
-            <div>নিবেদক</div>
+        <td style="padding:0;" width="300">
+            <div>Thanks and Regards</div>
+            <div><b>{{object.business_name.proprietor}}</b></div>
+            <div>Proprietor</div>
+            <div><b>{{object.business_name}}</b></div>
             {% if mode == 'pad' %}
             <div class="signature" style="height: 118px;"></div>
             {% else %}
             <div style="height: 118px;"></div>
             {% endif %}
-            <div>{{object.business_name.proprietor}}</div>
         </td>
 
     </tr>
 </table>
 </div>
 </div>
-
 </div>
 {% endblock content %}

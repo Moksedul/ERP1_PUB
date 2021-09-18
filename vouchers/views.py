@@ -309,11 +309,12 @@ def bill_print(request, pk):
         tds_text = ''
 
     total_amount = weight * rate
-    amount_in_word = d2wb(total_amount)
 
     if style == 'table':
+        amount_in_word = d2w(total_amount)
         template = 'vouchers/sale_bill_table.html'
     else:
+        amount_in_word = d2wb(total_amount)
         template = 'vouchers/sale_bill_plane.html'
 
     context = {

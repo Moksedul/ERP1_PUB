@@ -15,7 +15,6 @@ class Companies(models.Model):
         return reverse('company-list')
 
 
-# Create your models here. PersonName,CompanyName,Address,NID,ContactNumber,Email,NIDPhoto
 class Persons(models.Model):
     person_name = models.CharField(max_length=200)
     company_name = models.ForeignKey(Companies, null=True, blank=True, on_delete=models.CASCADE)
