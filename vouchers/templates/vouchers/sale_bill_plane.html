@@ -1,0 +1,71 @@
+{% extends 'main/base_challan.html' %}
+{% load indian_numbers_tags %}
+{% block content %}
+<style>
+    @page
+{
+    margin-top: 0mm;
+    margin-bottom: 0mm;
+    margin-left: 0mm;
+    margin-right: 0mm;
+}
+
+</style>
+{% if mode == 'pad' %}
+        <div class="pad">
+{% else %}
+        <div class="">
+{% endif %}
+<div style="height: 54mm;"></div>
+<div class="border">
+<div class="content">
+
+<table width="100%" class="no-border">
+        <tr>
+            <td class="left" style="font-size: 13pt;">{{object.challan_no}}/{{object.challan_serial}}</td>
+            <td class="bangla-number" style="text-align: right;">{{object.challan_date|date:"d-m-Y"}}</td>
+        </tr>
+    </table>
+<div style="height: 50px;"></div>
+<div style="text-align: center;">
+    <div style="font-size: 20pt; text-decoration: underline;"><b>বিল নংঃ </b><b class="bangla-number">{{challan_serial}}</b></div>
+</div>
+
+<table class="no-border left" style="font-size: 16pt;">
+    <tr><td>বরাবর,</td></tr>
+    <tr><td>{{object.company_name.name_of_company}}</td></tr>
+    <tr><td>{{object.company_name.company_address}}</td></tr>
+</table>
+<div style="height: 25px;"></div>
+
+<div class="bangla ">
+    {{ object.product_name }} <span class="bangla-number">{{ sack }}</span> বস্তা
+    সর্বমোট ওজনঃ <span class="bangla-number">{{ weight|floatcomma_indian }}</span> কেজি গাড়ি নংঃ ‍{{object.vehicle_plate_number}}
+    মূল্যঃ <span class="bangla-number">{{ weight|floatcomma_indian }}</span> x <span class="bangla-number">{{ rate }}</span>
+    = <span class="bangla-number">{{ total_amount|floatcomma_indian }}</span> টাকা ({{ tds }}) ।
+</div>
+<div class="bangla">কথায়ঃ<span>{{amount_in_word}}</span></div>
+<div style="height:50px;"></div>
+
+
+<div style="height: 50px;"></div>
+<table width="100%" class="no-border">
+    <tr>
+        <td style="padding:0;"></td>
+        <td style="padding:0;" width="200">
+            <div>নিবেদক</div>
+            {% if mode == 'pad' %}
+            <div class="signature" style="height: 118px;"></div>
+            {% else %}
+            <div style="height: 118px;"></div>
+            {% endif %}
+            <div>{{object.business_name.proprietor}}</div>
+        </td>
+
+    </tr>
+</table>
+</div>
+</div>
+
+</div>
+{% endblock content %}

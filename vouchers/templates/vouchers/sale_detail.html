@@ -4,7 +4,8 @@
 <div class="container card" style="font-size: 14px;">
     <div class="row ">
         <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
-        <a href="{% url 'sale-update' sale.id%}"><button class="btn-xs btn-info">E</button></a>
+        <a id="edit" href="{% url 'sale-update' sale.id%}"><button class="btn-xs btn-info">E</button></a>
+        <a id="bill" data-toggle="modal" data-target="#Modal"  href="#"><button class="btn-xs btn-info">BILL</button></a>
     </div>
     <div class="text-center"><strong>Sale Voucher Details</strong></div>
     <hr>
@@ -178,12 +179,66 @@
     </div>
     <!-- Profit Analysis  -->
 </div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">Select Bill Style</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form method="get" action="{% url 'bill-print' sale.id%}" >
+              <div class="form-group">
+              <select id="mode" name="mode" >
+                  <option  value="pad">With Pad</option>
+                  <option selected value="no-pad">Without Pad</option>
+              </select>
+              <select id="style" name="style" >
+                  <option  value="plane">Plane</option>
+                  <option selected value="table">Table</option>
+              </select>
+                  <div>
+                  <label for="tds"> With TDS </label>
+                  <input id="tds" type="checkbox" name="tds">
+                  <label for="include_tds"> With TDS </label>
+                  <input id="include_tds" type="checkbox" name="include_tds">
+                  <label for="spot"> Deduct Spot </label>
+                  <input id="spot" type="checkbox" name="spot">
+                  <label for="seed"> Deduct Seed </label>
+                  <input id="seed" type="checkbox" name="seed">
+                  </div>
+              </div>
+              <button type="submit" class="btn btn-sm btn-info">OK</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <script>
     function printPage() {
         var printButton = document.getElementById("print");
+        var editButton = document.getElementById("edit");
+        var billButton = document.getElementById("bill");
+
         printButton.style.visibility = 'hidden';
+        editButton.style.visibility = 'hidden';
+        billButton.style.visibility = 'hidden';
+
         window.print()
         printButton.style.visibility = 'visible';
+        editButton.style.visibility = 'visible';
+        billButton.style.visibility = 'visible';
     }
 </script>
 {% endblock content %}

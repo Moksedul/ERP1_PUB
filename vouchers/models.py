@@ -100,6 +100,8 @@ class SaleVoucher(models.Model):
     date_added = models.DateField(default=now)
     added_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
     status = models.BooleanField(default=False)
+    weight_percentage_TDS = models.FloatField(default=0)
+    amount_percentage_TDS = models.FloatField(default=0)
     remarks = models.CharField(max_length=500, blank=True)
 
     def __str__(self):

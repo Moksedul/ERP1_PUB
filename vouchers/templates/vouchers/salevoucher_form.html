@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 mb-0 border border-primary" >
+                <div class="col-md-8 mb-0 border border-primary" >
                 <div class="row">
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.per_bag_unloading_cost|as_crispy_field }}
@@ -62,6 +62,16 @@
                 </div>
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.weight_of_each_bag|as_crispy_field }}
+                </div>
+                </div>
+                </div>
+                <div class="col-md-4 mb-0 border border-primary" >
+                <div class="row">
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.weight_percentage_TDS|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-6 mb-0" >
+                   {{ form.amount_percentage_TDS|as_crispy_field }}
                 </div>
                 </div>
                 </div>
@@ -77,7 +87,7 @@
                 </div>
                 <div class="col-12 border border-info">
                     {% if button_name == 'Save' %}
-                    <input type="button" value="Add Product" id="add_more1" class="m-2">
+                    <input type="button" value="Add Expense" id="add_more1" class="m-2">
                     {%endif%}
                     {{ sale_formset.management_form }}
                     <div id="form_set1">

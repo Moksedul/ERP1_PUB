@@ -89,7 +89,10 @@ def sale_detail_calc(pk):
     total_measuring_cost = challan_weight * sale.measuring_cost_per_kg
     total_expanse += total_measuring_cost + total_unloading_cost
     actual_revenue_receivable = net_amount - total_expanse
-    actual_rate_receivable = actual_revenue_receivable / challan_weight
+    if challan_weight !=0:
+        actual_rate_receivable = actual_revenue_receivable / challan_weight
+    else:
+        actual_rate_receivable = 0
 
     context = {
         'sale': sale,

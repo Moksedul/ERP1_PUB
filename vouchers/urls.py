@@ -19,4 +19,5 @@ urlpatterns = [
     path('general_voucher_list', GeneralVoucherListView.as_view(), name='general-voucher-list'),
     path('general_voucher/<int:pk>/delete', GeneralVoucherDeleteView.as_view(), name='general-voucher-delete'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
+    path('bill/<int:pk>', bill_print, name='bill-print'),
 ]

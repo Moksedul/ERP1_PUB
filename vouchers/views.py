@@ -216,13 +216,13 @@ class SaleListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/sale_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 5
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         voucher_selection = SaleVoucher.objects.all()
         challan_selection = Challan.objects.all()
-        names = Persons.objects.all()
+        company_names = Companies.objects.all()
 
         challan_contains = self.request.GET.get('challan_no')
         if challan_contains is None:
@@ -232,23 +232,18 @@ class SaleListView(LoginRequiredMixin, ListView):
         if voucher_contains is None:
             voucher_contains = 'Select Voucher'
 
-        name_contains = self.request.GET.get('name')
-        if name_contains is None:
-            name_contains = 'Select Name'
-
-        phone_no_contains = self.request.GET.get('phone_no')
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
+        company_contains = self.request.GET.get('company_name')
+        if company_contains is None:
+            company_contains = 'Select Company'
 
         today = now()
 
-        context['names'] = names
+        context['company_names'] = company_names
         context['voucher_selected'] = voucher_contains
         context['voucher_selection'] = voucher_selection
         context['challan_selection'] = challan_selection
         context['challan_selected'] = challan_contains
-        context['name_selected'] = name_contains
-        context['phone_no_selected'] = phone_no_contains
+        context['company_selected'] = company_contains
         context['tittle'] = 'Sale List'
         context['today'] = today
         return context
@@ -262,24 +257,15 @@ class SaleListView(LoginRequiredMixin, ListView):
         voucher_contains = self.request.GET.get('voucher_no')
         if voucher_contains is None:
             voucher_contains = 'Select Voucher'
-        name_contains = self.request.GET.get('name')
-        if name_contains is None:
-            name_contains = 'Select Name'
-        phone_no_contains = self.request.GET.get('phone_no')
 
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
+        company_contains = self.request.GET.get('company_name')
+        if company_contains is None:
+            company_contains = 'Select Company'
 
-        # checking name from input
-        if name_contains != 'Select Name':
-            person = Persons.objects.get(person_name=name_contains)
-            challan = Challan.objects.filter(buyer_name=person.id)
-            vouchers = vouchers.filter(challan_no__in=challan)
-
-        # checking phone no from input
-        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
-            person = Persons.objects.get(contact_number=phone_no_contains)
-            challan = Challan.objects.filter(buyer_name=person.id)
+        # checking company_name from input
+        if company_contains != 'Select Company':
+            company = Companies.objects.get(name_of_company=company_contains)
+            challan = Challan.objects.filter(company_name=company.id)
             vouchers = vouchers.filter(challan_no__in=challan)
 
         # checking voucher number from input
@@ -288,10 +274,61 @@ class SaleListView(LoginRequiredMixin, ListView):
 
         # checking challan number from input
         if challan_contains != '' and challan_contains != 'Select Challan':
-            challan = Challan.objects.get(challan_no=challan_contains)
+            challan = Challan.objects.get(challan_serial=challan_contains)
             vouchers = vouchers.filter(challan_no=challan)
 
         return vouchers
+
+
+@login_required
+def bill_print(request, pk):
+    sale = sale_detail_calc(pk)
+    challan = Challan.objects.get(id=sale['sale'].challan_no.id)
+    challan_serial = challan.challan_serial.split('-')[-1]
+    mode = request.GET.get('mode')
+    style = request.GET.get('style')
+    tds = request.GET.get('tds')
+    include_tds = request.GET.get('include_tds')
+
+    if tds and include_tds:
+        sack = challan.number_of_bag * (sale['sale'].weight_percentage_TDS/100)
+        weight = sale['weight_with_spot_and_seed'] * (sale['sale'].weight_percentage_TDS/100)
+        rate = (sale['sale'].rate * (sale['sale'].amount_percentage_TDS/100)) + sale['sale'].rate
+        tds_text = 'টি.ডি.এস সহ'
+        challan_serial = str(challan_serial) + '(1)'
+    elif tds:
+        sack = challan.number_of_bag * (sale['sale'].weight_percentage_TDS/100)
+        weight = sale['weight_with_spot_and_seed'] * (sale['sale'].weight_percentage_TDS/100)
+        rate = sale['sale'].rate
+        tds_text = 'টি.ডি.এস ছাড়া'
+        challan_serial = str(challan_serial) + '(2)'
+    else:
+        sack = challan.number_of_bag
+        weight = sale['weight_with_spot_and_seed']
+        rate = sale['sale'].rate
+        tds_text = ''
+
+    total_amount = weight * rate
+    amount_in_word = d2w(total_amount)
+
+    if style == 'table':
+        template = 'vouchers/sale_bill_table.html'
+    else:
+        template = 'vouchers/sale_bill_plane.html'
+
+    context = {
+        'object': challan,
+        'challan_serial': challan_serial,
+        'mode': mode,
+        'sack': sack,
+        'weight': weight,
+        'total_amount': total_amount,
+        'rate': rate,
+        'tds': tds_text,
+        'amount_in_word': amount_in_word,
+
+    }
+    return render(request, template, context=context)
 
 
 class SaleUpdateView(LoginRequiredMixin, UpdateView):
