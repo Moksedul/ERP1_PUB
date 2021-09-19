@@ -5,7 +5,9 @@ from django.urls import reverse
 
 class Companies(models.Model):
     name_of_company = models.CharField(max_length=200, unique=True)
-    company_address = models.CharField(max_length=200)
+    contact_person = models.CharField(max_length=200, default='Contact Person')
+    designation = models.CharField(max_length=200, default='Designation')
+    company_address = models.TextField(max_length=250)
 
     def __str__(self):
         return str(self.name_of_company)
