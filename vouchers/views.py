@@ -216,7 +216,7 @@ class SaleListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/sale_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 2
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
