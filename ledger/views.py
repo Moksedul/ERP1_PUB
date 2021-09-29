@@ -13,7 +13,7 @@ from payroll.models import SalaryPayment
 from vouchers.models import GeneralVoucher, BuyVoucher, SaleVoucher
 from collection.models import Collection
 from payments.models import Payment
-from organizations.models import Companies, Persons
+from organizations.models import Companies, Persons, Organization
 
 
 @login_required()
@@ -33,11 +33,13 @@ def ledger(request):
     agent_payments = PaymentBkashAgent.objects.all()
     salary_payments = SalaryPayment.objects.all()
     challans = Challan.objects.all()
+    business_names = Organization.objects.all()
     name = request.POST.get('name')
     selected_name = 'Select Name'
     company = request.POST.get('company')
     selected_company = 'Select Company'
-    print(dd)
+    selected_business = 'Select Business'
+
     if dd is not None and dd != 'None' and dd != '':
         dd = datetime.strptime(dd, "%d-%m-%Y")
         date1 = dd
@@ -89,6 +91,19 @@ def ledger(request):
             agent_payments = PaymentBkashAgent.objects.none()
 
     if company != 'Select Company' and company:
+        selected_company = Companies.objects.get(name_of_company=company)
+
+        buys = BuyVoucher.objects.none()
+        payments = Payment.objects.none()
+        local_sales = LocalSale.objects.none()
+        general_vouchers = GeneralVoucher.objects.none()
+        agent_payments = PaymentBkashAgent.objects.none()
+        challans = challans.filter(company_name=selected_company)
+
+        sales = sales.filter(challan_no__in=challans)
+        collections = collections.filter(sale_voucher_no__in=sales)
+
+    if business != 'Select Business' and business:
         selected_company = Companies.objects.get(name_of_company=company)
 
         buys = BuyVoucher.objects.none()
@@ -319,6 +334,8 @@ def ledger(request):
         'date1': date1,
         'companies': companies,
         'selected_company': selected_company,
+        'selected_business': selected_business,
+        'business_names': business_names,
         'ledgers': report['voucher'],
         'persons': persons,
         'selected_name': selected_name,
