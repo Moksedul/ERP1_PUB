@@ -39,6 +39,7 @@ def ledger(request):
     company = request.POST.get('company')
     selected_company = 'Select Company'
     selected_business = 'Select Business'
+    business = request.POST.get('business')
 
     if dd is not None and dd != 'None' and dd != '':
         dd = datetime.strptime(dd, "%d-%m-%Y")
@@ -104,14 +105,14 @@ def ledger(request):
         collections = collections.filter(sale_voucher_no__in=sales)
 
     if business != 'Select Business' and business:
-        selected_company = Companies.objects.get(name_of_company=company)
+        selected_business = Organization.objects.get(name=business)
 
         buys = BuyVoucher.objects.none()
         payments = Payment.objects.none()
         local_sales = LocalSale.objects.none()
         general_vouchers = GeneralVoucher.objects.none()
         agent_payments = PaymentBkashAgent.objects.none()
-        challans = challans.filter(company_name=selected_company)
+        challans = challans.filter(business_name=selected_business)
 
         sales = sales.filter(challan_no__in=challans)
         collections = collections.filter(sale_voucher_no__in=sales)

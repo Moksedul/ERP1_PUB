@@ -4,6 +4,7 @@ $(document).ready(function ()
 
     $("#name").select2({});
     $("#company").select2({});
+     $("#business").select2({});
 
 
 });

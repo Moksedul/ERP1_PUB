@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             name='LocalSale',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sale_no', models.CharField(default=local_sale.models.increment_local_sale_no, max_length=10)),
+                ('sale_no', models.CharField(max_length=10)),
                 ('date', models.DateField(default=django.utils.timezone.now)),
                 ('date_time_stamp', models.DateTimeField(default=django.utils.timezone.now)),
                 ('buyer_name', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='organizations.Persons')),

@@ -11,13 +11,6 @@ class SaleForm(ModelForm):
         widgets = {
                     'date': AdminDateWidget(),
                 }
-        labels = {
-            'sale_no': 'Voucher No',
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['sale_no'].widget.attrs['readonly'] = True
 
 
 class ProductForm(ModelForm):

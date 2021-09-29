@@ -3,6 +3,8 @@ from django.utils.timezone import now
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+from organizations.models import Organization
+
 
 def default_account():
     account = Accounts.objects.get(account_name='Daily Cash').pk
@@ -11,6 +13,7 @@ def default_account():
 
 class Accounts(models.Model):
     account_name = models.CharField(max_length=50, null=True, default='M/S FATEMA ENTERPRISE')
+
     account_no = models.CharField(max_length=50, null=True, unique=True, blank=True)
     bank_name = models.CharField(max_length=50, null=True, blank=True)
     bank_branch = models.CharField(max_length=50, null=True, blank=True)
