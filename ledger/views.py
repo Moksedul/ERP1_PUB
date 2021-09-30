@@ -21,18 +21,18 @@ def ledger(request):
     date1 = now()
     date2 = now()
     dd = request.POST.get('date')
-    lcs = LC.objects.all()
-    buys = BuyVoucher.objects.all()
-    sales = SaleVoucher.objects.all()
-    local_sales = LocalSale.objects.all()
+    lcs = LC.objects.none()
+    buys = BuyVoucher.objects.none()
+    sales = SaleVoucher.objects.none()
+    local_sales = LocalSale.objects.none()
     companies = Companies.objects.all()
     persons = Persons.objects.all()
-    general_vouchers = GeneralVoucher.objects.all()
-    collections = Collection.objects.all()
-    payments = Payment.objects.all()
-    agent_payments = PaymentBkashAgent.objects.all()
-    salary_payments = SalaryPayment.objects.all()
-    challans = Challan.objects.all()
+    general_vouchers = GeneralVoucher.objects.none()
+    collections = Collection.objects.none()
+    payments = Payment.objects.none()
+    agent_payments = PaymentBkashAgent.objects.none()
+    salary_payments = SalaryPayment.objects.none()
+    challans = Challan.objects.none()
     business_names = Organization.objects.all()
     name = request.POST.get('name')
     selected_name = 'Select Name'
@@ -64,6 +64,17 @@ def ledger(request):
         if date1 is not None and date1 != '':
             date1 = datetime.strptime(date1, "%d-%m-%Y")
             date2 = datetime.strptime(date2, "%d-%m-%Y")
+
+    if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
+        payments = Payment.objects.filter(payment_date__range=[date1, date2])
+        collections = Collection.objects.filter(collection_date__range=[date1, date2])
+        general_vouchers = GeneralVoucher.objects.filter(date_added__range=[date1, date2])
+        agent_payments = PaymentBkashAgent.objects.filter(payment_date__range=[date1, date2])
+        sales = SaleVoucher.objects.filter(date_added__range=[date1, date2])
+        buys = BuyVoucher.objects.filter(date_added__range=[date1, date2])
+        local_sales = LocalSale.objects.filter(date__range=[date1, date2])
+        print('this')
+
 
     if name != 'Select Name' and name is not None:
         selected_name = name
@@ -107,24 +118,16 @@ def ledger(request):
     if business != 'Select Business' and business:
         selected_business = Organization.objects.get(name=business)
 
-        buys = BuyVoucher.objects.none()
-        payments = Payment.objects.none()
-        local_sales = LocalSale.objects.none()
-        general_vouchers = GeneralVoucher.objects.none()
+        buys = buys.filter(business_name=selected_business)
+        payments = payments.filter(voucher_no__in=buys)
+        local_sales = local_sales.filter(business_name=selected_business)
+        general_vouchers = general_vouchers.filter(business_name=selected_business)
         agent_payments = PaymentBkashAgent.objects.none()
         challans = challans.filter(business_name=selected_business)
 
         sales = sales.filter(challan_no__in=challans)
         collections = collections.filter(sale_voucher_no__in=sales)
 
-    if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
-        payments = payments.filter(payment_date__range=[date1, date2])
-        collections = collections.filter(collection_date__range=[date1, date2])
-        general_vouchers = general_vouchers.filter(date_added__range=[date1, date2])
-        agent_payments = agent_payments.filter(payment_date__range=[date1, date2])
-        sales = sales.filter(date_added__range=[date1, date2])
-        buys = buys.filter(date_added__range=[date1, date2])
-        local_sales = local_sales.filter(date__range=[date1, date2])
     ledgers = {
         'voucher': []
 
@@ -170,7 +173,7 @@ def ledger(request):
             'name': voucher.challan_no.company_name,
             'voucher_no': voucher.voucher_number,
             'descriptions': 'Challan: ' + str(voucher.challan_no.challan_serial) +
-                            ' |Weight: ' + str(detail['weight_with_spot_and_seed']) +
+                            ' |Weight: ' + str(detail['weight_after_deduction']) +
                             ' |Rate:'+ str(voucher.rate),
             'debit_amount': detail['net_amount'],
             'credit_amount': 0,

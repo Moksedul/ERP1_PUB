@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 from bkash.models import BkashTransaction
-from core.views import sale_detail_calc
+
 from products.models import Products
 from organizations.models import Persons, Companies, Organization
 from challan.models import Challan
@@ -119,11 +119,11 @@ class SaleVoucher(models.Model):
     def __str__(self):
         return str(self.voucher_number)
 
-    # @property
-    # def calc(self):
-    #     context = sale_detail_calc(self.pk)
-    #     print(context)
-    #     return context
+    @property
+    def details(self):
+        from core.views import sale_detail_calc
+        context = sale_detail_calc(self.pk)
+        return context
 
     @staticmethod
     def get_absolute_url():
@@ -160,6 +160,7 @@ def increment_general_voucher_number():
 
 class GeneralVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_general_voucher_number)
+    business_name = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     person_name = models.ForeignKey(Persons, on_delete=models.SET_DEFAULT, default=1)
     cost_Descriptions = models.TextField(max_length=500, blank=True, null=True)
     cost_amount = models.FloatField()
