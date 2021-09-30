@@ -11,7 +11,7 @@ from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
-from vouchers.models import SaleVoucher, Persons, GeneralVoucher, BuyVoucher, SaleExpense
+from vouchers.models import SaleVoucher as Sale, Persons, GeneralVoucher, BuyVoucher, SaleExpense
 
 
 def load_person_image(request):
@@ -46,7 +46,7 @@ def lc_total_amount(pk):
 
 
 def sale_detail_calc(pk):
-    sale = SaleVoucher.objects.get(id=pk)
+    sale = Sale.objects.get(id=pk)
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
@@ -56,7 +56,7 @@ def sale_detail_calc(pk):
     spot_amount = 0
     seed_amount = 0
 
-    challan_weight = sale.challan_no.total_weight
+    challan_weight = sale.challan_no.total_weight - sale.challan_no.weight_adjusted
     total_challan_amount = challan_weight * sale.rate
 
     total_self_weight_of_bag = sale.challan_no.number_of_bag * sale.weight_of_each_bag
@@ -72,7 +72,7 @@ def sale_detail_calc(pk):
         seed_weight = sale.seed_weight + ((sale.seed_percentage / 100) * challan_weight)
         seed_amount = seed_weight * sale.seed_rate
 
-    weight_after_deduction = challan_weight - moisture_weight - total_self_weight_of_bag - seed_weight - spot_weight
+    weight_after_deduction = challan_weight - moisture_weight - total_self_weight_of_bag -seed_weight - spot_weight- sale.weight_adjusted
     weight_with_spot_and_seed = weight_after_deduction + spot_weight + seed_weight
     amount_after_deduction = weight_after_deduction * sale.rate
     net_amount = amount_after_deduction + spot_amount + seed_amount
@@ -95,6 +95,7 @@ def sale_detail_calc(pk):
         actual_rate_receivable = 0
 
     context = {
+
         'sale': sale,
         'sale_expanses': sale_expanses,
         'total_expanse': round(total_expanse, 2),

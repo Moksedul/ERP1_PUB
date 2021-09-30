@@ -7,13 +7,13 @@
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-2 mb-0" >
-                    {{ form1.sale_no|as_crispy_field }}
+                <div class="form-group col-md-4 mb-0" >
+                    {{ form1.business_name|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-5 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                     {{ form1.buyer_name|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-5 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                     {{ form1.company_name|as_crispy_field }}
                 </div>
 

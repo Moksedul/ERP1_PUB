@@ -75,6 +75,9 @@
                 </div>
                 </div>
                 </div>
+                 <div class="form-group col-md-2 mb-0" >
+                   {{ form.weight_adjusted|as_crispy_field }}
+                </div>
                 <div class="form-group col-md-2 mb-0" >
                    {{ form.date_added|as_crispy_field }}
                 </div>
@@ -82,7 +85,7 @@
                     <h6>Sale Status</h6>
                    {{ form.status|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-8 mb-0" >
+                <div class="form-group col-md-6 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
                 <div class="col-12 border border-info">

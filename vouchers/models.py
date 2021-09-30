@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 from bkash.models import BkashTransaction
+from core.views import sale_detail_calc
 from products.models import Products
-from organizations.models import Persons, Companies
+from organizations.models import Persons, Companies, Organization
 from challan.models import Challan
 from accounts.models import Accounts, default_account
 
@@ -37,6 +38,7 @@ COST_PAYEE_CHOICES = (
 
 class BuyVoucher(models.Model):
     voucher_number = models.CharField(max_length=10, unique=True, default=increment_buy_voucher_number)
+    business_name = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     seller_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
     weight = models.FloatField(max_length=10)
@@ -97,6 +99,7 @@ class SaleVoucher(models.Model):
     per_bag_unloading_cost = models.FloatField(default=0)
     measuring_cost_per_kg = models.FloatField(default=0)
     weight_of_each_bag = models.FloatField(default=0)
+    weight_adjusted = models.FloatField(default=0)
     rate = models.FloatField(default=0)
     spot_weight = models.FloatField(default=0)
     spot_percentage = models.FloatField(default=0)
@@ -115,6 +118,12 @@ class SaleVoucher(models.Model):
 
     def __str__(self):
         return str(self.voucher_number)
+
+    # @property
+    # def calc(self):
+    #     context = sale_detail_calc(self.pk)
+    #     print(context)
+    #     return context
 
     @staticmethod
     def get_absolute_url():

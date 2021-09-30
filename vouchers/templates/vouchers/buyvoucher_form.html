@@ -11,23 +11,26 @@
               data-image-url="{% url 'load-person-image' %}" novalidate>
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.voucher_number|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-3 mb-0 d-flex" >
+                  <div class="form-group col-md-4 mb-0" >
+                   {{ form.business_name|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0 d-flex" >
                     {{ form.seller_name|as_crispy_field }}
                     <span style="padding-top: 19px;">
                         <a class="btn btn-sm btn-info" href="{% url 'add-person-buy' %}">+</a>
                     </span>
                 </div>
 
-                <div class="form-group col-md-3 mb-0 pl-1" >
+                <div class="form-group col-md-4 mb-0 pl-1" >
                    {{ form.product_name|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.weight|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.number_of_bag|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-2 mb-0" >

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now
 
-from organizations.models import Persons, Companies
+from organizations.models import Persons, Companies, Organization
 from products.models import Products
 
 
@@ -34,6 +34,7 @@ PAYEE = [
 
 class LocalSale(models.Model):
     buyer_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
+    business_name = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     company_name = models.ForeignKey(Companies, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(default=now)
     transport_charge = models.FloatField(default=0, blank=True)
