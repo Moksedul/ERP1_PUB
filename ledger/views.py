@@ -45,6 +45,9 @@ def ledger(request):
         dd = datetime.strptime(dd, "%d-%m-%Y")
         date1 = dd
         date2 = dd
+        print('date cilo')
+    elif dd == '' and request.POST.get('date_from') == '' and request.POST.get('date_to') == '':
+        print('nothing')
 
     if 'ALL' in request.POST:
         date1 = request.POST.get('date_from')
@@ -73,60 +76,58 @@ def ledger(request):
         sales = SaleVoucher.objects.filter(date_added__range=[date1, date2])
         buys = BuyVoucher.objects.filter(date_added__range=[date1, date2])
         local_sales = LocalSale.objects.filter(date__range=[date1, date2])
-        print('this')
 
+        if name != 'Select Name' and name is not None:
+            selected_name = name
+            person = Persons.objects.get(person_name=name)
+            bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
+            agent_id = []
+            challan_id = []
+            buys = buys.filter(seller_name_id=person)
+            payments = payments.filter(payment_for_person_id=person)
+            local_sales = local_sales.filter(buyer_name_id=person)
+            general_vouchers = general_vouchers.filter(person_name_id=person)
+            collections = collections.filter(local_sale_voucher_no__in=local_sales)
+            challan_no = challans.filter(sub_dealer_id=person)
+            for challan in challan_no:
+                challan_id.append(challan.id)
+            if challan_id:
+                sales = sales.filter(challan_no_id__in=challan_id)
+            else:
+                sales = SaleVoucher.objects.none()
 
-    if name != 'Select Name' and name is not None:
-        selected_name = name
-        person = Persons.objects.get(person_name=name)
-        bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
-        agent_id = []
-        challan_id = []
-        buys = buys.filter(seller_name_id=person)
-        payments = payments.filter(payment_for_person_id=person)
-        local_sales = local_sales.filter(buyer_name_id=person)
-        general_vouchers = general_vouchers.filter(person_name_id=person)
-        collections = collections.filter(local_sale_voucher_no__in=local_sales)
-        challan_no = challans.filter(sub_dealer_id=person)
-        for challan in challan_no:
-            challan_id.append(challan.id)
-        if challan_id:
-            sales = sales.filter(challan_no_id__in=challan_id)
-        else:
-            sales = SaleVoucher.objects.none()
+            for agent in bkash_agents:
+                agent_id.append(agent.id)
+            if agent_id:
+                agent_payments = agent_payments.filter(agent_name_id__in=agent_id)
+            else:
+                agent_payments = PaymentBkashAgent.objects.none()
 
-        for agent in bkash_agents:
-            agent_id.append(agent.id)
-        if agent_id:
-            agent_payments = agent_payments.filter(agent_name_id__in=agent_id)
-        else:
+        if company != 'Select Company' and company:
+            selected_company = Companies.objects.get(name_of_company=company)
+
+            buys = BuyVoucher.objects.none()
+            payments = Payment.objects.none()
+            local_sales = LocalSale.objects.none()
+            general_vouchers = GeneralVoucher.objects.none()
             agent_payments = PaymentBkashAgent.objects.none()
+            challans = challans.filter(company_name=selected_company)
 
-    if company != 'Select Company' and company:
-        selected_company = Companies.objects.get(name_of_company=company)
+            sales = sales.filter(challan_no__in=challans)
+            collections = collections.filter(sale_voucher_no__in=sales)
 
-        buys = BuyVoucher.objects.none()
-        payments = Payment.objects.none()
-        local_sales = LocalSale.objects.none()
-        general_vouchers = GeneralVoucher.objects.none()
-        agent_payments = PaymentBkashAgent.objects.none()
-        challans = challans.filter(company_name=selected_company)
+        if business != 'Select Business' and business:
+            selected_business = Organization.objects.get(name=business)
 
-        sales = sales.filter(challan_no__in=challans)
-        collections = collections.filter(sale_voucher_no__in=sales)
+            buys = buys.filter(business_name=selected_business)
+            payments = payments.filter(voucher_no__in=buys)
+            local_sales = local_sales.filter(business_name=selected_business)
+            general_vouchers = general_vouchers.filter(business_name=selected_business)
+            agent_payments = PaymentBkashAgent.objects.none()
+            challans = challans.filter(business_name=selected_business)
 
-    if business != 'Select Business' and business:
-        selected_business = Organization.objects.get(name=business)
-
-        buys = buys.filter(business_name=selected_business)
-        payments = payments.filter(voucher_no__in=buys)
-        local_sales = local_sales.filter(business_name=selected_business)
-        general_vouchers = general_vouchers.filter(business_name=selected_business)
-        agent_payments = PaymentBkashAgent.objects.none()
-        challans = challans.filter(business_name=selected_business)
-
-        sales = sales.filter(challan_no__in=challans)
-        collections = collections.filter(sale_voucher_no__in=sales)
+            sales = sales.filter(challan_no__in=challans)
+            collections = collections.filter(sale_voucher_no__in=sales)
 
     ledgers = {
         'voucher': []
