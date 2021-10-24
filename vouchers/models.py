@@ -159,7 +159,7 @@ def increment_general_voucher_number():
 
 
 class GeneralVoucher(models.Model):
-    voucher_number = models.CharField(max_length=10, unique=True, default=increment_general_voucher_number)
+    # voucher_number = models.CharField(max_length=10, unique=True, default=increment_general_voucher_number)
     business_name = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     person_name = models.ForeignKey(Persons, on_delete=models.SET_DEFAULT, default=1)
     cost_Descriptions = models.TextField(max_length=500, blank=True, null=True)
@@ -174,6 +174,11 @@ class GeneralVoucher(models.Model):
 
     def __str__(self):
         return str(self.voucher_number)
+
+    @property
+    def voucher_number(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'GV')
 
     @staticmethod
     def get_absolute_url():

@@ -378,3 +378,15 @@ def time_difference(time_1, time2):
     pt = datetime.strptime(str(difference), '%H:%M:%S')
     total_seconds = pt.second + pt.minute * 60 + pt.hour * 3600
     return total_seconds
+
+
+def serial_gen(pk, initial):
+    if pk < 10:
+        serial = initial + '-' + '000' + str(pk)
+    elif 100 > pk >= 10:
+        serial = initial + '-' + '00' + str(pk)
+    elif 100 <= pk < 1000:
+        serial = initial + '-' + '0' + str(pk)
+    else:
+        serial = initial + '-' + str(pk)
+    return serial
