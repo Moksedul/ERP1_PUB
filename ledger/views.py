@@ -22,15 +22,8 @@ def ledger(request):
     date2 = now()
     dd = request.POST.get('date')
     lcs = LC.objects.none()
-    buys = BuyVoucher.objects.none()
-    sales = SaleVoucher.objects.none()
-    local_sales = LocalSale.objects.none()
     companies = Companies.objects.all()
     persons = Persons.objects.all()
-    general_vouchers = GeneralVoucher.objects.none()
-    collections = Collection.objects.none()
-    payments = Payment.objects.none()
-    agent_payments = PaymentBkashAgent.objects.none()
     salary_payments = SalaryPayment.objects.none()
     challans = Challan.objects.none()
     business_names = Organization.objects.all()
@@ -45,9 +38,6 @@ def ledger(request):
         dd = datetime.strptime(dd, "%d-%m-%Y")
         date1 = dd
         date2 = dd
-        print('date cilo')
-    elif dd == '' and request.POST.get('date_from') == '' and request.POST.get('date_to') == '':
-        print('nothing')
 
     if 'ALL' in request.POST:
         date1 = request.POST.get('date_from')
@@ -76,58 +66,70 @@ def ledger(request):
         sales = SaleVoucher.objects.filter(date_added__range=[date1, date2])
         buys = BuyVoucher.objects.filter(date_added__range=[date1, date2])
         local_sales = LocalSale.objects.filter(date__range=[date1, date2])
+    else:
+        lcs = LC.objects.all()
+        buys = BuyVoucher.objects.all()
+        sales = SaleVoucher.objects.all()
+        local_sales = LocalSale.objects.all()
+        general_vouchers = GeneralVoucher.objects.all()
+        collections = Collection.objects.all()
+        payments = Payment.objects.all()
+        agent_payments = PaymentBkashAgent.objects.all()
+        salary_payments = SalaryPayment.objects.all()
+        challans = Challan.objects.all()
 
-        if name != 'Select Name' and name is not None:
-            selected_name = name
-            person = Persons.objects.get(person_name=name)
-            bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
-            agent_id = []
-            challan_id = []
-            buys = buys.filter(seller_name_id=person)
-            payments = payments.filter(payment_for_person_id=person)
-            local_sales = local_sales.filter(buyer_name_id=person)
-            general_vouchers = general_vouchers.filter(person_name_id=person)
-            collections = collections.filter(local_sale_voucher_no__in=local_sales)
-            challan_no = challans.filter(sub_dealer_id=person)
-            for challan in challan_no:
-                challan_id.append(challan.id)
-            if challan_id:
-                sales = sales.filter(challan_no_id__in=challan_id)
-            else:
-                sales = SaleVoucher.objects.none()
+    if name != 'Select Name' and name is not None:
+        selected_name = name
+        person = Persons.objects.get(person_name=name)
+        bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
+        agent_id = []
+        challan_id = []
+        buys = buys.filter(seller_name_id=person)
+        payments = payments.filter(payment_for_person_id=person)
+        local_sales = local_sales.filter(buyer_name_id=person)
+        general_vouchers = general_vouchers.filter(person_name_id=person)
+        collections = collections.filter(local_sale_voucher_no__in=local_sales)
+        challan_no = challans.filter(sub_dealer_id=person)
 
-            for agent in bkash_agents:
-                agent_id.append(agent.id)
-            if agent_id:
-                agent_payments = agent_payments.filter(agent_name_id__in=agent_id)
-            else:
-                agent_payments = PaymentBkashAgent.objects.none()
+        for challan in challan_no:
+            challan_id.append(challan.id)
+        if challan_id:
+            sales = sales.filter(challan_no_id__in=challan_id)
+        else:
+            sales = SaleVoucher.objects.none()
 
-        if company != 'Select Company' and company:
-            selected_company = Companies.objects.get(name_of_company=company)
-
-            buys = BuyVoucher.objects.none()
-            payments = Payment.objects.none()
-            local_sales = LocalSale.objects.none()
-            general_vouchers = GeneralVoucher.objects.none()
+        for agent in bkash_agents:
+            agent_id.append(agent.id)
+        if agent_id:
+            agent_payments = agent_payments.filter(agent_name_id__in=agent_id)
+        else:
             agent_payments = PaymentBkashAgent.objects.none()
-            challans = challans.filter(company_name=selected_company)
 
-            sales = sales.filter(challan_no__in=challans)
-            collections = collections.filter(sale_voucher_no__in=sales)
+    if company != 'Select Company' and company:
+        selected_company = Companies.objects.get(name_of_company=company)
 
-        if business != 'Select Business' and business:
-            selected_business = Organization.objects.get(name=business)
+        buys = BuyVoucher.objects.none()
+        payments = Payment.objects.none()
+        local_sales = LocalSale.objects.none()
+        general_vouchers = GeneralVoucher.objects.none()
+        agent_payments = PaymentBkashAgent.objects.none()
+        challans = challans.filter(company_name=selected_company)
 
-            buys = buys.filter(business_name=selected_business)
-            payments = payments.filter(voucher_no__in=buys)
-            local_sales = local_sales.filter(business_name=selected_business)
-            general_vouchers = general_vouchers.filter(business_name=selected_business)
-            agent_payments = PaymentBkashAgent.objects.none()
-            challans = challans.filter(business_name=selected_business)
+        sales = sales.filter(challan_no__in=challans)
+        collections = collections.filter(sale_voucher_no__in=sales)
 
-            sales = sales.filter(challan_no__in=challans)
-            collections = collections.filter(sale_voucher_no__in=sales)
+    if business != 'Select Business' and business:
+        selected_business = Organization.objects.get(name=business)
+
+        buys = buys.filter(business_name=selected_business)
+        payments = payments.filter(voucher_no__in=buys)
+        local_sales = local_sales.filter(business_name=selected_business)
+        general_vouchers = general_vouchers.filter(business_name=selected_business)
+        agent_payments = PaymentBkashAgent.objects.none()
+        challans = challans.filter(business_name=selected_business)
+
+        sales = sales.filter(challan_no__in=challans)
+        collections = collections.filter(sale_voucher_no__in=sales)
 
     ledgers = {
         'voucher': []
@@ -158,7 +160,7 @@ def ledger(request):
             'voucher_no': voucher.voucher_number,
             'descriptions': ' Weight: ' + str(voucher.weight) +
                             ' Kg | Rate/Kg:' + str(voucher.rate_per_kg) +
-                            'Tk. | Rate/mann:'+ str(voucher.rate_per_kg) + 'Tk.',
+                            'Tk. | Rate/mann:' + str(voucher.rate_per_kg) + 'Tk.',
             'credit_amount': amount['grand_total_amount'],
             'debit_amount': 0,
             'url1': 'buy/' + str(voucher.id) + '/detail',
@@ -175,7 +177,7 @@ def ledger(request):
             'voucher_no': voucher.voucher_number,
             'descriptions': 'Challan: ' + str(voucher.challan_no.challan_serial) +
                             ' |Weight: ' + str(detail['weight_after_deduction']) +
-                            ' |Rate:'+ str(voucher.rate),
+                            ' |Rate:' + str(voucher.rate),
             'debit_amount': detail['net_amount'],
             'credit_amount': 0,
             'url1': 'sale/' + str(voucher.id) + '/detail',
@@ -187,7 +189,8 @@ def ledger(request):
         products = detail['products']
         product_list = []
         for product in products:
-            product_list.append(str(product['name']) + ' ' + str(product['weight']) + ' Kg@' + str(product['rate']) + 'Tk.')
+            product_list.append(str(product['name']) + ' ' + str(product['weight']) + ' Kg@' + str(product['rate'])
+                                + 'Tk.')
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
@@ -367,7 +370,6 @@ def create_account_ledger(data):
         salary_payment=data['salary_payment'],
     )
     account_ledger.save()
-    print(account_ledger)
 
 
 def update_account_ledger(data, pk):

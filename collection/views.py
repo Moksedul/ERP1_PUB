@@ -1,12 +1,11 @@
-from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Sum
+
 import string
-from num2words import num2words
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from core.digit2words import d2w
 from ledger.views import create_account_ledger, update_account_ledger
 from local_sale.models import LocalSale
 
@@ -15,7 +14,6 @@ from vouchers.models import SaleVoucher
 from django.contrib.auth.decorators import login_required
 from challan.models import *
 from .forms import CollectionFormSale, CollectionFormLocalSale
-from core.views import sale_detail_calc
 
 
 def load_sale_vouchers(request):
@@ -164,7 +162,6 @@ class CollectionListView(LoginRequiredMixin, ListView):
         sale_vouchers = SaleVoucher.objects.all()
         local_sale_vouchers = LocalSale.objects.all()
         collections = Collection.objects.all().order_by('-collection_date')
-        order = self.request.GET.get('orderby')
         voucher_contains = self.request.GET.get('voucher_no')
 
         if voucher_contains is None:
@@ -267,7 +264,7 @@ class CollectionUpdateViewLocalSale(LoginRequiredMixin, UpdateView):
 @login_required()
 def collection_details(request, pk):
     collection = Collection.objects.get(id=pk)
-    collected_amount_word = string.capwords(num2words(collection.collection_amount))
+    collected_amount_word = string.capwords(d2w(collection.collection_amount))
     context = {
         'collection': collection,
         'collected_amount_word': collected_amount_word,
