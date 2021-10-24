@@ -18,7 +18,6 @@ def num2words(num):
     above_100 = {100: 'Hundred', 1000: 'Thousand', 100000: 'Lakhs', 10000000: 'Crore'}
 
     if num < 20:
-        print(num)
         return under_20[num]
 
     if num < 100:

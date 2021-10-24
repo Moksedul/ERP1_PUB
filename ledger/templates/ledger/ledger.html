@@ -8,7 +8,7 @@
 				<div class="row mb-2">
 				<div class="col-md-12">
 					<div class="d-flex justify-content-end float-left">
-						<input id="date" value="{{date1}}" name="date" >
+						<input id="date" value="{{date1}}" name="date" hidden="hidden">
 					<button type="submit" class ="btn-info btn-sm" name="Previous Day" >Previous Day</button>
 					<button type="submit" class ="btn-info btn-sm" name="Today" >Today</button>
 					<button type="submit" class ="btn-info btn-sm" name="Next Day" >Next Day</button>
@@ -66,7 +66,7 @@
 	<div class="card card-body">
 			<div class="text-center form-title">Ledger (খতিয়ান)</div>
 			<div  class="text-center">
-				Name: {{ selected_name }}<br>
+				Ledger For: {{ ledger_for }}<br>
 				Date: {{date_criteria}}
 			</div>
 

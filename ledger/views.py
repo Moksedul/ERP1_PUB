@@ -20,7 +20,7 @@ from organizations.models import Companies, Persons, Organization
 def ledger(request):
     date1 = now()
     date2 = now()
-    dd = request.POST.get('date')
+    auto_date = request.POST.get('date')
     lcs = LC.objects.none()
     companies = Companies.objects.all()
     persons = Persons.objects.all()
@@ -33,11 +33,18 @@ def ledger(request):
     selected_company = 'Select Company'
     selected_business = 'Select Business'
     business = request.POST.get('business')
+    ledger_for = {}
 
-    if dd is not None and dd != 'None' and dd != '':
-        dd = datetime.strptime(dd, "%d-%m-%Y")
-        date1 = dd
-        date2 = dd
+    if request.method == 'POST' and request.POST.get('date_from') != '' and request.POST.get('date_to') != '':
+        date1 = request.POST.get('date_from')
+        date2 = request.POST.get('date_to')
+        if date1 is not None and date1 != '':
+            date1 = datetime.strptime(date1, "%d-%m-%Y")
+            date2 = datetime.strptime(date2, "%d-%m-%Y")
+    elif auto_date is not None and auto_date != 'None' and auto_date != '':
+        auto_date = datetime.strptime(auto_date, "%d-%m-%Y")
+        date1 = auto_date
+        date2 = auto_date
 
     if 'ALL' in request.POST:
         date1 = request.POST.get('date_from')
@@ -51,12 +58,6 @@ def ledger(request):
     elif 'Next Day' in request.POST:
         date1 = date1 + timedelta(1)
         date2 = date2 + timedelta(1)
-    elif request.method == 'POST' and date1 != '' and date2 != '':
-        date1 = request.POST.get('date_from')
-        date2 = request.POST.get('date_to')
-        if date1 is not None and date1 != '':
-            date1 = datetime.strptime(date1, "%d-%m-%Y")
-            date2 = datetime.strptime(date2, "%d-%m-%Y")
 
     if date1 != '' and date2 != '' and date1 is not None and date2 is not None:
         payments = Payment.objects.filter(payment_date__range=[date1, date2])
@@ -79,6 +80,7 @@ def ledger(request):
         challans = Challan.objects.all()
 
     if name != 'Select Name' and name is not None:
+        ledger_for['name'] = name
         selected_name = name
         person = Persons.objects.get(person_name=name)
         bkash_agents = BkashAgents.objects.filter(agent_name__contains=name)
@@ -106,6 +108,7 @@ def ledger(request):
             agent_payments = PaymentBkashAgent.objects.none()
 
     if company != 'Select Company' and company:
+        ledger_for['company'] = company
         selected_company = Companies.objects.get(name_of_company=company)
 
         buys = BuyVoucher.objects.none()
@@ -113,12 +116,13 @@ def ledger(request):
         local_sales = LocalSale.objects.none()
         general_vouchers = GeneralVoucher.objects.none()
         agent_payments = PaymentBkashAgent.objects.none()
-        challans = challans.filter(company_name=selected_company)
+        challans = Challan.objects.filter(company_name=selected_company)
 
         sales = sales.filter(challan_no__in=challans)
         collections = collections.filter(sale_voucher_no__in=sales)
 
     if business != 'Select Business' and business:
+        ledger_for['business'] = business
         selected_business = Organization.objects.get(name=business)
 
         buys = buys.filter(business_name=selected_business)
@@ -126,11 +130,11 @@ def ledger(request):
         local_sales = local_sales.filter(business_name=selected_business)
         general_vouchers = general_vouchers.filter(business_name=selected_business)
         agent_payments = PaymentBkashAgent.objects.none()
-        challans = challans.filter(business_name=selected_business)
+        challans = Challan.objects.filter(business_name=selected_business)
 
         sales = sales.filter(challan_no__in=challans)
         collections = collections.filter(sale_voucher_no__in=sales)
-
+    print(ledger_for)
     ledgers = {
         'voucher': []
 
@@ -352,6 +356,7 @@ def ledger(request):
         'total_debit': round(total_debit, 2),
         'total_credit': round(total_credit, 2),
         'balance': round(balance, 2),
+        'ledger_for': ledger_for,
     }
 
     return render(request, 'ledger/ledger.html', context)
