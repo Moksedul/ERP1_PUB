@@ -406,6 +406,7 @@ class GeneralVoucherListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/general_voucher_list.html'
     context_object_name = 'vouchers'
     ordering = '-id'
+    paginate_by = 10
 
 
 class GeneralVoucherDeleteView(LoginRequiredMixin, DeleteView):
