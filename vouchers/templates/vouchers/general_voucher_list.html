@@ -1,15 +1,49 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block content %}
-<!--<div class="card card-body">-->
+	<form method="GET" id="search">
+		<div class="form-row">
+			<div class="col-md-2">
+				<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-general-voucher'%}">Add General Voucher</a>
+			</div>
+				<!--search form-->
+                <div class="form-group col-md-3">
+					<select id="company_name" class="form-control" name="company_name" onchange="this.form.submit()">
+						<option selected>{{ company_selected }}</option>
+						  {% for company in company_names %}
+						<option>{{ company }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="voucher_no" class="form-control" name="voucher_no" onchange="this.form.submit()">
+                    <option selected>{{ voucher_selected }}</option>
+					  {% for voucher in voucher_selection %}
+                    <option>{{ voucher.voucher_number }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+			     <div class="form-group col-md-2">
+                  <select id="challan_no" class="form-control" name="challan_no" onchange="this.form.submit()">
+                    <option selected>{{ challan_selected }}</option>
+					  {% for voucher in challan_selection %}
+                    <option>{{ voucher.challan_serial }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info">Search</button>
+					<a href="{% url 'general-voucher-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
 	<div class=" card card-body">
-		<input class="form-control-sm" id="myInput" type="text" placeholder="Type to Search..">
-			<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-general-voucher'%}">Add General Voucher</a>
-			<div class="table-container">
-				<table id="myTable" class="table table-sm table-striped table-bordered">
+			<div class="table-container infinite-trigger">
+				<table class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Voucher Number</th>
-					<th>Person Name</th>
+					<th>Serial</th>
+					<th>Business</th>
+					<th>Cost For</th>
 					<th>Cost Descriptions</th>
 					<th>Amount</th>
 					<th>Date</th>
@@ -20,6 +54,7 @@
 				{% for voucher in vouchers %}
 					<tr class="infinite-item">
 						<td>{{ voucher.voucher_number }}</td>
+						<td>{{ voucher.business_name }}</td>
 						<td>{{ voucher.person_name }}</td>
 						<td>{{ voucher.cost_Descriptions }}</td>
 						<td>{{ voucher.cost_amount }}</td>
@@ -66,7 +101,7 @@ function alertDelete() {
 <script>
 var infinite = new Waypoint.Infinite({
 	element: $('.infinite-container')[0],
-	context: $('.table-container'),
+	context: $('.infinite-trigger'),
 
 	offset: 'bottom-in-view',
 
@@ -76,6 +111,16 @@ var infinite = new Waypoint.Infinite({
 	onAfterPageLoad: function () {
 		$('.loading').hide();
 	}
+});
+</script>
+<script>
+$(document).ready(function(){
+	var bodyHeight = $("body").height();
+	var formHeight = $("#search").height() + 13;
+	var contentHeight = bodyHeight - formHeight - 15;
+	console.log(contentHeight);
+	$('.table-container').css('height', contentHeight);
+
 });
 </script>
 {% endblock content %}

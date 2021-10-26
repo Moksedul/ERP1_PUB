@@ -66,6 +66,9 @@ $(document).ready(function ()
     $("#name").select2({});
     $("#voucher_no").select2({});
     $("#phone_no").select2({});
+
+    // for general voucher form
+
 });
 
 //for search menu hide and show
