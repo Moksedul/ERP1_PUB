@@ -16,7 +16,7 @@
 					{% endfor %}
 
 					{% if page_obj.has_next %}
-						<a class="btn btn-sm btn-outline-info"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+						<a class="btn btn-sm btn-outline-info infinite-more-link"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
 						<a class="btn btn-sm btn-outline-info"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
 					{% endif %}
 

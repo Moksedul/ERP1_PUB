@@ -38,6 +38,7 @@
 			</div>
         </form>
 	<div class=" card card-body">
+		<div class="text-center form-title">{{tittle}}</div>
 			<div class="table-container infinite-trigger">
 				<table class="table table-sm table-striped table-bordered">
 				<tr>
@@ -61,15 +62,15 @@
 
 						{% if voucher.transaction  %}
 								<td>
-									<a class="" onclick="alertEdit()" href="#"><i class="fas fa-pencil-alt"></i></a>
+									<a class="disabled" onclick="alertEdit()" href="#"><i class="fas fa-pencil-alt"></i></a>
 									|
-									<a class="" onclick="alertDelete()" href="#"><i class="fas fa-trash-alt"></i></a>
+									<a class="disabled" onclick="alertDelete()" href="#"><i class="fas fa-trash-alt"></i></a>
 								</td>
 						{% else %}
 								<td>
-									<a class="" href="{% url 'general-voucher-update' voucher.id%}"><i class="fas fa-pencil-alt"></i></a>
+									<a class="" title="Edit" href="{% url 'general-voucher-update' voucher.id%}"><i class="fas fa-pencil-alt"></i></a>
 									|
-									<a class="" href="{% url 'general-voucher-delete' voucher.id%}"><i class="fas fa-trash-alt"></i></a>
+									<a class="" title="Delete" href="{% url 'general-voucher-delete' voucher.id%}"><i class="fas fa-trash-alt"></i></a>
 								</td>
 						{%endif%}
 					</tr>
@@ -93,43 +94,28 @@
 function alertEdit() {
   alert("General Voucher With Bkash Transaction Can't be edited");
 }
-
 function alertDelete() {
   alert("General Voucher With Bkash Transaction Can't be deleted");
 }
 </script>
+
+<!--this is also needed for infinite scrolling-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--this is also needed for infinite scrolling-->
+
+<!--for infinite scrolling-->
 <script type="text/javascript" src="{% static 'main/js/jquery.waypoints.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'main/js/infinite.min.js' %}"></script>
+<!--this file also includes responsive container height-calculator -->
+<script type="text/javascript" src="{% static 'main/js/infinite.scrolling.js' %}"></script>
+<!--for infinite scrolling-->
 
-
-<script>
-var infinite = new Waypoint.Infinite({
-	element: $('.infinite-container')[0],
-	context: $('.infinite-trigger'),
-
-	offset: 'bottom-in-view',
-
-	onBeforePageLoad: function () {
-		$('.loading').show();
-	},
-	onAfterPageLoad: function () {
-		$('.loading').hide();
-	}
-});
-</script>
+<!--for search function in selection fields-->
 <script>
 $(document).ready(function(){
-	var bodyHeight = $("body").height();
-	var formHeight = $("#search").height() + 13;
-	var contentHeight = bodyHeight - formHeight - 15;
-	console.log(contentHeight);
-	$('.table-container').css('height', contentHeight);
-
 	$("#name").select2({});
     $("#voucher_no").select2({});
     $("#business_name").select2({});
-
 });
 </script>
 {% endblock content %}

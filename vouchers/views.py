@@ -41,12 +41,13 @@ class BuyListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/buy_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 100
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         voucher_selection = BuyVoucher.objects.all()
         names = Persons.objects.all()
+        business_names = Organization.objects.all()
 
         voucher_contains = self.request.GET.get('voucher_no')
         if voucher_contains is None:
@@ -65,6 +66,7 @@ class BuyListView(LoginRequiredMixin, ListView):
         context['voucher_selection'] = voucher_selection
         context['name_selected'] = name_contains
         context['phone_no_selected'] = phone_no_contains
+        context['business_names'] = business_names
         context['tittle'] = 'Buy List'
         context['today'] = today
         return context

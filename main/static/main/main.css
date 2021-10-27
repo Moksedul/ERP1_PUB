@@ -67,7 +67,7 @@ label {
    margin:auto;
    width: 100%;
    height: auto;
-   background-color: #005266;
+   background-color: #005266a1;
    color: white;
    text-align: center;
 
@@ -243,8 +243,50 @@ ul {
 }
 
 .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    background: rgba(0,58,58,0.4);
+    border-bottom: 1px solid rgba(225,225,225,0.4);
+    z-index: 1000;
+}
+.navbar-brand{
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
 
-    padding: .1rem 1rem;
+.navbar-toggler {
+    padding: 0.2rem 0.5rem;
+    font-size: 15px;
+    line-height: 0;
+    background-color: transparent;
+    border: 1px solid;
+    border-radius: 0.25rem;
+}
+.navbar-collapse{
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #17a2b8;
+    padding-left: 15px;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+@media (min-width: 992px){
+.navbar-expand-lg .navbar-collapse{
+background-color: rgba(0,0,0,0.0);
+}
 }
 
 .site-header .navbar-nav .nav-link {
