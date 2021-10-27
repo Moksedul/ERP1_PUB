@@ -65,7 +65,7 @@ $(document).ready(function ()
     // for collection list
     $("#name").select2({});
     $("#voucher_no").select2({});
-    $("#phone_no").select2({});
+    $("#business").select2({});
 
     // for general voucher form
 

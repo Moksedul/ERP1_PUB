@@ -55,9 +55,9 @@ class BuyListView(LoginRequiredMixin, ListView):
         name_contains = self.request.GET.get('name')
         if name_contains is None:
             name_contains = 'Select Name'
-        phone_no_contains = self.request.GET.get('phone_no')
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
+        business_contains = self.request.GET.get('business')
+        if business_contains is None or business_contains == '':
+            business_contains = 'Select Business'
 
         today = now()
 
@@ -65,7 +65,7 @@ class BuyListView(LoginRequiredMixin, ListView):
         context['voucher_selected'] = voucher_contains
         context['voucher_selection'] = voucher_selection
         context['name_selected'] = name_contains
-        context['phone_no_selected'] = phone_no_contains
+        context['business_selected'] = business_contains
         context['business_names'] = business_names
         context['tittle'] = 'Buy List'
         context['today'] = today
@@ -73,31 +73,21 @@ class BuyListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         vouchers = BuyVoucher.objects.all().order_by('-date_added')
-        order = self.request.GET.get('orderby')
         voucher_contains = self.request.GET.get('voucher_no')
-        if voucher_contains is None:
-            voucher_contains = 'Select Voucher'
         name_contains = self.request.GET.get('name')
-        if name_contains is None:
-            name_contains = 'Select Name'
-        phone_no_contains = self.request.GET.get('phone_no')
+        business_contains = self.request.GET.get('business')
 
-        if phone_no_contains is None or phone_no_contains == '':
-            phone_no_contains = 'Select Phone No'
-
-        # checking name from input
-        if name_contains != 'Select Name':
+        if name_contains != 'Select Name' and name_contains is not None:
             person = Persons.objects.get(person_name=name_contains)
-            vouchers = vouchers.filter(seller_name=person.id)
+            vouchers = vouchers.filter(seller_name=person)
 
-        # checking phone no from input
-        if phone_no_contains != 'Select Phone No' and phone_no_contains != 'None':
-            person = Persons.objects.get(contact_number=phone_no_contains)
-            vouchers = vouchers.filter(seller_name=person.id)
+        if business_contains != 'Select Business' and business_contains is not None:
+            business = Organization.objects.get(name=business_contains)
+            vouchers = vouchers.filter(business_name=business)
 
-        # checking voucher number from input
-        if voucher_contains != '' and voucher_contains != 'Select Voucher':
-            vouchers = vouchers.filter(voucher_number=voucher_contains)
+        if voucher_contains is not None and voucher_contains != 'Select Voucher':
+            voucher_contains = voucher_contains.split('BV-')[-1]
+            vouchers = vouchers.filter(id=voucher_contains)
 
         return vouchers
 
@@ -218,13 +208,14 @@ class SaleListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/sale_list.html'
     context_object_name = 'vouchers'
     ordering = '-voucher_number'
-    paginate_by = 50
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         voucher_selection = SaleVoucher.objects.all()
         challan_selection = Challan.objects.all()
         company_names = Companies.objects.all()
+        business_names = Organization.objects.all()
 
         challan_contains = self.request.GET.get('challan_no')
         if challan_contains is None:
@@ -238,8 +229,13 @@ class SaleListView(LoginRequiredMixin, ListView):
         if company_contains is None:
             company_contains = 'Select Company'
 
-        today = now()
+        business_contains = self.request.GET.get('business')
+        if business_contains is None or business_contains == '':
+            business_contains = 'Select Business'
 
+        today = now()
+        context['business_selected'] = business_contains
+        context['business_names'] = business_names
         context['company_names'] = company_names
         context['voucher_selected'] = voucher_contains
         context['voucher_selection'] = voucher_selection
@@ -252,7 +248,6 @@ class SaleListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         vouchers = SaleVoucher.objects.all().order_by('-date_added')
-        order = self.request.GET.get('orderby')
         challan_contains = self.request.GET.get('challan_no')
         if challan_contains is None:
             challan_contains = 'Select Challan'
@@ -278,6 +273,12 @@ class SaleListView(LoginRequiredMixin, ListView):
         if challan_contains != '' and challan_contains != 'Select Challan':
             challan = Challan.objects.get(challan_serial=challan_contains)
             vouchers = vouchers.filter(challan_no=challan)
+
+        business_contains = self.request.GET.get('business')
+        if business_contains != 'Select Business' and business_contains is not None:
+            business = Organization.objects.get(name=business_contains)
+            challans = Challan.objects.filter(business_name=business)
+            vouchers = vouchers.filter(challan_no__in=challans)
 
         return vouchers
 

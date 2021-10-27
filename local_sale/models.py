@@ -48,15 +48,8 @@ class LocalSale(models.Model):
 
     @property
     def sale_no(self):
-        if self.pk < 10:
-            sale_no = 'FELS-000' + str(self.pk)
-        elif 100 > self.pk > 10:
-            sale_no = 'FELS-00' + str(self.pk)
-        elif 1000 > self.pk > 100:
-            sale_no = 'FELS-0' + str(self.pk)
-        else:
-            sale_no = 'FELS-' + str(self.pk)
-        return sale_no
+        from core.views import serial_gen
+        return serial_gen(self.id, 'LSV')
 
     def __str__(self):
         return str(self.sale_no)

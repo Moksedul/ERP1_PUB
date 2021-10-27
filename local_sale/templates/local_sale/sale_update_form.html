@@ -2,8 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h6 class="text-center">Update Local Sale</h6>
-        <hr>
+        <div class="text-center form-title">{{tittle}}</div>
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">
@@ -68,4 +67,17 @@
                 <button class="btn btn-outline-info" type="submit">Update</button>
         </form>
     </div>
+
+
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ()
+{
+    $("#id_company_name").select2({});
+    $("#id_buyer_name").select2({});
+    $("#id_business_name").select2({});
+    $("select").select2({});
+});
+</script>
 {% endblock content %}

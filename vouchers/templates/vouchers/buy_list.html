@@ -21,7 +21,7 @@
                     <select id="business" class="form-control" name="business" onchange="this.form.submit()">
                     <option selected>{{ business_selected }}</option>
 					  {% for name in business_names %}
-                    <option>{{ name.business_name }}</option>
+                    <option>{{ name.name }}</option>
 					  {% endfor %}
                   </select>
             	</div>
@@ -44,39 +44,40 @@
 		<div class="table-container infinite-trigger">
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Voucher No</th>
+					<th>BV No</th>
+					<th>Business</th>
 					<th>Seller Name</th>
 					<th>Product</th>
 					<th>Weight</th>
 					<th>Rate (BDT)</th>
 					<th>Amount</th>
-					<th>Bazar</th>
+					<th>Company</th>
 					<th>Date</th>
-					<th>&#128195;</th>
-					<th><i class="fa fa-edit"></i></th>
-					{% if user.is_staff %}
-					<th><i class="fa fa-trash"></i></th>
-					{% endif %}
-
+					<th>Controls</th>
 				</tr>
 				<tbody class="infinite-container">
 				{% for voucher in vouchers %}
 					<tr class="infinite-item">
 						<td>{{ voucher.voucher_number }}</td>
+						<td><small>{{ voucher.business_name }}</small></td>
 						<td>{{ voucher.seller_name }}</td>
-						<td>{{ voucher.product_name }}</td>
+						<td><small>{{ voucher.product_name }}</small></td>
 						<td>{{ voucher.weight|floatcomma_indian }}</td>
 						<td>{{ voucher.rate_per_kg|floatcomma_indian }}/kg,
 							{{ voucher.rate_per_mann|floatcomma_indian }}/Mann
 						</td>
 						<td>{{ voucher.details.grand_total_amount|floatcomma_indian }}</td>
-						<td>{{ voucher.bazar_or_company_name }}</td>
+						<td><small>{{ voucher.bazar_or_company_name }}</small></td>
 						<td>{{ voucher.date_added }}</td>
-						<td><a class="" href="{% url 'buy-detail' voucher.id%}">&#128195;</a></td>
-						<td><a class="" href="{% url 'buy-update' voucher.id%}"><i class="fa fa-edit"></i></a></td>
-						{% if user.is_staff %}
-						<td><a class="" href="{% url 'buy-delete' voucher.id%}"><i class="fa fa-trash"></i></a></td>
-						{% endif %}
+						<td>
+							<a class="" href="{% url 'buy-detail' voucher.id%}">&#128195;</a>
+							{% if perms.vouchers.change_buyvoucher %}
+							|<a class="" href="{% url 'buy-update' voucher.id%}"><i class="fa fa-edit"></i></a>
+							{% endif %}
+							{% if perms.vouchers.delete_buyvoucher %}
+							|<a class="" href="{% url 'buy-delete' voucher.id%}"><i class="fa fa-trash"></i></a>
+							{% endif %}
+						</td>
 					</tr>
 				{% endfor %}
 				</tbody>

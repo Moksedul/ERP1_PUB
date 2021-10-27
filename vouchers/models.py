@@ -37,7 +37,6 @@ COST_PAYEE_CHOICES = (
 
 
 class BuyVoucher(models.Model):
-    voucher_number = models.CharField(max_length=10, unique=True, default=increment_buy_voucher_number)
     business_name = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     seller_name = models.ForeignKey(Persons, on_delete=models.CASCADE, null=True)
     product_name = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
@@ -73,6 +72,11 @@ class BuyVoucher(models.Model):
         context = buy_details_calc(self.pk)
         return context
 
+    @property
+    def voucher_number(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'BV')
+
 
 def increment_sale_number():
     last_voucher = SaleVoucher.objects.all().order_by('id').last()
@@ -94,7 +98,7 @@ def increment_sale_number():
 
 
 class SaleVoucher(models.Model):
-    voucher_number = models.CharField(max_length=10, unique=True, default=increment_sale_number)
+    # voucher_number = models.CharField(max_length=10, unique=True, default=increment_sale_number)
     challan_no = models.OneToOneField(Challan, on_delete=models.CASCADE, null=True)
     per_bag_unloading_cost = models.FloatField(default=0)
     measuring_cost_per_kg = models.FloatField(default=0)
@@ -124,6 +128,11 @@ class SaleVoucher(models.Model):
         from core.views import sale_detail_calc
         context = sale_detail_calc(self.pk)
         return context
+
+    @property
+    def voucher_number(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'SV')
 
     @staticmethod
     def get_absolute_url():

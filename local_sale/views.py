@@ -7,7 +7,7 @@ from django.forms import formset_factory, inlineformset_factory
 
 from core.digit2words import d2w
 from core.views import local_sale_detail_calc
-from organizations.models import Persons
+from organizations.models import Persons, Organization
 from .forms import SaleForm, ProductForm
 from .models import LocalSale, Product
 
@@ -31,7 +31,13 @@ def sale_create(request):
         form1 = SaleForm
         form2set = product_set
 
-    return render(request, 'local_sale/sale_add_form.html', {'form1': form1, 'form2set': form2set})
+    context = {
+        'tittle': 'New Local Sale',
+        'form1': form1,
+        'form2set': form2set
+    }
+
+    return render(request, 'local_sale/sale_add_form.html', context=context)
 
 
 @login_required
@@ -58,7 +64,13 @@ def sale_update(request, pk):
         form1 = form1
         form2set = form2set
 
-    return render(request, 'local_sale/sale_update_form.html', {'form1': form1, 'form2set': form2set})
+    context = {
+        'tittle': 'Local Sale Update',
+        'form1': form1,
+        'form2set': form2set
+    }
+
+    return render(request, 'local_sale/sale_update_form.html', context=context)
 
 
 @login_required()
@@ -78,6 +90,7 @@ class LocalSaleList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         voucher_selection = LocalSale.objects.all()
         names = Persons.objects.all()
+        business_names = Organization.objects.all()
 
         voucher_contains = self.request.GET.get('voucher_no')
         if voucher_contains is None:
@@ -89,8 +102,13 @@ class LocalSaleList(LoginRequiredMixin, ListView):
         if phone_no_contains is None or phone_no_contains == '':
             phone_no_contains = 'Select Phone No'
 
-        today = now()
+        business_contains = self.request.GET.get('business')
+        if business_contains is None or business_contains == '':
+            business_contains = 'Select Business'
 
+        today = now()
+        context['business_selected'] = business_contains
+        context['business_names'] = business_names
         context['names'] = names
         context['voucher_selected'] = voucher_contains
         context['voucher_selection'] = voucher_selection
@@ -127,6 +145,11 @@ class LocalSaleList(LoginRequiredMixin, ListView):
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':
             vouchers = vouchers.filter(sale_no=voucher_contains)
+
+        business_contains = self.request.GET.get('business')
+        if business_contains != 'Select Business' and business_contains is not None:
+            business = Organization.objects.get(name=business_contains)
+            vouchers = vouchers.filter(business_name=business)
 
         return vouchers
 

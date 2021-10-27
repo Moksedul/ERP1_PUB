@@ -17,7 +17,7 @@ class SaleForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['voucher_number'].widget.attrs['readonly'] = True
+
 
 
 class ExpenseForm(ModelForm):
@@ -47,7 +47,6 @@ class BuyForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['voucher_number'].widget.attrs['readonly'] = True
 
 
 class GeneralForm(ModelForm):
