@@ -406,7 +406,59 @@ class GeneralVoucherListView(LoginRequiredMixin, ListView):
     template_name = 'vouchers/general_voucher_list.html'
     context_object_name = 'vouchers'
     ordering = '-id'
-    paginate_by = 10
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        voucher_selection = GeneralVoucher.objects.all()
+        name_selection = Persons.objects.all()
+        business_names = Organization.objects.all()
+
+        name_contains = self.request.GET.get('name')
+        if name_contains is None:
+            name_contains = 'Select Name'
+
+        voucher_contains = self.request.GET.get('voucher_no')
+        if voucher_contains is None:
+            voucher_contains = 'Select Voucher'
+
+        business_contains = self.request.GET.get('business_name')
+        if business_contains is None:
+            business_contains = 'Select Business'
+
+        today = now()
+
+        context['business_names'] = business_names
+        context['voucher_selected'] = voucher_contains
+        context['voucher_selection'] = voucher_selection
+        context['name_selection'] = name_selection
+        context['name_selected'] = name_contains
+        context['business_selected'] = business_contains
+        context['tittle'] = 'General Vouchers'
+        context['today'] = today
+        return context
+
+    def get_queryset(self):
+        vouchers = GeneralVoucher.objects.all().order_by('-id')
+
+        name_contains = self.request.GET.get('name')
+        voucher_contains = self.request.GET.get('voucher_no')
+        business_contains = self.request.GET.get('business_name')
+
+        if business_contains != 'Select Business' and business_contains is not None:
+            print(business_contains)
+            business = Organization.objects.get(name=business_contains)
+            vouchers = vouchers.filter(business_name=business)
+
+        if voucher_contains is not None and voucher_contains != 'Select Voucher':
+            voucher_contains = voucher_contains.split('GV-')[-1]
+            vouchers = vouchers.filter(id=voucher_contains)
+
+        if name_contains is not None and name_contains != 'Select Name':
+            name = Persons.objects.get(person_name=name_contains)
+            vouchers = vouchers.filter(person_name=name)
+
+        return vouchers
 
 
 class GeneralVoucherDeleteView(LoginRequiredMixin, DeleteView):

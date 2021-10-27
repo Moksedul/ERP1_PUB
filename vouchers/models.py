@@ -159,9 +159,8 @@ def increment_general_voucher_number():
 
 
 class GeneralVoucher(models.Model):
-    # voucher_number = models.CharField(max_length=10, unique=True, default=increment_general_voucher_number)
     business_name = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
-    person_name = models.ForeignKey(Persons, on_delete=models.SET_DEFAULT, default=1)
+    person_name = models.ForeignKey(Persons, on_delete=models.SET_NULL, null=True)
     cost_Descriptions = models.TextField(max_length=500, blank=True, null=True)
     cost_amount = models.FloatField()
     date_added = models.DateField(default=now)

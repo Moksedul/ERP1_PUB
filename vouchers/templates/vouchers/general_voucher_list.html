@@ -8,10 +8,10 @@
 			</div>
 				<!--search form-->
                 <div class="form-group col-md-3">
-					<select id="company_name" class="form-control" name="company_name" onchange="this.form.submit()">
-						<option selected>{{ company_selected }}</option>
-						  {% for company in company_names %}
-						<option>{{ company }}</option>
+					<select id="business_name" class="form-control" name="business_name" onchange="this.form.submit()">
+						<option selected>{{ business_selected }}</option>
+						  {% for business in business_names %}
+						<option>{{ business.name }}</option>
 						  {% endfor %}
 					  </select>
             	</div>
@@ -24,10 +24,10 @@
                   </select>
                 </div>
 			     <div class="form-group col-md-2">
-                  <select id="challan_no" class="form-control" name="challan_no" onchange="this.form.submit()">
-                    <option selected>{{ challan_selected }}</option>
-					  {% for voucher in challan_selection %}
-                    <option>{{ voucher.challan_serial }}</option>
+                  <select id="name" class="form-control" name="name" onchange="this.form.submit()">
+                    <option selected>{{ name_selected }}</option>
+					  {% for name in name_selection %}
+                    <option>{{ name.person_name }}</option>
 					  {% endfor %}
                   </select>
                 </div>
@@ -47,8 +47,7 @@
 					<th>Cost Descriptions</th>
 					<th>Amount</th>
 					<th>Date</th>
-					<th>Update</th>
-					<th>Remove</th>
+					<th>Control</th>
 				</tr>
 				<tbody class="infinite-container">
 				{% for voucher in vouchers %}
@@ -61,11 +60,17 @@
 						<td>{{ voucher.date_added }}</td>
 
 						{% if voucher.transaction  %}
-								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#">Edit</a></td>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#">Delete</a></td>
+								<td>
+									<a class="" onclick="alertEdit()" href="#"><i class="fas fa-pencil-alt"></i></a>
+									|
+									<a class="" onclick="alertDelete()" href="#"><i class="fas fa-trash-alt"></i></a>
+								</td>
 						{% else %}
-								<td><a class="btn btn-sm btn-info" href="{% url 'general-voucher-update' voucher.id%}">Edit</a></td>
-								<td><a class="btn btn-sm btn-danger" href="{% url 'general-voucher-delete' voucher.id%}">Delete</a></td>
+								<td>
+									<a class="" href="{% url 'general-voucher-update' voucher.id%}"><i class="fas fa-pencil-alt"></i></a>
+									|
+									<a class="" href="{% url 'general-voucher-delete' voucher.id%}"><i class="fas fa-trash-alt"></i></a>
+								</td>
 						{%endif%}
 					</tr>
 				{% endfor %}
@@ -120,6 +125,10 @@ $(document).ready(function(){
 	var contentHeight = bodyHeight - formHeight - 15;
 	console.log(contentHeight);
 	$('.table-container').css('height', contentHeight);
+
+	$("#name").select2({});
+    $("#voucher_no").select2({});
+    $("#business_name").select2({});
 
 });
 </script>
