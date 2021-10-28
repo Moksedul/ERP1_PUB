@@ -122,7 +122,7 @@ class ChallanListView(LoginRequiredMixin, ListView):
     def get_paginate_by(self, queryset):
         page = self.request.GET.get("paginated_by")
         if page is None:
-            print(page)
+            pass
         elif page == 'None':
             self.paginate_by = None
         else:

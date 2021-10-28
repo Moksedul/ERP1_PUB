@@ -86,7 +86,7 @@ class BuyListView(LoginRequiredMixin, ListView):
             vouchers = vouchers.filter(business_name=business)
 
         if voucher_contains is not None and voucher_contains != 'Select Voucher':
-            voucher_contains = voucher_contains.split('BV-')[-1]
+            voucher_contains = voucher_contains.split('-')[-1]
             vouchers = vouchers.filter(id=voucher_contains)
 
         return vouchers
@@ -267,7 +267,8 @@ class SaleListView(LoginRequiredMixin, ListView):
 
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':
-            vouchers = vouchers.filter(voucher_number=voucher_contains)
+            voucher_contains = voucher_contains.split('-')[-1]
+            vouchers = vouchers.filter(id=voucher_contains)
 
         # checking challan number from input
         if challan_contains != '' and challan_contains != 'Select Challan':

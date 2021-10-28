@@ -144,7 +144,8 @@ class LocalSaleList(LoginRequiredMixin, ListView):
 
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':
-            vouchers = vouchers.filter(sale_no=voucher_contains)
+            voucher_contains = voucher_contains.split('-')[-1]
+            vouchers = vouchers.filter(id=voucher_contains)
 
         business_contains = self.request.GET.get('business')
         if business_contains != 'Select Business' and business_contains is not None:

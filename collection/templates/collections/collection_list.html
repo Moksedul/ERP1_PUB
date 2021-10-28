@@ -68,17 +68,14 @@
 		<div class="table-container infinite-trigger">
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Collection No.</th>
+					<th>CL No.</th>
 					<th>Voucher No.</th>
 					<th>Business</th>
-					<th>Name</th>
+					<th>Name/Company</th>
 					<th>Amount</th>
 					<th>Date</th>
 					<th>Status</th>
-					<th>Remarks</th>
-					<th>&#128195;</th>
-					<th><i class="fa fa-edit"></i></th>
-	  {% if admin %}<th><i class="fa fa-trash"></i></th>{% endif %}
+					<th>Controls</th>
 
 				</tr>
 				<tbody class="infinite-container">
@@ -103,48 +100,18 @@
 							Pending
 							{%endif%}
 						</td>
-						<td>{{ collection.remarks }} </td>
-						<td><a href="{% url 'collection-detail' collection.id%}">&#128195;</a></td>
-						{% if collection.collection_status %}
-							{% if admin %}
-									<!-- Button trigger modal -->
-									<td><a class="btn btn-sm btn-info" data-toggle="modal" data-target="#dialog-edit" href="{% url 'collection-update-sale' collection.id%}">E</a></td>
-									<!-- Modal -->
-									<div class="modal fade" id="dialog-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-									  <div class="modal-dialog" role="document">
-										<div class="modal-content">
-										  <div class="modal-header">
-											<h6 class="modal-title" id="exampleModalLabel1">Confirmation (Are your sure?)</h6>
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											  <span aria-hidden="true">&times;</span>
-											</button>
-										  </div>
-										  <div class="modal-body">
-											  <p>Are You Sure Want to Edit This Collection After Success?</p>
-												{% if collection.sale_voucher_no %}
-													<a class="btn btn-sm btn-danger" href="{% url 'collection-update-sale' collection.id%}">YES</a>
-												{% else %}
-													<a class="btn btn-sm btn-danger" href="{% url 'collection-update-local-sale' collection.id%}">YES</a>
-												{%endif%}
-											<button  type="button" class="btn btn-sm btn-info" data-dismiss="modal" aria-label="Close">NO</button>
-										  </div>
-										</div>
-									  </div>
-									</div>
-								<td><a class="btn btn-sm btn-secondary" onclick="alertDelete()" href="#"><i class="fa fa-trash"></i></a></td>
-							{% else %}
-								<td><a class="btn btn-sm btn-secondary" onclick="alertEdit()" href="#"><i class="fa fa-edit"></i></a></td>
-						    {%endif%}
-						{% else %}
-							{% if collection.sale_voucher_no %}
-								<td><a href="{% url 'collection-update-sale' collection.id%}"><i class="fa fa-edit"></i></a></td>
-							{% else %}
-								<td><a  href="{% url 'collection-update-local-sale' collection.id%}"><i class="fa fa-edit"></i></a></td>
+						<td>
+							<a href="{% url 'collection-detail' collection.id%}">&#128195;</a>
+							{% if perms.collection.change_collection %}
+								{% if collection.sale_voucher_no %}
+									||<a href="{% url 'collection-update-sale' collection.id%}"><i class="fa fa-edit"></i></a>
+								{% else %}
+									||<a  href="{% url 'collection-update-local-sale' collection.id%}"><i class="fa fa-edit"></i></a>
+								{%endif%}
 							{%endif%}
-							{% if admin %}
-								<td><a href="{% url 'collection-delete' collection.id%}"><i class="fa fa-trash"></i></a></td>
+							{% if perms.collection.delete_collection %}
+							    ||<a href="{% url 'collection-delete' collection.id%}"><i class="fa fa-trash"></i></a></td>
 							{%endif%}
-						{%endif%}
 					</tr>
 				{% endfor %}
 

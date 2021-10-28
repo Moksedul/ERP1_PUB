@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-        <div class="text-center form-title">{{form_name}}</div>
+        <div class="text-center form-title">{{form_name}} ({{collection_no}})</div>
          {% if form.local_sale_voucher_no %}
         <div id="person_image"></div>
         {% endif %}
@@ -14,15 +14,11 @@
               novalidate>
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-3 mb-0" >
-                   {{ form.collection_no|as_crispy_field }}
-                </div>
-
                 {% if form.sale_voucher_no %}
                     <div class="form-group col-md-3 mb-0">
                         <label for="company">Company Name</label>
                         <select name="company" class="select form-control" id="company">
-                            <option value="" selected="">---------</option>
+                            <option value="company.id" selected>{{company_selected}}</option>
                             {%for company in companies%}
                             <option value="{{company.id}}">{{ company }}</option>
                             {% endfor %}
@@ -67,7 +63,7 @@
                 </div>
                 {% if user.is_staff %}
                 <div class="form-group col-md-2 mb-0" >
-                    <h6>Collection Status</h6>
+                    Collection Status
                    {{ form.collection_status|as_crispy_field }}
                 </div>
                 {% endif %}

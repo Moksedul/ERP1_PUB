@@ -28,7 +28,7 @@ class CollectionFormSale(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # self.fields['sale_voucher_no'].queryset = SaleVoucher.objects.none()
         self.fields['collection_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
-        self.fields['collection_no'].widget.attrs['readonly'] = True
+        # self.fields['collection_no'].widget.attrs['readonly'] = True
 
         if 'collected_from' in self.data:
             try:
@@ -66,7 +66,7 @@ class CollectionFormLocalSale(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # self.fields['local_sale_voucher_no'].queryset = LocalSale.objects.none()
         self.fields['collection_mode'].widget.attrs.update({'onchange': 'showChequeDetails()'})
-        self.fields['collection_no'].widget.attrs['readonly'] = True
+        # self.fields['collection_no'].widget.attrs['readonly'] = True
 
         if 'collected_from' in self.data:
             try:

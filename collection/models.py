@@ -43,7 +43,7 @@ def increment_collection_number():
 
 # Create your models here.
 class Collection(models.Model):
-    collection_no = models.CharField(max_length=10, unique=True, default=increment_collection_number)
+    # collection_no = models.CharField(max_length=10, unique=True, default=increment_collection_number)
     sale_type = models.CharField(max_length=10, choices=SALE_TYPES, default=SALE_TYPES[1])
     sale_voucher_no = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE, null=True)
     local_sale_voucher_no = models.ForeignKey(LocalSale, on_delete=models.CASCADE, null=True)
@@ -60,6 +60,11 @@ class Collection(models.Model):
 
     def __str__(self):
         return str(self.collection_no)
+
+    @property
+    def collection_no(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'CL')
 
     @staticmethod
     def get_absolute_url():

@@ -60,16 +60,8 @@ $(document).ready(function ()
 
 //for search function in options/selections
 $(document).ready(function ()
-{   // for collection form
-    $("#id_collected_from").select2({});
-    $("#company_name").select2({});
-    $("#id_sale_voucher_no").select2({});
-    $("#id_local_sale_voucher_no").select2({});
-
-    // for collection list
-    $("#name").select2({});
-    $("#voucher_no").select2({});
-    $("#business").select2({});
+{   // for collection
+    $("select").select2({});
 });
 
 //for search menu hide and show

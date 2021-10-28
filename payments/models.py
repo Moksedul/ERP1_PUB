@@ -38,9 +38,9 @@ def increment_payment_number():
 
 
 class Payment(models.Model):
-    payment_no = models.CharField(max_length=50, unique=True, default=increment_payment_number)
+    # payment_no = models.CharField(max_length=50, unique=True, default=increment_payment_number)
     payment_for_person = models.ForeignKey(Persons, null=True, on_delete=models.CASCADE, blank=True)
-    voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE, blank=True)
+    voucher_no = models.ForeignKey(BuyVoucher, null=True, on_delete=models.CASCADE)
     lc_number = models.ForeignKey(LC, null=True, blank=True, on_delete=models.CASCADE)
     payed_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     payed_to = models.CharField(max_length=50, null=True, blank=True)
@@ -57,6 +57,11 @@ class Payment(models.Model):
 
     def __str__(self):
         return str(self.payment_no)
+
+    @property
+    def payment_no(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'PV')
 
     @staticmethod
     def get_absolute_url():

@@ -20,7 +20,7 @@ from .forms import CollectionFormSale, CollectionFormLocalSale
 def load_sale_vouchers(request):
     name = request.GET.get('name')
     challan = []
-    if name != '':
+    if name != 'company.id':
         challan = Challan.objects.filter(company_name=name)
     vouchers = SaleVoucher.objects.filter(challan_no__in=challan)
     context = {
@@ -31,7 +31,7 @@ def load_sale_vouchers(request):
 
 def load_local_sale_vouchers(request):
     name = request.GET.get('name')
-    if name != '':
+    if name != 'company.id':
         vouchers = LocalSale.objects.filter(buyer_name=name).order_by('sale_no')
     else:
         vouchers = []
@@ -118,7 +118,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
     template_name = 'collections/collection_list.html'
     context_object_name = 'collections'
     ordering = '-collection_date'
-    paginate_by = 100
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -209,11 +209,12 @@ class CollectionListView(LoginRequiredMixin, ListView):
 
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':
-            sale_vouchers = sale_vouchers.filter(voucher_number=voucher_contains)
+            voucher_contains = voucher_contains.split('-')[-1]
+            sale_vouchers = sale_vouchers.filter(id=voucher_contains)
             if sale_vouchers:
                 collections = collections.filter(sale_voucher_no__in=sale_vouchers)
             else:
-                local_sale_vouchers = local_sale_vouchers.filter(sale_no=voucher_contains)
+                local_sale_vouchers = local_sale_vouchers.filter(id=voucher_contains)
                 collections = collections.filter(local_sale_voucher_no__in=local_sale_vouchers)
         collection_final = collections
         return collection_final
@@ -250,6 +251,28 @@ class CollectionUpdateViewSale(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        companies = Companies.objects.all()
+        s_id = self.object.sale_voucher_no
+        ls_id = self.object.local_sale_voucher_no
+
+        if s_id:
+            sale = SaleVoucher.objects.get(id=s_id.id)
+        else:
+            sale = None
+
+        if ls_id:
+            local_sale = LocalSale.objects.get(id=ls_id.id)
+        else:
+            local_sale = None
+
+        if sale:
+            company = Companies.objects.get(id=sale.challan_no.company_name.id)
+        else:
+            company = Companies.objects.get()
+
+        context['collection_no'] = self.object.collection_no
+        context['company_selected'] = company
+        context['companies'] = companies
         context['form_name'] = 'Update Sale Collection'
         context['button_name'] = 'Update'
         context['tittle'] = 'Update Sale Collection'

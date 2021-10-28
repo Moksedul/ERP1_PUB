@@ -2,9 +2,8 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="container">
-        <h5 class="text-center">{{form_name}}</h5>
+        <div class="text-center form-title">{{tittle}}</div>
         <div id="person_image"></div>
-        <hr>
         <form method="post"
               id="paymentForm"
               data-vouchers-url="{% url 'load-buy-vouchers' %}"
@@ -12,28 +11,25 @@
 
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-2 mb-0" >
-                   {{ form.payment_no|as_crispy_field }}
-                </div>
                 {% if form_name == 'New Payment' or form_name == 'Payment Update' %}
-                    <div class="col-md-4 mb-0" >
+                    <div class="col-md-3 mb-0" >
                         <div class="row">
                             <div class="form-group col-10 pr-0" >{{ form.payment_for_person|as_crispy_field }}</div>
-                            <div class="col-2 mt-3 pt-3 pl-1"><a class="btn btn-sm btn-info" href="{% url 'add-person-payment' %}">Add</a></div>
+                            <div class="col-2 mt-3 pt-1 pl-1"><a class="btn btn-sm btn-info" href="{% url 'add-person-payment' %}">Add</a></div>
                         </div>
                     </div>
-                    <div class="form-group col-md-2 mb-0" >
+                    <div class="form-group col-md-3 mb-0 pl-3" >
                        {{ form.voucher_no|as_crispy_field }}
                     </div>
                 {%else%}
-                    <div class="form-group col-md-2 mb-0" >
+                    <div class="form-group col-md-3 mb-0" >
                     {{ form.lc_number|as_crispy_field }}
                     </div>
                 {% endif %}
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.payment_date|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0" >
+                <div class="form-group col-md-3 mb-0" >
                    {{ form.payment_mode|as_crispy_field }}
                 </div>
 

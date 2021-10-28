@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% load techAlong_extras %}
+{% load static %}
 {% load indian_numbers_tags %}
 {% block content %}
 <form method="GET" id="search">
@@ -61,11 +62,12 @@
 			</div>
         </form>
 	<div class=" card card-body">
-		<h5 class="text-center">{{tittle}}</h5>
+		<div class="text-center form-title">{{tittle}}</div>
+		<div class="table-container infinite-trigger">
 			<table class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Payment Number</th>
-					<th>Voucher Number</th>
+					<th>PV No</th>
+					<th>Voucher</th>
 					<th>Payment To</th>
 					<th>Payed Amount</th>
 					<th>Payed Date</th>
@@ -73,9 +75,9 @@
 					<th><i class="fa fa-edit"></i></th>
 					<th><i class="fa fa-trash"></i></th>
 				</tr>
-
+				<tbody class="infinite-container">
 				{% for payment in payments %}
-					<tr>
+					<tr class="infinite-item">
 						<td>{{ payment.payment_no }}</td>
 						{% if payment.lc_number %}
 							<td>{{ payment.lc_number }}</td>
@@ -112,33 +114,11 @@
 
 					</tr>
 				{% endfor %}
-
-
 			</table>
 		</div>
-		<div class="mt-3 float-right">
-		        {% if is_paginated %}
-
-					{% if page_obj.has_previous %}
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
-					{% endif %}
-
-					{% for num in page_obj.paginator.page_range %}
-						{% if page_obj.number == num %}
-							<a class="btn btn-sm btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-						{% endif %}
-					{% endfor %}
-
-					{% if page_obj.has_next %}
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
-					{% endif %}
-
-        		{% endif %}
+		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
 		</div>
+
 
 
 <script>
@@ -171,4 +151,12 @@ function alertDelete() {
     $("#phone_no").select2({});
 });
 </script>
+
+<!--for infinite scrolling-->
+<script type="text/javascript" src="{% static 'main/js/jquery.waypoints.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/infinite.min.js' %}"></script>
+<!--this file also includes responsive container height-calculator -->
+<script type="text/javascript" src="{% static 'main/js/infinite.scrolling.js' %}"></script>
+<!--for infinite scrolling-->
+
 {% endblock content %}

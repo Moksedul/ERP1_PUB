@@ -26,7 +26,7 @@ class PaymentForm(ModelForm):
         self.fields['payment_for_person'].widget.attrs.update({'id': "select1"})
         self.fields['voucher_no'].widget.attrs.update({'id': "select2"})
         # self.fields['payment_for_person'].widget.attrs.update({'data-live-search': "true"})
-        self.fields['payment_no'].widget.attrs['readonly'] = True
+        self.fields['voucher_no'].widget.attrs['required'] = True
 
         if 'payment_for_person' in self.data:
             try:

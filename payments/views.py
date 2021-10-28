@@ -23,8 +23,10 @@ from core.views import buy_details_calc
 
 def load_buy_vouchers(request):
     name = request.GET.get('name')
-    # person = Persons.objects.get(id=name)
-    vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('voucher_number')
+    vouchers = []
+    if name != '':
+        # person = Persons.objects.get(id=name)
+        vouchers = BuyVoucher.objects.filter(seller_name=name).order_by('id')
     context = {
         'vouchers': vouchers,
     }
