@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
@@ -126,6 +127,12 @@ class CollectionListView(LoginRequiredMixin, ListView):
         companies = Companies.objects.all()
         sale_vouchers_selection = SaleVoucher.objects.all()
         local_sale_voucher_selection = LocalSale.objects.all()
+        business = Organization.objects.all()
+
+        business_contains = self.request.GET.get('business')
+        if business_contains is None:
+            business_contains = 'Select Business'
+
         voucher_contains = self.request.GET.get('voucher_no')
         if voucher_contains is None:
             voucher_contains = 'Select Voucher'
@@ -146,6 +153,8 @@ class CollectionListView(LoginRequiredMixin, ListView):
             voucher_list.setdefault(key, [])
             voucher_list[key].append({'voucher_no': local_sale.sale_no})
 
+        context['business'] = business
+        context['business_selected'] = business_contains
         context['companies'] = companies
         context['names'] = names
         context['sale_voucher_selection'] = voucher_list['voucher']
@@ -163,6 +172,7 @@ class CollectionListView(LoginRequiredMixin, ListView):
         local_sale_vouchers = LocalSale.objects.all()
         collections = Collection.objects.all().order_by('-collection_date')
         voucher_contains = self.request.GET.get('voucher_no')
+        business_contains = self.request.GET.get('business')
 
         if voucher_contains is None:
             voucher_contains = 'Select Voucher'
@@ -187,6 +197,15 @@ class CollectionListView(LoginRequiredMixin, ListView):
             challan = Challan.objects.filter(company_name=company)
             sale = SaleVoucher.objects.filter(challan_no__in=challan)
             collections = collections.filter(sale_voucher_no__in=sale)
+
+        # checking name from input
+        if business_contains != 'Select Business' and business_contains is not None:
+            business = Organization.objects.get(name=business_contains)
+            challans = Challan.objects.filter(business_name=business.id)
+            sale = SaleVoucher.objects.filter(challan_no__in=challans)
+            local_sale_vouchers = local_sale_vouchers.filter(business_name=business)
+            collections = collections.filter\
+                (Q(sale_voucher_no__in=sale) | Q(local_sale_voucher_no__in=local_sale_vouchers))
 
         # checking voucher number from input
         if voucher_contains != '' and voucher_contains != 'Select Voucher':

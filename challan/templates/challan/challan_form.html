@@ -3,10 +3,7 @@
 {% block content %}
     <div class="">
         <div class="text-center form-title">{{form_name}}</div>
-        <div id="person_image"></div>
-        <form method="post"
-              id="challanForm"
-              data-image-url="{% url 'load-person-image' %}" novalidate>
+        <form method="post" id="challanForm">
             {% csrf_token %}
             <div class="form-row">
             <div class="form-group col-md-4 mb-0">
@@ -15,10 +12,7 @@
             <div class="form-group col-md-4 mb-0">
                 {{ form.sub_dealer|as_crispy_field }}
             </div>
-             <div class="col-md-4"></div>
-            <div class="form-group col-md-2 mb-0">
-                {{ form.challan_no|as_crispy_field }}
-            </div>
+            <div class="col-md-4"></div>
             <div class="form-group col-md-2 mb-0">
                 {{ form.challan_serial|as_crispy_field }}
             </div>
@@ -26,11 +20,9 @@
             <div class="form-group col-md-2 mb-0">
                 {{ form.reference|as_crispy_field }}
             </div>
-                <div class="col-md-3 mb-0" >
-                    <div class="row">
-                        <div class="form-group col-10 pr-0" >{{ form.company_name|as_crispy_field }}</div>
-                        <div class="col-2 mt-3 pt-3 pl-1"><a class="btn btn-sm btn-info" href="{% url 'add-company-challan' %}">Add</a></div>
-                    </div>
+                <div  style="float:left" class="col-md-3 mb-0">
+                    {{ form.company_name|as_crispy_field }}
+                    <span style="float:left"><a class="btn btn-sm btn-info" href="{% url 'add-company-challan' %}">+</a></span>
                 </div>
                 <div class="form-group col-md-3 mb-0">
                 {{ form.product_name|as_crispy_field }}
@@ -38,16 +30,16 @@
                 <div class="form-group col-md-2 mb-0">
                 {{ form.number_of_bag|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0">
+                <div class="form-group col-md-3 mb-0">
                 {{ form.weight_of_each_bag|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0">
+                <div class="form-group col-md-3 mb-0">
                 {{ form.weight_adjusted|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-2 mb-0">
+                <div class="form-group col-md-3 mb-0">
                 {{ form.number_of_vehicle|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-4 mb-0">
+                <div class="form-group col-md-3 mb-0">
                 {{ form.challan_date|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-4 mb-0">
@@ -71,30 +63,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function ()
-{
-   var $select1 = $('#id_buyer_name');
-       $select1.on('change',function()
-       {
-            var url2 = $("#challanForm").attr("data-image-url");
-            var nameId = $(this).val();
-             $.ajax({
-                        url: url2,
-                        data: {
-                          'name': nameId
-                        },
-                        success: function (data) {
-                          $("#person_image").html(data);
-                        }
-                  });
-       }).trigger('change');
-});
-</script>
-<script>
     $(document).ready(function ()
 {
-    $("#id_product_name").select2({});
-    $("#id_company_name").select2({});
+    $("select").select2({});
 });
 </script>
 {% endblock content %}

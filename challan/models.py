@@ -28,7 +28,7 @@ def increment_challan_number():
 
 
 class Challan(models.Model):
-    challan_no = models.CharField(max_length=10, unique=True, default=increment_challan_number)
+    # challan_no = models.CharField(max_length=10, unique=True, default=increment_challan_number)
     reference = models.CharField(max_length=50)
     business_name = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     sub_dealer = models.ForeignKey(Persons, on_delete=models.Empty, null=True, blank=True)
@@ -53,6 +53,11 @@ class Challan(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('challan-list')
+
+    @property
+    def challan_no(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'CHL')
 
     @property
     def total_weight(self):

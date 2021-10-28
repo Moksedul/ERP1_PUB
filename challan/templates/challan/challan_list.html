@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 {% load techAlong_extras %}
 {% load indian_numbers_tags %}
 {% block content %}
@@ -17,7 +18,7 @@
 						  {% endfor %}
 					  </select>
             	</div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
                     <select id="company_name" class="form-control" name="company_name" onchange="this.form.submit()">
                     <option selected>{{ company_name_selected }}</option>
 					  {% for company_name in company_names %}
@@ -25,24 +26,12 @@
 					  {% endfor %}
                   </select>
             	</div>
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
                   <select id="challan_no" class="form-control" name="challan_no" onchange="this.form.submit()">
                     <option selected>{{ challan_selected }}</option>
 					  {% for challan in challan_selection %}
                     <option>{{ challan.challan_serial }}</option>
 					  {% endfor %}
-                  </select>
-                </div>
-				<div class="form-group col-md-1">
-                  <select id="paginated_by" class="form-control" name="paginated_by" onchange="this.form.submit()">
-                    <option value="5"  selected>---</option>
-					<option value="50">50/Page</option>
-					<option value="100">100/Page</option>
-					<option value="200">200/Page</option>
-					<option value="300">300/Page</option>
-					<option value="400">400/Page</option>
-					<option value="500">500/Page</option>
-                    <option value="None">All</option>
                   </select>
                 </div>
 				<div class="col-md-2">
@@ -53,8 +42,8 @@
         </form>
 
 	<div class=" card card-body">
-		<div class="text-center table-title">{{tittle}}</div>
-		<div class="table-container">
+		<div class="text-center form-title">{{tittle}}</div>
+		<div class="table-container infinite-trigger">
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Challan No</th>
@@ -65,13 +54,11 @@
 					<th>Product Name</th>
 					<th>Weight</th>
 					<th>Date</th>
-					<th>&#128195;</th>
-					<th><i class="fa fa-edit"></i></th>
-					<th><i class="fa fa-trash"></i></th>
+					<th>Controls</th>
 				</tr>
-
+				<tbody class="infinite-container">
 				{% for item in challan %}
-					<tr>
+					<tr class="infinite-item">
 						<td >{{ item.challan_no }}</td>
 						<td>{{ item.reference }}</td>
 						<td>{{ item.challan_serial }}</td>
@@ -106,53 +93,23 @@
 								</div>
 							  </div>
 							</div>
+							{% if perms.challan.change_challan %}
+							||<a  href="{% url 'challan-update' item.id%}"><i class="fa fa-edit"></i></a>
+							{% endif %}
+							{% if perms.challan.delete_challan %}
+							||<a  href="{% url 'challan-delete' item.id%}"><i class="fa fa-trash"></i></a>
+							{% endif %}
 						</td>
-						{% if user.is_staff or item.date_added == today.date %}
-								<td><a  href="{% url 'challan-update' item.id%}"><i class="fa fa-edit"></i></a></td>
-						{% else %}
-								<td><a class="disabled" href="#"><i class="fa fa-edit"></i></a></td>
-						{% endif %}
-
-						{% if user.is_staff or item.date_added == today.date %}
-								<td><a  href="{% url 'challan-delete' item.id%}"><i class="fa fa-trash"></i></a></td>
-						{%else%}
-								<td><a class="disabled" href="#"><i class="fa fa-trash"></i></a></td>
-						{% endif %}
-
 					</tr>
 
 				{% endfor %}
 
-
+				</tbody>
 			</table>
 		</div>
+		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
 	</div>
-		<div class="mt-2 float-right">
 
-
-
-		        {% if is_paginated %}
-
-					{% if page_obj.has_previous %}
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
-					{% endif %}
-
-					{% for num in page_obj.paginator.page_range %}
-						{% if page_obj.number == num %}
-							<a class="btn btn-sm btn-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-						{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-							<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-						{% endif %}
-					{% endfor %}
-
-					{% if page_obj.has_next %}
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
-						<a class="btn btn-sm btn-outline-info mb-4"  href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
-					{% endif %}
-
-        		{% endif %}
-		</div>
 <!-- search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -164,5 +121,13 @@
     $("#paginated_by").select2({});
 });
 </script>
+
+
+<!--for infinite scrolling-->
+<script type="text/javascript" src="{% static 'main/js/jquery.waypoints.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/infinite.min.js' %}"></script>
+<!--this file also includes responsive container height-calculator -->
+<script type="text/javascript" src="{% static 'main/js/infinite.scrolling.js' %}"></script>
+<!--for infinite scrolling-->
 
 {% endblock content %}
