@@ -366,10 +366,11 @@ class SaleDeleteView(LoginRequiredMixin, DeleteView):
 class GeneralVoucherCreateView(LoginRequiredMixin, CreateView):
     form_class = GeneralForm
     template_name = 'vouchers/general_voucher_form.html'
+    # pk = None
 
     def form_valid(self, form):
-        form.save()
-        voucher = get_object_or_404(GeneralVoucher, voucher_number=form.cleaned_data['voucher_number'])
+        item = form.save()
+        voucher = get_object_or_404(GeneralVoucher, id=item.pk)
         data = {
             'general_voucher': voucher,
             'payment_no': None,

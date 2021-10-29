@@ -140,9 +140,9 @@ class SaleVoucher(models.Model):
 
 
 class SaleExpense(models.Model):
-    expanse_name = models.CharField(max_length=50)
+    expanse_name = models.CharField(max_length=50, default='Expense 1')
     sale = models.ForeignKey(SaleVoucher, on_delete=models.CASCADE)
-    amount = models.FloatField()
+    amount = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.expanse_name)

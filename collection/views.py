@@ -48,8 +48,8 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
         form.instance.sale_type = 'SALE'
-        super().form_valid(form=form)
-        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+        item = form.save()
+        voucher = get_object_or_404(Collection, id=item.pk)
         data = {
             'general_voucher': None,
             'payment_no': None,
@@ -62,6 +62,7 @@ class CollectionCreateSale(LoginRequiredMixin, CreateView):
             'type': 'C'
         }
         create_account_ledger(data)
+        super().form_valid(form=form)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -89,8 +90,8 @@ class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
         form.instance.sale_type = 'LOCAL SALE'
-        super().form_valid(form=form)
-        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+        item = form.save()
+        voucher = get_object_or_404(Collection, id=item.pk)
         data = {
             'general_voucher': None,
             'payment_no': None,
@@ -103,6 +104,7 @@ class CollectionCreateLocalSale(LoginRequiredMixin, CreateView):
             'date': voucher.collection_date
         }
         create_account_ledger(data)
+        super().form_valid(form)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -240,13 +242,14 @@ class CollectionUpdateViewSale(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
-        super().form_valid(form=form)
-        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+        item = form.save()
+        voucher = get_object_or_404(Collection, id=item.pk)
 
         data = {
             'date': voucher.collection_date
         }
         update_account_ledger(data, voucher.pk)
+        super().form_valid(form=form)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -286,13 +289,14 @@ class CollectionUpdateViewLocalSale(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.collected_by = self.request.user
-        super().form_valid(form=form)
-        voucher = get_object_or_404(Collection, collection_no=form.cleaned_data['collection_no'])
+        item = form.save()
+        voucher = get_object_or_404(Collection, id=item.pk)
 
         data = {
             'date': voucher.collection_date
         }
         update_account_ledger(data, voucher.pk)
+        super().form_valid(form=form)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):

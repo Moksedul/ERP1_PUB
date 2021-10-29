@@ -1,0 +1,39 @@
+<style>
+
+.float{
+	position:fixed;
+	width:40px;
+	height:40px;
+	bottom:50px;
+	right:40px;
+	color: white;
+	background-color: #090b26;
+	border-radius:50px;
+	text-align:center;
+	z-index: 100;
+}
+
+.my-float{
+	margin-top:13px;
+}
+
+ :root{
+  --color: #f0f;
+}
+.shadow {
+  box-shadow: 0px 0px 10px 5px var(--color)!important;
+}
+</style>
+
+    <div id="print" class="float shadow">
+    <i class="fa fa-print my-float"></i>
+    </div>
+<script src="https://kit.fontawesome.com/6850edd2a2.js" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$('#print').click(function(){
+$('#print').hide();
+window.print();
+$('#print').show();
+});
+</script>

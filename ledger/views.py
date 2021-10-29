@@ -522,7 +522,7 @@ def account_ledger_report(request):
                         'url1': '/payment/' + str(payment.id) + '/detail',
                         'url2': '/lc_list'
                     })
-                else:
+                elif payment.lc_number:
                     key = "voucher"
                     ledgers.setdefault(key, [])
                     ledgers[key].append({
@@ -587,7 +587,7 @@ def account_ledger_report(request):
                         ledgers.setdefault(key, [])
                         ledgers[key].append({
                             'date': account_ledger.date,
-                            'name': challan.buyer_name,
+                            'name': challan.company_name,
                             'voucher_no': collection.collection_no,
                             'type': 'Cost',
                             'descriptions': account_ledger.description,
