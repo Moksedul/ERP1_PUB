@@ -19,7 +19,6 @@ class SaleForm(ModelForm):
         super().__init__(*args, **kwargs)
 
 
-
 class ExpenseForm(ModelForm):
     class Meta:
         model = SaleExpense

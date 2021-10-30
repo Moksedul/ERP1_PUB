@@ -9,7 +9,8 @@ from vouchers.models import BuyVoucher
 
 
 class Stocks(models.Model):
-    product_name = models.CharField(max_length=5)
+    voucher_no = models.ForeignKey(BuyVoucher, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
     weight_loss = models.FloatField(default=0)
     seed_weight = models.FloatField(default=0)
     spot_weight = models.FloatField(default=0)
@@ -20,7 +21,7 @@ class Stocks(models.Model):
     remarks = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return str(self.product_name)
+        return str(self.product)
 
     @staticmethod
     def get_absolute_url():

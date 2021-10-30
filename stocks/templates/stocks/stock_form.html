@@ -1,14 +1,17 @@
 {% extends "main/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="container">
+<style>
+@media screen and (min-width: 600px) {
+form {
+    width:
+}
+}
+</style>
+        <div class="text-center form-title">{{tittle}}</div>
         <form method="post" >
             {% csrf_token %}
-            <div class="form-row">
-            {{form.as_p}}
-            </div>
-                <button class="btn btn-outline-info" type="submit">Save</button>
+            {{form|crispy}}
+            <button class="btn btn-sm btn-outline-info" type="submit">{{button_name}}</button>
         </form>
-    </div>
-
 {% endblock content %}
