@@ -1,6 +1,10 @@
 from django.contrib import admin
-from .models import Stocks
+from .models import YardStock
 
 
-# Register your models here.
-admin.site.register(Stocks)
+class YardStockAdmin(admin.ModelAdmin):
+    list_display = ('voucher_no', 'product', 'weight', 'added_by', 'rate', 'weight_adjustment', 'number_of_bag')
+
+
+admin.site.register(YardStock, YardStockAdmin)
+

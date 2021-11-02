@@ -8,16 +8,14 @@ from products.models import Products
 from vouchers.models import BuyVoucher
 
 
-class Stocks(models.Model):
-    voucher_no = models.ForeignKey(BuyVoucher, on_delete=models.CASCADE, null=True)
+class YardStock(models.Model):
+    voucher_no = models.ForeignKey(BuyVoucher, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
-    weight_loss = models.FloatField(default=0)
-    seed_weight = models.FloatField(default=0)
-    spot_weight = models.FloatField(default=0)
-    seed_rate = models.FloatField(default=0)
-    spot_rate = models.FloatField(default=0)
-    number_of_bag = models.FloatField()
-    added_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    weight_adjustment = models.FloatField(default=0)
+    weight = models.FloatField(default=0)
+    rate = models.FloatField(default=0)
+    number_of_bag = models.FloatField(blank=True, null=True)
+    added_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     remarks = models.CharField(max_length=200, blank=True)
 
     def __str__(self):

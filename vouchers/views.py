@@ -6,6 +6,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.digit2words import d2w, d2wb
 from core.views import buy_details_calc, sale_detail_calc
 from ledger.views import create_account_ledger
+from stocks.forms import StockFormBuy
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
@@ -34,6 +35,34 @@ class BuyVoucherCreateView(LoginRequiredMixin, CreateView):
         context['button_name'] = 'Save'
         context['tittle'] = 'New Buy'
         return context
+
+
+@login_required
+def buy_create(request):
+    buy_form = BuyForm(request.POST or None)
+    stock_set = formset_factory(StockFormBuy)
+    stock_formset = stock_set(request.POST or None, request.FILES)
+    if request.method == 'POST':
+        if buy_form.is_valid():
+            buy = buy_form.save(commit=False)
+            buy.added_by = request.user
+            buy.save()
+            for stock_form in stock_formset:
+                stock = stock_form.save(commit=False)
+                stock.voucher_no = buy
+                stock.save()
+            return redirect('/buy_list')
+    else:
+        buy_form = BuyForm
+        stock_formset = stock_set
+
+    context = {
+        'tittle': 'New Local Sale',
+        'form1': buy_form,
+        'form2set': stock_formset
+    }
+
+    return render(request, 'local_sale/sale_add_form.html', context=context)
 
 
 class BuyListView(LoginRequiredMixin, ListView):
