@@ -57,12 +57,12 @@ def buy_create(request):
         stock_formset = stock_set
 
     context = {
-        'tittle': 'New Local Sale',
+        'tittle': 'New Buy',
         'form1': buy_form,
         'form2set': stock_formset
     }
 
-    return render(request, 'local_sale/sale_add_form.html', context=context)
+    return render(request, 'vouchers/buy_voucher_add_form.html', context=context)
 
 
 class BuyListView(LoginRequiredMixin, ListView):

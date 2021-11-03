@@ -3,7 +3,7 @@ from django.views.i18n import JavaScriptCatalog
 from .views import *
 
 urlpatterns = [
-    path('add_buy_voucher', BuyVoucherCreateView.as_view(), name='add-buy-voucher'),
+    path('add_buy_voucher', buy_create, name='add-buy-voucher'),
     path('add_person_buy', PersonCreateBuy.as_view(), name='add-person-buy'),
     path('buy_list', BuyListView.as_view(), name='buy-list'),
     path('buy/<int:pk>/detail', buy_details, name='buy-detail'),
