@@ -25,19 +25,19 @@
                    {{ form.product_name|as_crispy_field }}
                 </div>
 
-                <div class="col-12 border border-info text-center">
+                <div class="col-12 border border-info">
                     <input type="button" value="Add Product" id="add_more" class="m-2">
-                    {{ form2set.management_form }}
+                    {{ form2set.management_form|crispy }}
                     <div id="form_set">
                         {% for form in form2set.forms %}
                             <div class='no_error'>
-                                {{ form.as_table }}
+                                 {% crispy form %}
                             </div>
                         {% endfor %}
                     </div>
                     <div id="empty_form" style="display:none">
                         <div class='no_error'>
-                            {{ form2set.empty_form.as_table }}
+                            {% crispy form2set.empty_form %}
                         </div>
                     </div>
                 </div>
@@ -128,5 +128,15 @@ $(document).ready(function ()
     $("#id_product_name").select2({});
     $("#id_bazar_or_company_name").select2({});
 });
+</script>
+<script>
+    $('#add_more').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_form-" + form_idx + "-name"
+        console.log(id);
+        $(id).select2({});
+    });
 </script>
 {% endblock content %}
