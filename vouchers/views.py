@@ -50,15 +50,15 @@ def buy_create(request):
             for stock_form in stock_formset:
                 stock = stock_form.save(commit=False)
                 stock.voucher_no = buy
+                stock.added_by = request.user
                 stock.save()
             return redirect('/buy_list')
     else:
         buy_form = BuyForm
         stock_formset = stock_set
-
     context = {
         'tittle': 'New Buy',
-        'form1': buy_form,
+        'form': buy_form,
         'form2set': stock_formset
     }
 

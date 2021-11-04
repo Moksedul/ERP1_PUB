@@ -19,8 +19,7 @@ class StockFormBuy(ModelForm):
 
     class Meta:
         model = YardStock
-        fields = '__all__'
+        fields = ('product', 'weight','weight_adjustment', 'rate', 'number_of_bag')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['voucher_no'].widget.attrs['disabled'] = 'disabled'
