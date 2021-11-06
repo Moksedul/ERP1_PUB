@@ -7,6 +7,7 @@ from core.digit2words import d2w, d2wb
 from core.views import buy_details_calc, sale_detail_calc
 from ledger.views import create_account_ledger
 from stocks.forms import StockFormBuy
+from stocks.models import YardStock
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
@@ -64,6 +65,40 @@ def buy_create(request):
     }
 
     return render(request, 'vouchers/buy_voucher_add_form.html', context=context)
+
+
+@login_required
+def buy_update(request, pk):
+    sale = BuyVoucher.objects.get(pk=pk)
+    sale_form = SaleForm(instance=sale)
+    stock_set = inlineformset_factory(
+                    BuyVoucher, YardStock,
+                    fields=('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag'), extra=1
+                    )
+    stock_form_set = stock_set(instance=sale)
+    if request.method == 'POST':
+        print('in post')
+        sale_form = SaleForm(request.POST or None, instance=sale)
+        stock_form_set = stock_set(request.POST, instance=sale)
+        if sale_form.is_valid():
+            print('valid')
+            sale = sale_form.save(commit=False)
+            sale.posted_by = request.user
+            sale.save()
+            if stock_form_set.is_valid():
+                stock_form_set.save()
+            return redirect('/local_sale_list')
+    else:
+        sale_form = sale_form
+        stock_form_set = stock_form_set
+
+    context = {
+        'tittle': 'Local Sale Update',
+        'form1': sale_form,
+        'form2set': stock_form_set
+    }
+
+    return render(request, 'local_sale/sale_update_form.html', context=context)
 
 
 class BuyListView(LoginRequiredMixin, ListView):

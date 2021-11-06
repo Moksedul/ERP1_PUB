@@ -31,12 +31,14 @@
                     <div id="form_set" class="form-row">
                         {% for form in form2set.forms %}
                             <div class='no_error border border-info col-md-2'>
+                                <div class="text-center product" style="color: grey;">Product-1</div>
                                  {{ form|crispy }}
                             </div>
                         {% endfor %}
                     </div>
                     <div id="empty_form" style="display:none">
                         <div class='no_error col-md-2 border border-info'>
+                            <div class="text-center product" style="color: grey;">empty</div>
                             {{ form2set.empty_form|crispy  }}
                         </div>
                     </div>
@@ -124,17 +126,27 @@ $(document).ready(function ()
 <script>
     $(document).ready(function ()
 {
-    $('select').select2({});
+    $("#id_form-0-product").select2({});
+    $("#id_business_name").select2({});
+    $("#id_seller_name").select2({});
+    $("#id_bazar_or_company_name").select2({});
+
 });
 </script>
 <script>
     $('#add_more').click(function() {
+
         var form_idx = $('#id_form-TOTAL_FORMS').val();
         $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
         $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-        var id = "#id_form-" + form_idx + "-name"
-        console.log(id);
+        var id = "#id_form-" + form_idx + "-product"
         $(id).select2({});
+
+        var productTitle = $('.product')
+        var lastProductTitle = productTitle[productTitle.length-2]
+        var textProduct = 'Product-'  + (productTitle.length-1)
+
+        $(lastProductTitle).text(textProduct);
     });
 </script>
 {% endblock content %}
