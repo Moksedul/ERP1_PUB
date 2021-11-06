@@ -30,5 +30,11 @@ class StockFormBuy(ModelForm):
         # self.helper.field_class = "col-md-12"
         self.helper.layout = Layout(
             Div(
-                (Div(Field('product'), css_class='col-md-4')), (Div(Field('weight'), css_class='col-md-4')), css_class='row')
+                (Div(Field('product'), css_class='col-md-3')),
+                (Div(Field('weight'), css_class='col-md-2')),
+                (Div(Field('rate'), css_class='col-md-2')),
+                (Div(Field('weight_adjustment'), css_class='col-md-2')),
+                (Div(Field('number_of_bag'), css_class='col-md-2')),
+                css_class='row'
+                    )
             )

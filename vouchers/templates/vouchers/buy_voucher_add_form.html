@@ -26,18 +26,18 @@
                 </div>
 
                 <div class="col-12 border border-info">
-                    <input type="button" value="Add Product" id="add_more" class="m-2">
-                    {{ form2set.management_form|crispy }}
-                    <div id="form_set">
+                    <input type="button" value="+" id="add_more" class="m-2">
+                    {{ form2set.management_form }}
+                    <div id="form_set" class="form-row">
                         {% for form in form2set.forms %}
-                            <div class='no_error'>
-                                 {% crispy form %}
+                            <div class='no_error border border-info col-md-2'>
+                                 {{ form|crispy }}
                             </div>
                         {% endfor %}
                     </div>
                     <div id="empty_form" style="display:none">
-                        <div class='no_error'>
-                            {% crispy form2set.empty_form %}
+                        <div class='no_error col-md-2 border border-info'>
+                            {{ form2set.empty_form|crispy  }}
                         </div>
                     </div>
                 </div>
@@ -95,9 +95,9 @@
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
-
-            </div>
                 <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
+            </div>
+
         </form>
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -124,9 +124,7 @@ $(document).ready(function ()
 <script>
     $(document).ready(function ()
 {
-    $("#id_seller_name").select2({});
-    $("#id_product_name").select2({});
-    $("#id_bazar_or_company_name").select2({});
+    $('select').select2({});
 });
 </script>
 <script>
