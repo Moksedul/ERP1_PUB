@@ -49,11 +49,11 @@ def sale_update(request, pk):
                     )
     form2set = ProductFormSet(instance=sale)
     if request.method == 'POST':
-        print('in post')
+
         form1 = SaleForm(request.POST or None, instance=sale)
         form2set = ProductFormSet(request.POST, instance=sale)
         if form1.is_valid():
-            print('valid')
+
             sale = form1.save(commit=False)
             sale.posted_by = request.user
             sale.save()

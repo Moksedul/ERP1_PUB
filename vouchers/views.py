@@ -69,36 +69,37 @@ def buy_create(request):
 
 @login_required
 def buy_update(request, pk):
-    sale = BuyVoucher.objects.get(pk=pk)
-    sale_form = SaleForm(instance=sale)
+    buy = BuyVoucher.objects.get(pk=pk)
+    buy_form = BuyForm(instance=buy)
     stock_set = inlineformset_factory(
                     BuyVoucher, YardStock,
-                    fields=('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag'), extra=1
+                    fields=('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag'), extra=0
                     )
-    stock_form_set = stock_set(instance=sale)
+    stock_form_set = stock_set(instance=buy)
     if request.method == 'POST':
-        print('in post')
-        sale_form = SaleForm(request.POST or None, instance=sale)
-        stock_form_set = stock_set(request.POST, instance=sale)
-        if sale_form.is_valid():
-            print('valid')
-            sale = sale_form.save(commit=False)
-            sale.posted_by = request.user
-            sale.save()
+
+        buy_form = BuyForm(request.POST or None, instance=buy)
+        stock_form_set = stock_set(request.POST, instance=buy)
+        if buy_form.is_valid():
+
+            buy = buy_form.save(commit=False)
+            buy.added_by = request.user
+            buy.save()
             if stock_form_set.is_valid():
                 stock_form_set.save()
-            return redirect('/local_sale_list')
+            return redirect('/buy_list')
     else:
-        sale_form = sale_form
+        buy_form = buy_form
         stock_form_set = stock_form_set
 
     context = {
-        'tittle': 'Local Sale Update',
-        'form1': sale_form,
-        'form2set': stock_form_set
+        'tittle': 'Buy Update',
+        'form': buy_form,
+        'form2set': stock_form_set,
+        'button_name': 'Update',
+        'formset_name': 'yardstock_set',
     }
-
-    return render(request, 'local_sale/sale_update_form.html', context=context)
+    return render(request, 'vouchers/buy_voucher_add_form.html', context=context)
 
 
 class BuyListView(LoginRequiredMixin, ListView):
