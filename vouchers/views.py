@@ -65,7 +65,7 @@ def buy_create(request):
         'formset_name': 'form',
     }
 
-    return render(request, 'vouchers/buy_voucher_add_form.html', context=context)
+    return render(request, 'vouchers/buy_voucher_form.html', context=context)
 
 
 @login_required
@@ -100,7 +100,7 @@ def buy_update(request, pk):
         'button_name': 'Update',
         'formset_name': 'yardstock_set',
     }
-    return render(request, 'vouchers/buy_voucher_add_form.html', context=context)
+    return render(request, 'vouchers/buy_voucher_form.html', context=context)
 
 
 class BuyListView(LoginRequiredMixin, ListView):

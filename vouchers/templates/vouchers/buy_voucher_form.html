@@ -3,14 +3,15 @@
 {% block content %}
 
 <div class="">
-    <div class="text-center form-title">{{form_name}}</div>
-        <div id="person_image"></div>
+    <div class="text-center form-title">{{tittle}}</div>
 
-          <form method="post"
-              id="buyForm"
-              data-image-url="{% url 'load-person-image' %}" novalidate>
-            {% csrf_token %}
-            <div class="form-row">
+
+
+            <div class="table-container">
+                <div id="person_image" class="col-md"></div>
+                <form method="post"  id="buyForm" data-image-url="{% url 'load-person-image' %}" novalidate>
+                    {% csrf_token %}
+                 <div class="form-row">
                   <div class="form-group col-md-4 mb-0" >
                    {{ form.business_name|as_crispy_field }}
                 </div>
@@ -25,17 +26,17 @@
                    {{ form.product_name|as_crispy_field }}
                 </div>
 
-                <div class="col-12 border border-info">
-                    <input type="button" value="+" id="add_more" class="m-2">
+                <div class="col-12 border border-info rounded">
                     {{ form2set.management_form }}
                     <div id="form_set" class="form-row">
                         {% for form in form2set.forms %}
-                            <div class='no_error border border-info col-md-2'>
-                                <div class="text-center product" style="color: grey;">Product-1</div>
+                            <div class='no_error border border-info col-md-2 rounded'>
+                                <div class="text-center product" style="color: grey;">Product-{{ forloop.counter }}</div>
                                  {{ form|crispy }}
                             </div>
                         {% endfor %}
                     </div>
+                    <div title="add more" id="add_more" class="rounded add-more border border-info">+</div>
                     <div id="empty_form" style="display:none">
                         <div class='no_error col-md-2 border border-info'>
                             <div class="text-center product" style="color: grey;">empty</div>
@@ -98,8 +99,7 @@
                    {{ form.remarks|as_crispy_field }}
                 </div>
                 <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
-            </div>
-
+                </div>
         </form>
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -126,21 +126,26 @@ $(document).ready(function ()
 <script>
     $(document).ready(function ()
 {
-    $("#id_form-0-product").select2({});
+    var totalForms = $('#id_{{formset_name}}-TOTAL_FORMS').val();
+
+      for (let i = 0; i < totalForms; i++) {
+                $("#id_{{formset_name}}-"+ i +"-product").select2({});
+            }
     $("#id_business_name").select2({});
     $("#id_seller_name").select2({});
     $("#id_bazar_or_company_name").select2({});
 
 });
+
 </script>
-{% if button_name == 'Save' %}
+
 <script>
     $('#add_more').click(function() {
 
-        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        var form_idx = $('#id_{{formset_name}}-TOTAL_FORMS').val();
         $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
-        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-        var id = "#id_form-" + form_idx + "-product"
+        $('#id_{{formset_name}}-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_{{formset_name}}-" + form_idx + "-product"
         $(id).select2({});
 
         var productTitle = $('.product')
@@ -150,5 +155,16 @@ $(document).ready(function ()
         $(lastProductTitle).text(textProduct);
     });
 </script>
-{% endif %}
+
+<!--for responsive table container height-->
+<script>
+$(document).ready(function(){
+	var bodyHeight = $("body").height();
+	var footerHeight = $('.footer').height();
+	var contentHeight = bodyHeight- footerHeight-15;
+	console.log(contentHeight);
+	$('.table-container').css('height', contentHeight);
+});
+</script>
+
 {% endblock content %}
