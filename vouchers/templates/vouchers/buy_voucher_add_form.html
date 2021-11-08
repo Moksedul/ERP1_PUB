@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="col-12 border border-info">
-                    <input type="button" value="+" id="add_more" class="m-2">
+                    <div id="add_more" class="add-more">+</div>
                     {{ form2set.management_form }}
                     <div id="form_set" class="form-row">
                         {% for form in form2set.forms %}
@@ -126,7 +126,11 @@ $(document).ready(function ()
 <script>
     $(document).ready(function ()
 {
-    $("#id_form-0-product").select2({});
+    var totalForms = $('#id_{{formset_name}}-TOTAL_FORMS').val();
+
+      for (let i = 0; i < totalForms; i++) {
+                $("#id_{{formset_name}}-"+ i +"-product").select2({});
+            }
     $("#id_business_name").select2({});
     $("#id_seller_name").select2({});
     $("#id_bazar_or_company_name").select2({});
@@ -134,14 +138,14 @@ $(document).ready(function ()
 });
 
 </script>
-{% if button_name == 'Save' %}
+
 <script>
     $('#add_more').click(function() {
 
         var form_idx = $('#id_{{formset_name}}-TOTAL_FORMS').val();
         $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
-        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-        var id = "#id_form-" + form_idx + "-product"
+        $('#id_{{formset_name}}-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_{{formset_name}}-" + form_idx + "-product"
         $(id).select2({});
 
         var productTitle = $('.product')
@@ -151,25 +155,6 @@ $(document).ready(function ()
         $(lastProductTitle).text(textProduct);
     });
 </script>
-{% endif %}
 
-{% if button_name == 'Update' %}
-<script>
-    $('#add_more').click(function() {
 
-        var form_idx = $('#id_{{formset_name}}-TOTAL_FORMS').val();
-        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
-        $('#id_yardstock_set-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-
-        var id = "#id_form-" + form_idx + "-product"
-        $(id).select2({});
-
-        var productTitle = $('.product')
-        var lastProductTitle = productTitle[productTitle.length-2]
-        var textProduct = 'Product-'  + (productTitle.length-1)
-
-        $(lastProductTitle).text(textProduct);
-    });
-</script>
-{% endif %}
 {% endblock content %}

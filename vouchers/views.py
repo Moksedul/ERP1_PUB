@@ -61,7 +61,8 @@ def buy_create(request):
         'tittle': 'New Buy',
         'form': buy_form,
         'form2set': stock_formset,
-        'button_name': 'Save'
+        'button_name': 'Save',
+        'formset_name': 'form',
     }
 
     return render(request, 'vouchers/buy_voucher_add_form.html', context=context)
