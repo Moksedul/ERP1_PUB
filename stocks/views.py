@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from .forms import StockForm
-from .models import YardStock
+from .models import Stock
 
 
 # Create your views here.
@@ -25,7 +25,7 @@ class StockCreateView(LoginRequiredMixin, CreateView):
 
 
 def stock_view(request):
-    stocks = YardStock.objects.all()
+    stocks = Stock.objects.all()
     all_weights = []
     for stock in stocks:
         all_weights.append(stock.weight)
@@ -35,19 +35,19 @@ def stock_view(request):
 
 
 class StockListView(LoginRequiredMixin, ListView):
-    model = YardStock
+    model = Stock
     template_name = 'stocks/stock_list.html'
     context_object_name = 'stocks'
     paginate_by = 20
 
 
 class StockUpdateView(LoginRequiredMixin, UpdateView):
-    model = YardStock
+    model = Stock
     template_name = 'stocks/stock_update_form.html'
     fields = '__all__'
 
 
 class StockDeleteView(LoginRequiredMixin, DeleteView):
-    model = YardStock
+    model = Stock
     template_name = 'main/confirm_delete.html'
     success_url = '/stock_list'

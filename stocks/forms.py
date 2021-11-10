@@ -2,13 +2,13 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Div
 from django.forms import ModelForm
 
-from stocks.models import YardStock
+from stocks.models import Stock
 
 
 class StockForm(ModelForm):
 
     class Meta:
-        model = YardStock
+        model = Stock
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -19,7 +19,7 @@ class StockForm(ModelForm):
 class StockFormBuy(ModelForm):
 
     class Meta:
-        model = YardStock
+        model = Stock
         fields = ('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag')
 
     def __init__(self, *args, **kwargs):

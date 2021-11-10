@@ -7,7 +7,7 @@ from core.digit2words import d2w, d2wb
 from core.views import buy_details_calc, sale_detail_calc
 from ledger.views import create_account_ledger
 from stocks.forms import StockFormBuy
-from stocks.models import YardStock
+from stocks.models import Stock
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
@@ -73,7 +73,7 @@ def buy_update(request, pk):
     buy = BuyVoucher.objects.get(pk=pk)
     buy_form = BuyForm(instance=buy)
     stock_set = inlineformset_factory(
-                    BuyVoucher, YardStock,
+                    BuyVoucher, Stock,
                     fields=('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag'), extra=0
                     )
     stock_form_set = stock_set(instance=buy)

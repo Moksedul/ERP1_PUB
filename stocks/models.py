@@ -8,8 +8,17 @@ from products.models import Products
 from vouchers.models import BuyVoucher
 
 
-class YardStock(models.Model):
+class Store(models.Model):
+    name = models.CharField(max_length=200)
+    location = models.CharField(max_length=500, blank=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Stock(models.Model):
     voucher_no = models.ForeignKey(BuyVoucher, on_delete=models.CASCADE, null=True, blank=True)
+    store_name = models.ForeignKey(Store, on_delete=models.Empty, blank=True, null=True)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     weight_adjustment = models.FloatField(default=0)
     weight = models.FloatField(default=0)
