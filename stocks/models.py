@@ -1,9 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django_currentuser.db.models import CurrentUserField
 
-from LC.models import LC
-from hut_buy.models import HutBuy
 from products.models import Products
 from vouchers.models import BuyVoucher
 
@@ -24,7 +23,10 @@ class Stock(models.Model):
     weight = models.FloatField(default=0)
     rate = models.FloatField(default=0)
     number_of_bag = models.FloatField(blank=True, null=True)
-    added_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
+    last_updated_time = models.DateTimeField(auto_now=True, null=True)
+    added_by = CurrentUserField(related_name='stock_added_by')
+    updated_by = CurrentUserField(on_update=True, related_name='stock_updated_by')
     remarks = models.CharField(max_length=225, blank=True)
 
     def __str__(self):

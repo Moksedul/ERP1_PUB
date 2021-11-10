@@ -1,10 +1,9 @@
 .add-more{
   width: 20px;
   text-align: center;
-  padding: 0;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding: 0 3 0 3;
+  margin: 5px;
+  position: relative;
 
 }
 
@@ -32,12 +31,34 @@ color: white;
 border-bottom: 2px solid blue;
 
 }
+
 .form-control{
-    height: 28px;
+  height: 28px;
+  font-size: small;
+  padding: 2;
+
+}
+
+#form_set .form-control{
+    height: 22px;
+    font-size: small;
+    padding: 2;
+
+}
+
+#form_set .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #444;
+  line-height: 20px!important;
+}
+
+#form_set .select2-container .select2-selection--single {
+  height: 22px!important;
+  font-size: small;
+  padding: 2;
 }
 
 label {
-    font-size: 14px;
+    font-size: small;
     display: inline-block;
     margin-bottom: 0px;
 }

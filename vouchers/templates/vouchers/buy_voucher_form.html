@@ -4,9 +4,6 @@
 
 <div class="">
     <div class="text-center form-title">{{tittle}}</div>
-
-
-
             <div class="table-container">
                 <div id="person_image" class="col-md"></div>
                 <form method="post"  id="buyForm" data-image-url="{% url 'load-person-image' %}" novalidate>
@@ -17,8 +14,8 @@
                 </div>
                 <div class="form-group col-md-4 mb-0 d-flex" >
                     {{ form.seller_name|as_crispy_field }}
-                    <span style="padding-top: 19px;">
-                        <a class="btn btn-sm btn-info" href="{% url 'add-person-buy' %}">+</a>
+                    <span title="add seller"  style="margin-top: 18px;" class="rounded add-more border border-info">
+                     <a href="{% url 'add-person-buy' %}">+</a>
                     </span>
                 </div>
 
@@ -36,7 +33,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <div title="add more" id="add_more" class="rounded add-more border border-info">+</div>
+                    <span title="add more" id="add_more" style="float: right;" class="rounded add-more border border-info">+</span>
                     <div id="empty_form" style="display:none">
                         <div class='no_error col-md-2 border border-info'>
                             <div class="text-center product" style="color: grey;">empty</div>
@@ -44,11 +41,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12">
-                    <hr>
-                </div>
-
-
 
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.weight|as_crispy_field }}
@@ -123,6 +115,7 @@ $(document).ready(function ()
        }).trigger('change');
 });
 </script>
+
 <script>
     $(document).ready(function ()
 {
@@ -134,6 +127,11 @@ $(document).ready(function ()
     $("#id_business_name").select2({});
     $("#id_seller_name").select2({});
     $("#id_bazar_or_company_name").select2({});
+
+   var addMore = $('#add_more')
+   var productTitle = $('.product')
+   var lastProductTitle = productTitle[productTitle.length-2]
+   $(lastProductTitle).append(addMore)
 
 });
 
@@ -151,8 +149,9 @@ $(document).ready(function ()
         var productTitle = $('.product')
         var lastProductTitle = productTitle[productTitle.length-2]
         var textProduct = 'Product-'  + (productTitle.length-1)
-
         $(lastProductTitle).text(textProduct);
+        $(lastProductTitle).append(this)
+        
     });
 </script>
 

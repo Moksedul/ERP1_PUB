@@ -74,7 +74,7 @@ def buy_update(request, pk):
     buy_form = BuyForm(instance=buy)
     stock_set = inlineformset_factory(
                     BuyVoucher, Stock,
-                    fields=('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag'), extra=0
+                    fields=('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag', 'store_name'), extra=0
                     )
     stock_form_set = stock_set(instance=buy)
     if request.method == 'POST':
@@ -98,7 +98,7 @@ def buy_update(request, pk):
         'form': buy_form,
         'form2set': stock_form_set,
         'button_name': 'Update',
-        'formset_name': 'yardstock_set',
+        'formset_name': 'stock_set',
     }
     return render(request, 'vouchers/buy_voucher_form.html', context=context)
 

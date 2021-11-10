@@ -7,7 +7,10 @@ class StoreAdmin(admin.ModelAdmin):
 
 
 class StockAdmin(admin.ModelAdmin):
-    list_display = ('voucher_no', 'product', 'weight', 'added_by', 'rate', 'weight_adjustment', 'number_of_bag')
+    list_display = ('voucher_no', 'product', 'weight',
+                    'added_by', 'rate', 'weight_adjustment',
+                    'number_of_bag', 'date_time_stamp', 'last_updated_time',
+                    'added_by', 'updated_by')
 
 
 admin.site.register(Stock, StockAdmin)
