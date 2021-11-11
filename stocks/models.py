@@ -21,7 +21,8 @@ class Stock(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     weight_adjustment = models.FloatField(default=0)
     weight = models.FloatField(default=0)
-    rate = models.FloatField(default=0)
+    rate_per_kg = models.FloatField(default=0)
+    rate_per_mann = models.FloatField(default=0)
     number_of_bag = models.FloatField(blank=True, null=True)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
     last_updated_time = models.DateTimeField(auto_now=True, null=True)
@@ -31,6 +32,17 @@ class Stock(models.Model):
 
     def __str__(self):
         return str(self.product)
+
+    @property
+    def total_weight(self):
+        total_weight = self.weight + self.weight_adjustment
+        return total_weight
+
+    @property
+    def total_amount(self):
+        total_weight = self.weight + self.weight_adjustment
+        total_amount = total_weight * self.rate
+        return total_amount
 
     @staticmethod
     def get_absolute_url():

@@ -11,6 +11,7 @@ from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
+from stocks.models import Stock
 from vouchers.models import SaleVoucher as Sale, Persons, GeneralVoucher, BuyVoucher, SaleExpense
 
 
@@ -172,6 +173,15 @@ def local_sale_detail_calc(pk):
 
 def buy_details_calc(pk):
     buy = BuyVoucher.objects.get(id=pk)
+    products = Stock.objects.filter(voucher_no=pk)
+    product_weight = 0
+    product_bags = 0
+    product_total_amount = 0
+    for product in products:
+        product_weight += product.total_weight
+        product_total_amount += product.total_amount
+        product_bags += product.number_of_bag
+
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
     total_measuring_cost = 0
@@ -223,6 +233,10 @@ def buy_details_calc(pk):
         'total_measuring_cost': total_measuring_cost,
         'net_amount_in_words': net_amount_in_words,
         'transport_cost': transport_cost,
+        'products': products,
+        'product_weight': product_weight,
+        'product_bags': product_bags,
+        'product_total_amount': product_total_amount,
     }
 
     return context
@@ -390,3 +404,9 @@ def serial_gen(pk, initial):
     else:
         serial = initial + '-' + str(pk)
     return serial
+
+
+def stock_detail(pk):
+    product = Stock.objects.get(id=pk)
+    if product.rate_per_mann and product.rate_per_mann != 0:
+        product.

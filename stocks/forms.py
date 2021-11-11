@@ -20,7 +20,8 @@ class StockFormBuy(ModelForm):
 
     class Meta:
         model = Stock
-        fields = ('product', 'weight', 'weight_adjustment', 'rate', 'number_of_bag', 'store_name')
+        fields = ('product', 'weight', 'weight_adjustment', 'rate_per_kg',
+                  'rate_per_mann', 'number_of_bag', 'store_name')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

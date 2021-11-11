@@ -28,36 +28,39 @@
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.bazar_or_company_name }}</div>
     </div>
-    <div class="row mb-1">
-        <div class="col-3"><strong>Product Name</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ buy.product_name }}</div>
+    <div class="row">
+        <div class="col-12 border border-info text-center">
+            <div><strong>Product Details</strong></div>
+        <table class="table table-sm table-striped table-bordered">
+            <tr>
+                <th>SL</th>
+                <th>Name</th>
+                <th>Weight (KG)</th>
+                <th>Bags</th>
+                <th>Rate (৳)</th>
+                <th>Total Amount (৳)</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{product.product|floatcomma_indian}}</td>
+                <td>{{product.total_weight|floatcomma_indian}}</td>
+                <td>{{product.number_of_bag|floatcomma_indian}}</td>
+                <td>{{product.rate|floatcomma_indian}}</td>
+                <td>{{product.total_amount|floatcomma_indian}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="2" class="text-right">Total</th>
+                <th>{{product_weight}}</th>
+                <th>{{product_bags}}</th>
+                <th></th>
+                <th>{{product_total_amount}}</th>
+            </tr>
+        </table>
+        </div>
     </div>
-    <div class="row mb-1">
-        <div class="col-3"><strong>Weight</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ buy.weight }} Kg.</div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-3"><strong>Number Bags</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ buy.number_of_bag }} Nos.</div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-3"><strong>Total Weight</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ total_weight }} Kg.</div>
-    </div>
-        <div class="row mb-1">
-        <div class="col-3"><strong>Rate (Per Kg.)</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ buy.rate|floatcomma_indian }} BDT.</div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-3"><strong>Total Amount</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-3">{{ total_amount|floatcomma_indian }} BDT.</div>
-    </div>
+
     <div class="row mb-1">
         <div class="col-3"><strong>Self Weight of Each Bag</strong></div>
         <div class="col-1"><strong>:</strong></div>
