@@ -1,6 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django_currentuser.db.models import CurrentUserField
 
 from products.models import Products
@@ -34,15 +33,9 @@ class Stock(models.Model):
         return str(self.product)
 
     @property
-    def total_weight(self):
-        total_weight = self.weight + self.weight_adjustment
-        return total_weight
-
-    @property
-    def total_amount(self):
-        total_weight = self.weight + self.weight_adjustment
-        total_amount = total_weight * self.rate
-        return total_amount
+    def details(self):
+        from core.views import stock_details
+        return stock_details(self.pk)
 
     @staticmethod
     def get_absolute_url():

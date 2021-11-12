@@ -178,8 +178,8 @@ def buy_details_calc(pk):
     product_bags = 0
     product_total_amount = 0
     for product in products:
-        product_weight += product.total_weight
-        product_total_amount += product.total_amount
+        product_weight += product.details['weight']
+        product_total_amount += product.details['amount']
         product_bags += product.number_of_bag
 
     total_unloading_cost = 0
@@ -406,7 +406,28 @@ def serial_gen(pk, initial):
     return serial
 
 
-def stock_detail(pk):
+def stock_details(pk):
     product = Stock.objects.get(id=pk)
+    rate = 0
+    weight = product.weight + product.weight_adjustment
+    amount = 0
+    rate_condition = ''
+
     if product.rate_per_mann and product.rate_per_mann != 0:
-        product.
+        amount = weight * (product.rate_per_mann / 40)
+        rate = product.rate_per_mann
+        rate_condition = '/mann'
+    elif product.rate_per_kg and product.rate_per_kg != 0:
+        rate = product.rate_per_kg
+        amount = weight * rate
+        rate_condition = '/kg'
+
+    context = {
+        'rate': rate,
+        'amount': amount,
+        'weight': weight,
+        'rate_condition': rate_condition,
+
+    }
+
+    return context

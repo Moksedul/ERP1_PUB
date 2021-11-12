@@ -44,10 +44,10 @@
             <tr>
                 <td>{{forloop.counter}}</td>
                 <td>{{product.product|floatcomma_indian}}</td>
-                <td>{{product.total_weight|floatcomma_indian}}</td>
+                <td>{{product.details.weight|floatcomma_indian}}</td>
                 <td>{{product.number_of_bag|floatcomma_indian}}</td>
-                <td>{{product.rate|floatcomma_indian}}</td>
-                <td>{{product.total_amount|floatcomma_indian}}</td>
+                <td>{{product.details.rate|floatcomma_indian}}{{product.details.rate_condition}}</td>
+                <td>{{product.details.amount|floatcomma_indian}}</td>
             </tr>
             {% endfor %}
             <tr>
