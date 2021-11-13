@@ -90,7 +90,7 @@
                 <div class="form-group col-md-4 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
-                <button class="btn btn-outline-info" type="submit">{{button_name}}</button>
+                <button class="btn btn-sm btn-outline-info" type="submit">{{button_name}}</button>
                 </div>
         </form>
     </div>
@@ -155,15 +155,6 @@ $(document).ready(function ()
     });
 </script>
 
-<!--for responsive table container height-->
-<script>
-$(document).ready(function(){
-	var bodyHeight = $("body").height();
-	var footerHeight = $('.footer').height();
-	var contentHeight = bodyHeight- footerHeight-15;
-	console.log(contentHeight);
-	$('.table-container').css('height', contentHeight);
-});
-</script>
+<script src="/static/main/js/responsive.content.height.js"></script>
 
 {% endblock content %}

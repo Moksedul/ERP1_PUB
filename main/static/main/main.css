@@ -32,6 +32,11 @@ border-bottom: 2px solid blue;
 
 }
 
+.business-name{
+  font-size: x-large;
+  font-weight: bold;
+}
+
 .form-control{
   height: 28px;
   font-size: small;
@@ -209,9 +214,32 @@ font-weight:bold;
   border-collapse: collapse;
   width: 100%;
 }
-.btn th{
 
-}
+tr:hover {
+  background-color:gray!important;
+  box-shadow: 0px 0px 10px gray;
+  z-index:2;
+  -webkit-transition: background-color 1000ms linear;
+  -moz-transition: background-color 1000ms linear;
+  -o-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+  -webkit-animation-direction: alternate; /* Chrome, Safari, Opera */
+  animation-direction: alternate;
+  
+  -webkit-animation-iteration-count: 2; /* Chrome, Safari, Opera */
+  animation-iteration-count: 2;
+  
+  }
+  
+ tr:hover a {
+  color: #331919;
+  }
+  
+ tr:hover .disabled {
+      color: #331919;
+  }
+
 #tableta td, #customers th {
   border: 1px solid #ddd;
   padding: 8px;

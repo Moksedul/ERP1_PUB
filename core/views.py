@@ -96,7 +96,7 @@ def sale_detail_calc(pk):
     total_measuring_cost = challan_weight * sale.measuring_cost_per_kg
     total_expanse += total_measuring_cost + total_unloading_cost
     actual_revenue_receivable = net_amount - total_expanse
-    if challan_weight !=0:
+    if challan_weight != 0:
         actual_rate_receivable = actual_revenue_receivable / challan_weight
     else:
         actual_rate_receivable = 0
@@ -177,10 +177,14 @@ def buy_details_calc(pk):
     product_weight = 0
     product_bags = 0
     product_total_amount = 0
+    product_net_weight = 0
+    product_weight_of_bags = 0
     for product in products:
         product_weight += product.details['weight']
         product_total_amount += product.details['amount']
         product_bags += product.number_of_bag
+        product_net_weight += product.details['net_weight']
+        product_weight_of_bags += product.details['total_weight_of_bags']
 
     total_unloading_cost = 0
     total_self_weight_of_bag = 0
@@ -199,13 +203,13 @@ def buy_details_calc(pk):
     total_amount = total_weight * rate
 
     if buy.weight_of_each_bag is not None:
-        total_self_weight_of_bag = buy.weight_of_each_bag * buy.number_of_bag
+        total_self_weight_of_bag = buy.weight_of_each_bag * product_bags
 
     if buy.per_bag_unloading_cost is not None:
-        total_unloading_cost = buy.per_bag_unloading_cost * buy.number_of_bag
+        total_unloading_cost = buy.per_bag_unloading_cost * product_bags
 
     if buy.measuring_cost_per_kg is not None:
-        total_measuring_cost = buy.measuring_cost_per_kg * total_weight
+        total_measuring_cost = buy.measuring_cost_per_kg * product_weight
 
     if buy.previous_amount:
         previous_amount = buy.previous_amount
@@ -215,17 +219,15 @@ def buy_details_calc(pk):
     else:
         transport_cost = -buy.transport_cost
 
-    weight_after_deduction = total_weight - total_self_weight_of_bag
-    total_amount_without_bag = rate * weight_after_deduction
-    amount_after_deduction = total_amount_without_bag - total_unloading_cost - total_measuring_cost
+    amount_after_deduction = product_total_amount - total_unloading_cost - total_measuring_cost
     grand_total_amount = amount_after_deduction + previous_amount - buy.discount + transport_cost
     net_amount_in_words = d2w(round(grand_total_amount, 2))
 
     context = {
+        'tittle': 'Buy Voucher: ' + str(buy.voucher_number),
         'buy': buy,
         'grand_total_amount': round(grand_total_amount, 2),
         'total_weight': round(total_weight, 2),
-        'weight_after_deduction': round(weight_after_deduction, 2),
         'amount_after_deduction': round(amount_after_deduction, 2),
         'total_amount': round(total_amount, 2),
         'total_unloading_cost': total_unloading_cost,
@@ -237,6 +239,8 @@ def buy_details_calc(pk):
         'product_weight': product_weight,
         'product_bags': product_bags,
         'product_total_amount': product_total_amount,
+        'product_net_weight': product_net_weight,
+        'product_weight_of_bags': product_weight_of_bags,
     }
 
     return context
@@ -412,14 +416,16 @@ def stock_details(pk):
     weight = product.weight + product.weight_adjustment
     amount = 0
     rate_condition = ''
+    net_weight = weight - (product.weight_of_bags * product.number_of_bag)
+    total_weight_of_bags = product.weight_of_bags * product.number_of_bag
 
     if product.rate_per_mann and product.rate_per_mann != 0:
-        amount = weight * (product.rate_per_mann / 40)
+        amount = net_weight * (product.rate_per_mann / 40)
         rate = product.rate_per_mann
         rate_condition = '/mann'
     elif product.rate_per_kg and product.rate_per_kg != 0:
         rate = product.rate_per_kg
-        amount = weight * rate
+        amount = net_weight * rate
         rate_condition = '/kg'
 
     context = {
@@ -427,6 +433,8 @@ def stock_details(pk):
         'amount': amount,
         'weight': weight,
         'rate_condition': rate_condition,
+        'net_weight': net_weight,
+        'total_weight_of_bags': total_weight_of_bags,
 
     }
 

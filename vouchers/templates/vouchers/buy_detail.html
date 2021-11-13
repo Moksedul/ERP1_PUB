@@ -1,12 +1,22 @@
 {% extends "main/base.html" %}
 {% load indian_numbers_tags %}
+{% block style %}
+<link rel="stylesheet" type="text/css" href="/static/main/css/print.css">
+{% endblock %}
 {% block content %}
-<div class="container card" style="font-size: 14px;">
+<div id="print" class="float shadow">
+    <i class="fa fa-print my-float"></i>
+</div>
+
+<div class="table-container" >
+<div id="section-to-print" class="container card" style="font-size: 14px;">
     <div class="row ">
-        <button id="print" class="btn-xs btn-info" onclick="printPage()">Print</button>
         <a href="{% url 'buy-update' buy.id%}"><button id="edit" class="btn-xs btn-info">E</button></a>
     </div>
-
+    <div class="text-center">
+        <div class="business-name">{{buy.business_name}}</div>
+        <div>{{tittle}}</div>
+    </div>
     <hr>
     <hr>
 
@@ -14,7 +24,7 @@
         <div class="col-3"><strong>Voucher Number</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ buy.voucher_number }}</div>
-        <div class="col-2"><strong>Buy Date</strong></div>
+        <div class="col-2"><strong>Voucher Date</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-3">{{ buy.date_added }}</div>
     </div>
@@ -37,6 +47,8 @@
                 <th>Name</th>
                 <th>Weight (KG)</th>
                 <th>Bags</th>
+                <th>Weight/Bags(Kg)</th>
+                <th>Net Weight(Kg)</th>
                 <th>Rate (৳)</th>
                 <th>Total Amount (৳)</th>
             </tr>
@@ -46,6 +58,8 @@
                 <td>{{product.product|floatcomma_indian}}</td>
                 <td>{{product.details.weight|floatcomma_indian}}</td>
                 <td>{{product.number_of_bag|floatcomma_indian}}</td>
+                <td>{{product.weight_of_bags}}</td>
+                <th>{{product.details.net_weight|floatcomma_indian}}</th>
                 <td>{{product.details.rate|floatcomma_indian}}{{product.details.rate_condition}}</td>
                 <td>{{product.details.amount|floatcomma_indian}}</td>
             </tr>
@@ -54,20 +68,13 @@
                 <th colspan="2" class="text-right">Total</th>
                 <th>{{product_weight}}</th>
                 <th>{{product_bags}}</th>
+                <th>{{product_weight_of_bags}}</th>
+                <th>{{product_net_weight}}</th>
                 <th></th>
                 <th>{{product_total_amount}}</th>
             </tr>
         </table>
         </div>
-    </div>
-
-    <div class="row mb-1">
-        <div class="col-3"><strong>Self Weight of Each Bag</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ buy.weight_of_each_bag }} Kg.</div>
-        <div class="col-3"><strong>Total Self Weight of Bags</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ total_self_weight_of_bag }} Kg.</div>
     </div>
 
     <div class="row mb-1">
@@ -92,13 +99,7 @@
 
     <div class="row mb-1">
         <div class="col-6"></div>
-        <div class="col-3"><strong>Total Weight After Deduction</strong></div>
-        <div class="col-1"><strong>:</strong></div>
-        <div class="col-2">{{ weight_after_deduction }} Kg.</div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-6"></div>
-        <div class="col-3"><strong>Total Amount After Deduction</strong></div>
+        <div class="col-3"><strong>Net Amount</strong></div>
         <div class="col-1"><strong>:</strong></div>
         <div class="col-2">{{ amount_after_deduction|floatcomma_indian }} BDT.</div>
     </div>
@@ -137,15 +138,24 @@
     </div>
 
 </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    function printPage() {
-        var printButton = document.getElementById("print");
-        var editButton = document.getElementById("edit");
-        printButton.style.visibility = 'hidden';
-        editButton.style.visibility = 'hidden';
-        window.print()
-        printButton.style.visibility = 'visible';
-        editButton.style.visibility = 'visible';
-    }
+$('#print').click(function(){
+    var editButton = document.getElementById("edit");
+    editButton.style.visibility = 'hidden';
+	$('body').css('margin-top', '0');
+	$('#search').css('display', 'none');
+     window.print();
+    editButton.style.visibility = 'visible';
+    $('body').css('margin-top', '3rem');
+	$('#search').css('display', 'block');
+});
 </script>
+
+
+<script src="/static/main/js/responsive.content.height.js"></script>
+
 {% endblock content %}

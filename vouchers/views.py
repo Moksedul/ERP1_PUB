@@ -75,7 +75,7 @@ def buy_update(request, pk):
     stock_set = inlineformset_factory(
                     BuyVoucher, Stock,
                     fields=('product', 'weight', 'weight_adjustment', 'rate_per_kg',
-                            'rate_per_mann', 'number_of_bag', 'store_name'), extra=0
+                            'rate_per_mann', 'number_of_bag', 'weight_of_bags',  'store_name'), extra=0
                     )
     stock_form_set = stock_set(instance=buy)
     if request.method == 'POST':

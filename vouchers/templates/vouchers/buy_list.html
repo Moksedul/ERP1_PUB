@@ -47,9 +47,8 @@
 					<th>BV No</th>
 					<th>Business</th>
 					<th>Seller Name</th>
-					<th>Product</th>
-					<th>Weight</th>
-					<th>Rate (BDT)</th>
+					<th>Products</th>
+					<th>Weight (KG)</th>
 					<th>Amount</th>
 					<th>Company</th>
 					<th>Date</th>
@@ -61,11 +60,14 @@
 						<td>{{ voucher.voucher_number }}</td>
 						<td><small>{{ voucher.business_name }}</small></td>
 						<td>{{ voucher.seller_name }}</td>
-						<td><small>{{ voucher.product_name }}</small></td>
-						<td>{{ voucher.weight|floatcomma_indian }}</td>
-						<td>{{ voucher.rate_per_kg|floatcomma_indian }}/kg,
-							{{ voucher.rate_per_mann|floatcomma_indian }}/Mann
+						<td>
+							{% for product in voucher.details.products %}
+								<div style="font-size: x-small;">
+									{{ product.product }}@{{product.details.rate}}{{product.details.rate_condition}}
+								</div>
+							{% endfor %}
 						</td>
+						<td>{{ voucher.details.product_net_weight|floatcomma_indian }}</td>
 						<td>{{ voucher.details.grand_total_amount|floatcomma_indian }}</td>
 						<td><small>{{ voucher.bazar_or_company_name }}</small></td>
 						<td>{{ voucher.date_added }}</td>
