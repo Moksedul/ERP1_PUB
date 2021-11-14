@@ -70,7 +70,7 @@
 						<td>{{ voucher.details.product_net_weight|floatcomma_indian }}</td>
 						<td>{{ voucher.details.grand_total_amount|floatcomma_indian }}</td>
 						<td><small>{{ voucher.bazar_or_company_name }}</small></td>
-						<td>{{ voucher.date_added }}</td>
+						<td>{{ voucher.date_added|date:"d-m-y" }}</td>
 						<td>
 							<a class="" href="{% url 'buy-detail' voucher.id%}">&#128195;</a>
 							{% if perms.vouchers.change_buyvoucher %}
