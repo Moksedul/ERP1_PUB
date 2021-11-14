@@ -1,7 +1,7 @@
 
 
 //for activating infinite scrolling
-var table = $('.card-body')
+var loaderContainer = $('.infinite-trigger')
 var infinite = new Waypoint.Infinite({
 	element: $('.infinite-container')[0],
 	context: $('.infinite-trigger'),
@@ -9,7 +9,11 @@ var infinite = new Waypoint.Infinite({
 	offset: 'bottom-in-view',
 
 	onBeforePageLoad: function () {
-		$(table).load("{% include 'main/loader.html' %}");
+		$.ajax({
+            url: "/loader",
+            success: function (data) { $(loaderContainer).append(data); },
+            dataType: 'html'
+            });
 	},
 	onAfterPageLoad: function () {
 		$( "#loading" ).remove();

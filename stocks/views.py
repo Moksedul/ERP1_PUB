@@ -4,6 +4,9 @@ from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from organizations.models import Organization
+from products.models import Products
+from vouchers.models import BuyVoucher
 from .forms import StockForm
 from .models import Stock
 
@@ -38,13 +41,48 @@ class StockListView(LoginRequiredMixin, ListView):
     model = Stock
     template_name = 'stocks/stock_list.html'
     context_object_name = 'stocks'
-    paginate_by = 20
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = Products.objects.all()
+        business_names = Organization.objects.all()
+
+        product_contains = self.request.GET.get('name')
+        if product_contains is None:
+            product_contains = 'Select Product'
+        business_contains = self.request.GET.get('business')
+        if business_contains is None or business_contains == '':
+            business_contains = 'Select Business'
+
+        context['products'] = products
+        context['name_selected'] = product_contains
+        context['business_selected'] = business_contains
+        context['business_names'] = business_names
+        context['tittle'] = 'Stock List'
+        return context
+
+    def get_queryset(self):
+        stocks = Stock.objects.all().order_by('-last_updated_time')
+        product_contains = self.request.GET.get('name')
+        business_contains = self.request.GET.get('business')
+
+        if product_contains != 'Select Name' and product_contains is not None:
+            product = Products.objects.get(product_name=product_contains)
+            stocks = stocks.filter(product=product)
+
+        if business_contains != 'Select Business' and business_contains is not None:
+            business = Organization.objects.get(name=business_contains)
+            buy_v = BuyVoucher.objects.filter(business_name=business)
+            stocks = stocks.filter(voucher_no__in=buy_v)
+
+        return stocks
 
 
 class StockUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = StockForm
     model = Stock
-    template_name = 'stocks/stock_update_form.html'
-    fields = '__all__'
+    template_name = 'stocks/stock_form.html'
 
 
 class StockDeleteView(LoginRequiredMixin, DeleteView):

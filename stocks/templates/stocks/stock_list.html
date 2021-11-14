@@ -56,10 +56,10 @@
 					<th>Controls</th>
 				</tr>
 				<tbody class="infinite-container">
-				{% for voucher in vouchers %}
+				{% for stock in stocks %}
 					<tr class="infinite-item">
-						<td>{{ voucher.voucher_number }}</td>
-						<td><small>{{ voucher.business_name }}</small></td>
+						<td>{{ stock.voucher_no }}</td>
+						<td><small>{{ stock.business_name }}</small></td>
 						<td>{{ voucher.seller_name }}</td>
 						<td><small>{{ voucher.product_name }}</small></td>
 						<td>{{ voucher.weight|floatcomma_indian }}</td>
@@ -70,12 +70,11 @@
 						<td><small>{{ voucher.bazar_or_company_name }}</small></td>
 						<td>{{ voucher.date_added }}</td>
 						<td>
-							<a class="" href="{% url 'buy-detail' voucher.id%}">&#128195;</a>
 							{% if perms.vouchers.change_buyvoucher %}
-							|<a class="" href="{% url 'buy-update' voucher.id%}"><i class="fa fa-edit"></i></a>
+							|<a class="" href="{% url 'stock-update' stock.id%}"><i class="fa fa-edit"></i></a>
 							{% endif %}
 							{% if perms.vouchers.delete_buyvoucher %}
-							|<a class="" href="{% url 'buy-delete' voucher.id%}"><i class="fa fa-trash"></i></a>
+							|<a class="" href="{% url 'stock-delete' stock.id%}"><i class="fa fa-trash"></i></a>
 							{% endif %}
 						</td>
 					</tr>

@@ -13,7 +13,7 @@ class StockForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['voucher_no'].widget.attrs['disabled'] = 'disabled'
+        self.fields['voucher_no'].disabled = True
 
 
 class StockFormBuy(ModelForm):
