@@ -9,7 +9,7 @@ from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
 from .forms import StockForm
-from .models import Stock
+from .models import Stock, Store
 
 
 # Create your views here.
@@ -48,16 +48,22 @@ class StockListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         products = Products.objects.all()
         business_names = Organization.objects.all()
+        stores = Store.objects.all()
 
-        product_contains = self.request.GET.get('name')
+        product_contains = self.request.GET.get('product')
         if product_contains is None:
             product_contains = 'Select Product'
         business_contains = self.request.GET.get('business')
         if business_contains is None or business_contains == '':
             business_contains = 'Select Business'
+        store_contains = self.request.GET.get('store')
+        if store_contains is None or store_contains == '':
+            store_contains = 'Select store'
 
         context['products'] = products
-        context['name_selected'] = product_contains
+        context['product_selected'] = product_contains
+        context['stores'] = stores
+        context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
         context['tittle'] = 'Stock List'
@@ -65,17 +71,21 @@ class StockListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         stocks = Stock.objects.all().order_by('-last_updated_time')
-        product_contains = self.request.GET.get('name')
+        product_contains = self.request.GET.get('product')
         business_contains = self.request.GET.get('business')
+        store_contains = self.request.GET.get('store')
 
-        if product_contains != 'Select Name' and product_contains is not None:
+        if product_contains != 'Select Product' and product_contains is not None:
             product = Products.objects.get(product_name=product_contains)
             stocks = stocks.filter(product=product)
 
         if business_contains != 'Select Business' and business_contains is not None:
             business = Organization.objects.get(name=business_contains)
-            buy_v = BuyVoucher.objects.filter(business_name=business)
-            stocks = stocks.filter(voucher_no__in=buy_v)
+            stocks = stocks.filter(business_name=business)
+
+        if store_contains != 'Select store' and business_contains is not None:
+            store = Store.objects.get(name=store_contains)
+            stocks = stocks.filter(store_name=store)
 
         return stocks
 
