@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Sum
@@ -89,3 +90,19 @@ class StockDeleteView(LoginRequiredMixin, DeleteView):
     model = Stock
     template_name = 'main/confirm_delete.html'
     success_url = '/stock_list'
+
+
+def stock_update():
+    buy = BuyVoucher.objects.all()
+
+    for item in buy:
+        if not item.weight_of_each_bag:
+            item.weight_of_each_bag = 0
+        Stock.objects.create(voucher_no=item, business_name=item.business_name,
+                             product=item.product_name, weight=item.weight,
+                             rate_per_kg=item.rate_per_kg, rate_per_mann=item.rate_per_mann,
+                             number_of_bag=item.number_of_bag, weight_of_bags=item.weight_of_each_bag,
+                             added_by=item.added_by, date_time_stamp=item.date_time_stamp,
+                             )
+        print('stock updated:'+ str(item.id))
+

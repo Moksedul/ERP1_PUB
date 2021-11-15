@@ -44,14 +44,13 @@
 		<div class="table-container infinite-trigger">
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Vocher</th>
+					<th>Voucher</th>
 					<th>Business</th>
-					<th>Seller Name</th>
 					<th>Product</th>
 					<th>Weight</th>
                     <th>Bags</th>
 					<th>Rate (BDT)</th>
-					<th>Date Added</th>
+					<th>Added Time</th>
 					<th>Controls</th>
 				</tr>
 				<tbody class="infinite-container">
@@ -59,15 +58,11 @@
 					<tr class="infinite-item">
 						<td>{{ stock.voucher_no }}</td>
 						<td><small>{{ stock.business_name }}</small></td>
-						<td>{{ voucher.seller_name }}</td>
-						<td><small>{{ voucher.product_name }}</small></td>
-						<td>{{ voucher.weight|floatcomma_indian }}</td>
-						<td>{{ voucher.rate_per_kg|floatcomma_indian }}/kg,
-							{{ voucher.rate_per_mann|floatcomma_indian }}/Mann
-						</td>
-						<td>{{ voucher.details.grand_total_amount|floatcomma_indian }}</td>
-						<td><small>{{ voucher.bazar_or_company_name }}</small></td>
-						<td>{{ voucher.date_added }}</td>
+						<td>{{ stock.product }}</td>
+						<td>{{ stock.details.net_weight }}</td>
+						<td>{{ stock.number_of_bag }}</td>
+						<td>{{ stock.details.rate }}{{ stock.details.rate_condition }}</td>
+						<td>{{ stock.date_time_stamp }}</td>
 						<td>
 							{% if perms.vouchers.change_buyvoucher %}
 							|<a class="" href="{% url 'stock-update' stock.id%}"><i class="fa fa-edit"></i></a>

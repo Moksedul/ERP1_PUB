@@ -12,6 +12,7 @@ from orders.models import Orders
 from organizations.models import Persons
 from payments.models import Payment
 from payroll.models import Employee, Attendance, Day
+from stocks.views import stock_update
 from vouchers.models import SaleVoucher, BuyVoucher
 
 

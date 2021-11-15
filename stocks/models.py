@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django_currentuser.db.models import CurrentUserField
 
+from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
 
@@ -16,6 +17,7 @@ class Store(models.Model):
 
 class Stock(models.Model):
     voucher_no = models.ForeignKey(BuyVoucher, on_delete=models.CASCADE, null=True, blank=True)
+    business_name = models.ForeignKey(Organization, on_delete=models.Empty, blank=True, null=True)
     store_name = models.ForeignKey(Store, on_delete=models.Empty, blank=True, null=True)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     weight_adjustment = models.FloatField(default=0)

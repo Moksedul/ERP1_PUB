@@ -52,6 +52,7 @@ def buy_create(request):
                 stock = stock_form.save(commit=False)
                 stock.voucher_no = buy
                 stock.added_by = request.user
+                stock.business_name = buy.business_name
                 stock.save()
             return redirect('/buy_list')
     else:
@@ -83,12 +84,14 @@ def buy_update(request, pk):
         buy_form = BuyForm(request.POST or None, instance=buy)
         stock_form_set = stock_set(request.POST, instance=buy)
         if buy_form.is_valid():
-
             buy = buy_form.save(commit=False)
             buy.added_by = request.user
             buy.save()
             if stock_form_set.is_valid():
-                stock_form_set.save()
+                for stock_form in stock_form_set:
+                    stock = stock_form.save(commit=False)
+                    stock.business_name = buy.business_name
+                    stock.save()
             return redirect('/buy_list')
     else:
         buy_form = buy_form
