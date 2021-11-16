@@ -52,6 +52,7 @@
                     <th>Bags</th>
 					<th>Rate (BDT)</th>
 					<th>Added Time</th>
+					<th>Added by</th>
 					<th>Controls</th>
 				</tr>
 				<tbody class="infinite-container">
@@ -65,6 +66,7 @@
 						<td>{{ stock.number_of_bag }}</td>
 						<td>{{ stock.details.rate }}{{ stock.details.rate_condition }}</td>
 						<td>{{ stock.date_time_stamp }}</td>
+						<td>{{ stock.added_by }}</td>
 						<td>
 							{% if perms.vouchers.change_buyvoucher %}
 							|<a class="" href="{% url 'stock-update' stock.id%}"><i class="fa fa-edit"></i></a>

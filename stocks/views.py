@@ -8,7 +8,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
-from .forms import StockForm
+from .forms import StockForm, StockUpdateForm
 from .models import Stock, Store
 
 
@@ -94,6 +94,12 @@ class StockUpdateView(LoginRequiredMixin, UpdateView):
     form_class = StockForm
     model = Stock
     template_name = 'stocks/stock_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Stock'
+        return context
 
 
 class StockDeleteView(LoginRequiredMixin, DeleteView):

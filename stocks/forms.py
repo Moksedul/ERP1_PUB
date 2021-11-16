@@ -9,11 +9,13 @@ class StockForm(ModelForm):
 
     class Meta:
         model = Stock
-        fields = '__all__'
+        exclude = ('added_by',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['voucher_no'].disabled = True
+        if self.instance.voucher_no:
+            self.fields['business_name'].disabled = True
 
 
 class StockFormBuy(ModelForm):
