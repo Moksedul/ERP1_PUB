@@ -8,7 +8,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
-from .forms import StockForm, StockUpdateForm
+from .forms import StockForm
 from .models import Stock, Store
 
 
