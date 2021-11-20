@@ -1,0 +1,105 @@
+{% extends 'main/base.html' %}
+{% load techAlong_extras %}
+{% load static %}
+{% load humanize %}
+{% load indian_numbers_tags %}
+{% block content %}
+	<form method="GET" id="search">
+		<div class="form-row">
+				<div class="form-group col-md-1">
+					<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-pre-stock'%}">Add Stock</a>
+				</div>
+                <div class="form-group col-md-3">
+					<select id="product" class="form-control" name="product" onchange="this.form.submit()">
+						<option selected>{{ product_selected }}</option>
+						  {% for product in products %}
+						<option>{{ product }}</option>
+						  {% endfor %}
+					  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                    <select id="business" class="form-control" name="business" onchange="this.form.submit()">
+                    <option selected>{{ business_selected }}</option>
+					  {% for name in business_names %}
+                    <option>{{ name.name }}</option>
+					  {% endfor %}
+                  </select>
+            	</div>
+                <div class="form-group col-md-2">
+                  <select id="store" class="form-control" name="store" onchange="this.form.submit()">
+                    <option selected>{{ store_selected }}</option>
+					  {% for store in stores %}
+                    <option>{{ store }}</option>
+					  {% endfor %}
+                  </select>
+                </div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-sm btn-info"><i class="fas fa-search"></i></button>
+					<a href="{% url 'finished-stock-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+				</div>
+			</div>
+        </form>
+	<div class="card card-body">
+	<div class="text-center form-title">{{tittle}}</div>
+		<div class="table-container infinite-trigger">
+			<table id="myTable" class="table table-sm table-striped table-bordered">
+				<tr>
+					<th>Store</th>
+					<th>Voucher</th>
+					<th>Business</th>
+					<th>Product</th>
+					<th>Weight</th>
+                    <th>Bags</th>
+					<th>Rate (BDT)</th>
+					<th>Added Time</th>
+					<th>Added by</th>
+					<th>Controls</th>
+				</tr>
+				<tbody class="infinite-container">
+				{% for stock in stocks %}
+					<tr class="infinite-item">
+						<td>{{ stock.store_name }}</td>
+						<td>{{ stock.voucher_no }}</td>
+						<td><small>{{ stock.business_name }}</small></td>
+						<td>{{ stock.product }}</td>
+						<td>{{ stock.details.net_weight }}</td>
+						<td>{{ stock.number_of_bag }}</td>
+						<td>{{ stock.details.rate }}{{ stock.details.rate_condition }}</td>
+						<td>{{ stock.date_time_stamp }}</td>
+						<td>{{ stock.added_by }}</td>
+						<td>
+							{% if perms.stocks.change_finishedstock %}
+							|<a class="" href="{% url 'finished-stock-update' stock.id%}"><i class="fa fa-edit"></i></a>
+							{% endif %}
+							{% if perms.stocks.delete_finishedtock %}
+							|<a class="" href="{% url 'finished-stock-delete' stock.id%}"><i class="fa fa-trash"></i></a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+
+			</table>
+		</div>
+		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
+	</div>
+
+
+
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function ()
+{
+    $("select").select2({});
+});
+</script>
+<!--for infinite scrolling-->
+<script type="text/javascript" src="{% static 'main/js/jquery.waypoints.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/infinite.min.js' %}"></script>
+<!--this file also includes responsive container height-calculator -->
+<script type="text/javascript" src="{% static 'main/js/infinite.scrolling.js' %}"></script>
+<!--for infinite scrolling-->
+
+
+{% endblock content %}

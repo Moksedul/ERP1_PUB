@@ -1,18 +1,26 @@
 from django.contrib import admin
-from .models import Stock, Store
+from .models import PreStock, Store, FinishedStock
 
 
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('name', 'location')
 
 
-class StockAdmin(admin.ModelAdmin):
+class PreStockAdmin(admin.ModelAdmin):
     list_display = ('voucher_no', 'product', 'weight',
-                    'added_by', 'rate_per_kg', 'weight_adjustment',
+                    'rate_per_kg', 'weight_adjustment',
                     'number_of_bag', 'date_time_stamp', 'last_updated_time',
                     'added_by', 'updated_by')
 
 
-admin.site.register(Stock, StockAdmin)
+class FinishedStockAdmin(admin.ModelAdmin):
+    list_display = ('product', 'weight',
+                    'buying_rate_per_kg', 'processing_cost_per_kg',
+                    'number_of_bag', 'date_time_stamp', 'last_updated_time',
+                    'added_by', 'updated_by')
+
+
+admin.site.register(PreStock, PreStockAdmin)
+admin.site.register(FinishedStock, FinishedStockAdmin)
 admin.site.register(Store, StoreAdmin)
 

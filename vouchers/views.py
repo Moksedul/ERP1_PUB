@@ -6,8 +6,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from core.digit2words import d2w, d2wb
 from core.views import buy_details_calc, sale_detail_calc
 from ledger.views import create_account_ledger
-from stocks.forms import StockFormBuy
-from stocks.models import Stock
+from stocks.forms import PreStockFormBuy
+from stocks.models import PreStock
 from .forms import *
 from challan.models import Challan
 from organizations.models import Persons
@@ -41,7 +41,7 @@ class BuyVoucherCreateView(LoginRequiredMixin, CreateView):
 @login_required
 def buy_create(request):
     buy_form = BuyForm(request.POST or None)
-    stock_set = formset_factory(StockFormBuy)
+    stock_set = formset_factory(PreStockFormBuy)
     stock_formset = stock_set(request.POST or None, request.FILES)
     if request.method == 'POST':
         if buy_form.is_valid():
@@ -74,7 +74,7 @@ def buy_update(request, pk):
     buy = BuyVoucher.objects.get(pk=pk)
     buy_form = BuyForm(instance=buy)
     stock_set = inlineformset_factory(
-                    BuyVoucher, Stock,
+                    BuyVoucher, PreStock,
                     fields=('product', 'weight', 'weight_adjustment', 'rate_per_kg',
                             'rate_per_mann', 'number_of_bag', 'weight_of_bags',  'store_name'), extra=0
                     )

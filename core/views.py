@@ -11,7 +11,7 @@ from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
-from stocks.models import Stock
+from stocks.models import PreStock
 from vouchers.models import SaleVoucher as Sale, Persons, GeneralVoucher, BuyVoucher, SaleExpense
 
 
@@ -173,7 +173,7 @@ def local_sale_detail_calc(pk):
 
 def buy_details_calc(pk):
     buy = BuyVoucher.objects.get(id=pk)
-    products = Stock.objects.filter(voucher_no=pk)
+    products = PreStock.objects.filter(voucher_no=pk)
     product_weight = 0
     product_bags = 0
     product_total_amount = 0
@@ -411,7 +411,7 @@ def serial_gen(pk, initial):
 
 
 def stock_details(pk):
-    product = Stock.objects.get(id=pk)
+    product = PreStock.objects.get(id=pk)
     rate = 0
     weight = product.weight + product.weight_adjustment
     amount = 0

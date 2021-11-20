@@ -15,3 +15,10 @@ class Products(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('product-list')
+
+    # def save(self, *args, **kwargs):
+    #     items = Products.objects.filter(product_name=self.product_name)
+    #     if items:  # if some items are found in the database
+    #         items.update(product_category=self.product_category)
+    #     else:
+    #         return super(Products, self).save(*args, **kwargs)
