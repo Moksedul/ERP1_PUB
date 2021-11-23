@@ -8,8 +8,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
-from .forms import PreStockForm, FinishedStockForm
-from .models import PreStock, Store, FinishedStock
+from .forms import PreStockForm, FinishedStockForm, ProcessingStockForm
+from .models import PreStock, Store, FinishedStock, ProcessingStock
 
 
 # Create your views here.
@@ -108,6 +108,73 @@ class StockDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/pre_stock_list'
 
 
+class ProcessingStockCreate(LoginRequiredMixin, CreateView):
+    form_class = ProcessingStockForm
+    template_name = 'stocks/processing_stock_form.html'
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_name'] = 'Save'
+        context['tittle'] = 'Add Processing Stock'
+        return context
+
+
+class ProcessingStockList(LoginRequiredMixin, ListView):
+    model = ProcessingStock
+    template_name = 'stocks/processing_stock_list.html'
+    context_object_name = 'stocks'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = Products.objects.all()
+        business_names = Organization.objects.all()
+        stores = Store.objects.all()
+
+        product_contains = self.request.GET.get('product')
+        if product_contains is None:
+            product_contains = 'Select Product'
+        business_contains = self.request.GET.get('business')
+        if business_contains is None or business_contains == '':
+            business_contains = 'Select Business'
+        store_contains = self.request.GET.get('store')
+        if store_contains is None or store_contains == '':
+            store_contains = 'Select store'
+
+        context['products'] = products
+        context['product_selected'] = product_contains
+        context['stores'] = stores
+        context['store_selected'] = store_contains
+        context['business_selected'] = business_contains
+        context['business_names'] = business_names
+        context['tittle'] = 'Finished Stock List'
+        return context
+
+    def get_queryset(self):
+        stocks = ProcessingStock.objects.all().order_by('-last_updated_time')
+        product_contains = self.request.GET.get('product')
+        business_contains = self.request.GET.get('business')
+        store_contains = self.request.GET.get('store')
+
+        if product_contains != 'Select Product' and product_contains is not None:
+            product = Products.objects.get(product_name=product_contains)
+            stocks = stocks.filter(product=product)
+
+        if business_contains != 'Select Business' and business_contains is not None:
+            business = Organization.objects.get(name=business_contains)
+            stocks = stocks.filter(business_name=business)
+
+        if store_contains != 'Select store' and business_contains is not None:
+            store = Store.objects.get(name=store_contains)
+            stocks = stocks.filter(store_name=store)
+
+        return stocks
+
+
 class FinishedStockCreate(LoginRequiredMixin, CreateView):
     form_class = FinishedStockForm
     template_name = 'stocks/finished_stock_form.html'
@@ -173,6 +240,12 @@ class FinishedStockList(LoginRequiredMixin, ListView):
             stocks = stocks.filter(store_name=store)
 
         return stocks
+
+
+class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
+    form_class = ProcessingStockForm
+    model = ProcessingStock
+    template_name = 'stocks/processing_stock_form.html'
 
 
 class FinishedStockUpdate(LoginRequiredMixin, UpdateView):

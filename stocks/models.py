@@ -62,7 +62,7 @@ class ProcessingStock(models.Model):
     def all_pre_stocks(self):
         pre_stocks = ''
         for pre_stock in self.pre_stocks.all():
-            pre_stocks += pre_stock.product + ',\r\n'
+            pre_stocks += str(pre_stock.product) + ',\r\n'
         return pre_stocks
 
     @property
