@@ -30,6 +30,7 @@ class PreStock(models.Model):
     last_updated_time = models.DateTimeField(auto_now=True, null=True)
     added_by = CurrentUserField(related_name='stock_added_by')
     updated_by = CurrentUserField(on_update=True, related_name='stock_updated_by')
+    added_to_processing_stock = models.BooleanField(default=False)
     added_to_finished_stock = models.BooleanField(default=False)
     remarks = models.CharField(max_length=225, blank=True)
 
@@ -44,6 +45,33 @@ class PreStock(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('pre-stock-list')
+
+
+class ProcessingStock(models.Model):
+    pre_stocks = models.ManyToManyField(PreStock)
+    date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
+    last_updated_time = models.DateTimeField(auto_now=True, null=True)
+    added_by = CurrentUserField(related_name='processing_stock_added_by')
+    updated_by = CurrentUserField(on_update=True, related_name='processing_stock_updated_by')
+    processing_completed = models.BooleanField(default=False)
+    remarks = models.CharField(max_length=225, blank=True)
+
+    def __str__(self):
+        return str(self.pre_stocks)
+
+    def all_pre_stocks(self):
+        pre_stocks = ''
+        for pre_stock in self.pre_stocks.all():
+            pre_stocks += pre_stock.product + ',\r\n'
+        return pre_stocks
+
+    @property
+    def details(self):
+        return '0'
+
+    @staticmethod
+    def get_absolute_url():
+        return reverse('processing-stock-list')
 
 
 class FinishedStock(models.Model):
