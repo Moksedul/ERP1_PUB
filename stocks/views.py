@@ -151,7 +151,7 @@ class ProcessingStockList(LoginRequiredMixin, ListView):
         context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
-        context['tittle'] = 'Finished Stock List'
+        context['tittle'] = 'Processing Stock List'
         return context
 
     def get_queryset(self):
@@ -173,6 +173,31 @@ class ProcessingStockList(LoginRequiredMixin, ListView):
             stocks = stocks.filter(store_name=store)
 
         return stocks
+
+
+class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
+    form_class = ProcessingStockForm
+    model = ProcessingStock
+    template_name = 'stocks/processing_stock_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Processing Stock'
+        return context
+
+
+class ProcessingStockDelete(LoginRequiredMixin, DeleteView):
+    model = ProcessingStock
+    template_name = 'main/confirm_delete.html'
+    success_url = '/stock_processing_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_name'] = 'Processing Stock'
+        context['tittle'] = 'Delete Processing Stock'
+        context['cancel_url'] = '/stock_processing_list'
+        return context
 
 
 class FinishedStockCreate(LoginRequiredMixin, CreateView):
@@ -242,18 +267,6 @@ class FinishedStockList(LoginRequiredMixin, ListView):
         return stocks
 
 
-class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
-    form_class = ProcessingStockForm
-    model = ProcessingStock
-    template_name = 'stocks/processing_stock_form.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['button_name'] = 'Update'
-        context['tittle'] = 'Update Processing Stock'
-        return context
-
-
 class FinishedStockUpdate(LoginRequiredMixin, UpdateView):
     form_class = FinishedStockForm
     model = FinishedStock
@@ -269,6 +282,7 @@ class FinishedStockUpdate(LoginRequiredMixin, UpdateView):
 class FinishedStockDelete(LoginRequiredMixin, DeleteView):
     model = FinishedStock
     template_name = 'main/confirm_delete.html'
+    success_url = '/finished_stock_list'
 
 
 def stock_update():
