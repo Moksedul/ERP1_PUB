@@ -1,12 +1,20 @@
 {% extends "main/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<style>
+    .check-box-container{
+    overflow:auto;
+    height:200px;
+    background-color: white;
+    }
+</style>
+
 <div class="text-center form-title">{{tittle}}</div>
             <div class="table-container">
                 <form action="" method="post">
                     {% csrf_token %}
                  <div class="form-row">
-                     <div class="form-group col-md-2 mb-0" >
+                     <div class="form-group col-md-3 mb-0" >
                    {{ form.pre_stocks|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-5 mb-0" >
@@ -19,4 +27,16 @@
                 </div>
         </form>
     </div>
+
+
+
+
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function ()
+{
+    $('#div_id_pre_stocks div:first').addClass('check-box-container');
+});
+</script>
 {% endblock content %}

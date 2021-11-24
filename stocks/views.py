@@ -218,7 +218,7 @@ class FinishedStockList(LoginRequiredMixin, ListView):
         context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
-        context['tittle'] = 'Finished Stock List'
+        context['tittle'] = 'Processing Stock List'
         return context
 
     def get_queryset(self):
@@ -246,6 +246,12 @@ class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
     form_class = ProcessingStockForm
     model = ProcessingStock
     template_name = 'stocks/processing_stock_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['button_name'] = 'Update'
+        context['tittle'] = 'Update Processing Stock'
+        return context
 
 
 class FinishedStockUpdate(LoginRequiredMixin, UpdateView):
