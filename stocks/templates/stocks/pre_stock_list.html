@@ -134,8 +134,7 @@
 					</div>
 					<div>
 						<select id="processing_stock" name="processing_stock" >
-							<option selected value="pad">New Processing</option>
-							<option value="no-pad">Existing Processing</option>
+							
 						</select>
 					</div>
 				</div>
@@ -163,7 +162,11 @@ $(document).ready(function (){
 	if (mode == 'existing'){
 		processingStock.show();
 	}
+	else{
+		processingStock.hide();
+	}
 	});
+
 });
 
 
