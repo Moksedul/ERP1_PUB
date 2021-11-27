@@ -6,6 +6,7 @@ from .views import (
     StockUpdateView,
     StockDeleteView, FinishedStockCreate, FinishedStockList, FinishedStockUpdate, FinishedStockDelete,
     ProcessingStockCreate, ProcessingStockList, ProcessingStockUpdate, ProcessingStockDelete,
+    processing_stock_mess_creation,
 
 )
 
@@ -16,6 +17,7 @@ urlpatterns = [
     path('pre_stock/<int:pk>/update', StockUpdateView.as_view(), name='pre-stock-update'),
     path('pre_stock/<int:pk>/delete', StockDeleteView.as_view(), name='pre-stock-delete'),
     path('add_processing_stock', ProcessingStockCreate.as_view(), name='add-processing-stock'),
+    path('processing_stock_mess_creation', processing_stock_mess_creation, name='processing-stock-mess-creation'),
     path('stock_processing_list', ProcessingStockList.as_view(), name='processing-stock-list'),
     path('stock_processing/<int:pk>/update', ProcessingStockUpdate.as_view(), name='processing-stock-update'),
     path('stock_processing/<int:pk>/delete', ProcessingStockDelete.as_view(), name='processing-stock-delete'),

@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -198,6 +198,17 @@ class ProcessingStockDelete(LoginRequiredMixin, DeleteView):
         context['tittle'] = 'Delete Processing Stock'
         context['cancel_url'] = '/stock_processing_list'
         return context
+
+
+@login_required()
+def processing_stock_mess_creation(request):
+
+    selected_pre_stocks = request.POST.getlist('selected_pre_stock')
+    selected_member = request.POST.get('selected_member')
+
+    print(selected_pre_stocks)
+
+    return redirect(ProcessingStock)
 
 
 class FinishedStockCreate(LoginRequiredMixin, CreateView):

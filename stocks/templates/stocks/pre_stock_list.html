@@ -4,6 +4,15 @@
 {% load humanize %}
 {% load indian_numbers_tags %}
 {% block content %}
+<style>
+	form{
+		background-color: white;	
+	}
+
+	label{
+		padding-bottom: 5px;
+	}
+</style>
 	<form method="GET" id="search">
 		<div class="form-row">
 				<div class="form-group col-md-1">
@@ -37,13 +46,21 @@
 					<button type="submit" class="btn btn-sm btn-info"><i class="fas fa-search"></i></button>
 					<a href="{% url 'pre-stock-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
 				</div>
+				<div class="form-group col-md-2">
+					<div id="btn_processing" class="btn btn-sm rounded border" data-toggle="modal" data-target="#Modal">
+						Add to Processing
+					</div>
+				</div>
 			</div>
         </form>
 	<div class="card card-body">
 	<div class="text-center form-title">{{tittle}}</div>
 		<div class="table-container infinite-trigger">
+			<form id="add_to_processing" action="{% url 'processing-stock-mess-creation' %}" method="post">
+				{% csrf_token %}
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
+					<th>Select</th>
 					<th>Store</th>
 					<th>Voucher</th>
 					<th>Business</th>
@@ -58,6 +75,7 @@
 				<tbody class="infinite-container">
 				{% for stock in stocks %}
 					<tr class="infinite-item">
+						<td><input name="selected_pre_stock" value="{{stock.id}}" type="checkbox"></td>
 						<td>{{ stock.store_name }}</td>
 						<td>{{ stock.voucher_no }}</td>
 						<td><small>{{ stock.business_name }}</small></td>
@@ -78,21 +96,77 @@
 					</tr>
 				{% endfor %}
 				</tbody>
-
 			</table>
+			</form>
 		</div>
 		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
 	</div>
 
 
 
+<!-- Modal For Mess Creation of Processing Store -->
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header form-title">
+		  <h6 class="modal-title" id="exampleModalLabel">Select Options</h6>
+		  <div class="close-btn" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true" style="color: white;">&times;</span>
+		  </div>
+		</div>
+		<div class="modal-body">
+			<form method="get" action="" >
+				<div class="form-group">
+				<div class="">
+					<div>
+						<label for="mode">Select Mode </label>
+					</div>
+					<div>
+						<select id="mode" name="mode" >
+							<option selected value="new">New Processing</option>
+							<option value="existing">Existing Processing</option>
+						</select>
+					</div>
+				</div>
+				<div id="select_processing_stock">
+					<div>
+						<label for="processing_stock">Select Existing Processing Stock</label>
+					</div>
+					<div>
+						<select id="processing_stock" name="processing_stock" >
+							<option selected value="pad">New Processing</option>
+							<option value="no-pad">Existing Processing</option>
+						</select>
+					</div>
+				</div>
+				</div>
+				<button type="submit" class="btn btn-sm btn-info float-right">OK</button>
+			</form>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+
+
 <!-- search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-	$(document).ready(function ()
-{
+$(document).ready(function (){	
+	var processingStock = $('#select_processing_stock');
+	processingStock.hide();
+	
     $("select").select2({});
+
+	$('#mode').change(function(){
+	var mode = $('#mode').val();
+	if (mode == 'existing'){
+		processingStock.show();
+	}
+	});
 });
+
+
 </script>
 <!--for infinite scrolling-->
 <script type="text/javascript" src="{% static 'main/js/jquery.waypoints.min.js' %}"></script>
@@ -101,5 +175,10 @@
 <script type="text/javascript" src="{% static 'main/js/infinite.scrolling.js' %}"></script>
 <!--for infinite scrolling-->
 
+<!-- <script>
+	$( "#btn_processing").click(function() {
+		$( "#add_to_processing" ).submit();
+	});
+</script> -->
 
 {% endblock content %}

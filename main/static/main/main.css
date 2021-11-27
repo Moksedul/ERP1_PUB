@@ -142,7 +142,27 @@ form {
 }
 
 .modal-header{
+  height: 25px;
+  padding: 2px;
+  padding-left: 15px;
+}
 
+.modal-content{
+  border-radius: 11px;
+}
+
+.close-btn{
+  border: 1px solid tomato;
+  width: 25;
+  font-size: 13;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.close-btn:hover{
+  background-color: tomato;
 }
 
 #menuButtons{

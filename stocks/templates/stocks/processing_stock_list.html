@@ -44,7 +44,7 @@
 		<div class="table-container infinite-trigger">
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
-					<th>Store</th>
+					<th>Serial</th>
 					<th>Voucher</th>
 					<th>Business</th>
 					<th>Product</th>
@@ -58,7 +58,7 @@
 				<tbody class="infinite-container">
 				{% for stock in stocks %}
 					<tr class="infinite-item">
-						<td>{{ stock.store_name }}</td>
+						<td>{{ stock.id }}</td>
 						<td>{{ stock.voucher_no }}</td>
 						<td><small>{{ stock.business_name }}</small></td>
 						<td>{{ stock.all_pre_stocks }}</td>
