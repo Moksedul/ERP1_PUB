@@ -133,7 +133,7 @@
 						<label for="processing_stock">Select Existing Processing Stock</label>
 					</div>
 					<div>
-						<select id="processing_stock" name="processing_stock" >
+						<select id="processing_stock" name="processing_stock" data-url="{% url 'load-persons' %}">
 							
 						</select>
 					</div>
@@ -183,5 +183,22 @@ $(document).ready(function (){
 		$( "#add_to_processing" ).submit();
 	});
 </script> -->
+
+<script>
+	$("#btn_processing").click(function()
+		{
+			var url1 = $("#processing_stock").attr("data-url");
+			var nameId = $(this).val();
+			$.ajax({
+						url: url1,
+						data: {
+						  'name': nameId
+						},
+						success: function (data) {
+						  $("#processing_stock").html(data);
+						}
+				  });
+		});
+</script>
 
 {% endblock content %}
