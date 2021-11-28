@@ -201,6 +201,13 @@ class ProcessingStockDelete(LoginRequiredMixin, DeleteView):
 
 
 @login_required()
+def load_processing_stock(request):
+    processing_stocks = ProcessingStock.objects.all()
+
+    return render(request, 'stocks/processing_stock_options.html', context={'existing_stocks': processing_stocks})
+
+
+@login_required()
 def processing_stock_mess_creation(request):
 
     selected_pre_stocks = request.POST.getlist('selected_pre_stock')

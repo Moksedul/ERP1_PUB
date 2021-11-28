@@ -1,1 +1,17 @@
-{{existing_stocks}}
+{% for stock in existing_stocks %}
+<option value="stock.id">
+    SL-{{stock.id}}:
+    Products:
+    ({% for pre_stock in stock.pre_stocks.all %}
+        {{ pre_stock }},
+    {% endfor %})
+</option>
+{% endfor %}
+
+<!-- search options function-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function (){
+    $("select").select2({});
+});
+</script>
