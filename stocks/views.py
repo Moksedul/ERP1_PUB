@@ -212,16 +212,37 @@ def processing_stock_mess_creation(request):
 
     selected_pre_stocks = request.POST.getlist('selected_pre_stock')
     selected_processing_stock = request.POST.get('processing_stock')
+    product_ids = []
+    same_products = None
 
     if selected_processing_stock:
-        processing_stock = ProcessingStock.objects.get(id=selected_processing_stock)
-        print(processing_stock)
+        existing_processing_stock = ProcessingStock.objects.get(id=selected_processing_stock)
+        pre_stocks_in_exs_pros = existing_processing_stock.pre_stocks.all()
+        [product_ids.append(pre_stock.product.pk) for pre_stock in pre_stocks_in_exs_pros]
+    else:
+        existing_processing_stock = None
 
-    if selected_pre_stocks:
+    if selected_pre_stocks:  # checking all selected products are same
+        all_pre_stocks = PreStock.objects.filter(id__in=selected_pre_stocks)
+        [product_ids.append(pre_stock.product.pk) for pre_stock in all_pre_stocks]
+        same_products = all(value == product_ids[0] for value in product_ids)
+
+    if same_products and existing_processing_stock:
         for item in selected_pre_stocks:
-            processing_stock.
-
-    return redirect(ProcessingStock)
+            existing_processing_stock.pre_stocks.add(item)
+        pre_stocks = PreStock.objects.filter(id__in=selected_pre_stocks)
+        pre_stocks.update(added_to_processing_stock=True)
+        return redirect(PreStock)
+    elif same_products and not existing_processing_stock:
+        new_processing_stock = ProcessingStock()
+        new_processing_stock.save()
+        new_processing_stock.pre_stocks.set(selected_pre_stocks)
+        pre_stocks = new_processing_stock.pre_stocks.all()
+        pre_stocks.update(added_to_processing_stock=True)
+        return redirect(ProcessingStock)
+    else:
+        msg = 'Selected Products Are not Same'
+        return HttpResponse(msg, content_type='text/plain')
 
 
 class FinishedStockCreate(LoginRequiredMixin, CreateView):

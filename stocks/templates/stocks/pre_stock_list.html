@@ -76,7 +76,11 @@
 				<tbody class="infinite-container">
 				{% for stock in stocks %}
 					<tr class="infinite-item">
-						<td><input name="selected_pre_stock" value="{{stock.id}}" type="checkbox"></td>
+						<td>
+                            {% if not stock.added_to_processing_stock %}
+                            <input name="selected_pre_stock" value="{{stock.id}}" type="checkbox">
+							{% endif %}
+                        </td>
 						<td>{{ stock.store_name }}</td>
 						<td>{{ stock.voucher_no }}</td>
 						<td><small>{{ stock.business_name }}</small></td>
@@ -116,9 +120,21 @@ $(document).ready(function (){
 	var mode = $('#mode').val();
 	if (mode == 'existing'){
 		processingStock.show();
+		var url1 = $("#processing_stock_container").attr("data-url");
+			var nameId = $(this).val();
+			$.ajax({
+						url: url1,
+						data: {
+						  'name': nameId
+						},
+						success: function (data) {
+						  $("#processing_stock_container").html(data);
+						}
+				  });
 	}
 	else{
 		processingStock.hide();
+		$('#processing_stock').remove();
 	}
 	});
 

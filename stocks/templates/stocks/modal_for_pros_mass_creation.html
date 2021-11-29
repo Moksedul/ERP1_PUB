@@ -26,12 +26,8 @@
 						<label for="processing_stock">Select Existing Processing Stock</label>
 					</div>
 					<div class="form-group">
-						<select id="processing_stock"
-								name="processing_stock"
-								data-url="{% url 'load-processing-stocks' %}"
-								style="width: 25em;">
-
-						</select>
+						<div id="processing_stock_container" data-url="{% url 'load-processing-stocks' %}">
+						</div>
 					</div>
 				</div>
 				</div>
@@ -45,16 +41,5 @@
 <script>
 	$("#btn_processing").click(function()
 		{
-			var url1 = $("#processing_stock").attr("data-url");
-			var nameId = $(this).val();
-			$.ajax({
-						url: url1,
-						data: {
-						  'name': nameId
-						},
-						success: function (data) {
-						  $("#processing_stock").html(data);
-						}
-				  });
 		});
 </script>

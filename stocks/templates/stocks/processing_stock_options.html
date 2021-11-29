@@ -1,4 +1,9 @@
+
+<select id="processing_stock"
+        name="processing_stock"
+        style="width: 25em;">
 <option selected value="">------</option>
 {% for stock in existing_stocks %}
 <option value="{{stock.id}}">{{stock.serial}}</option>
 {% endfor %}
+</select>

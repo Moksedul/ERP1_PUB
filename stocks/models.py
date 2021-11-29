@@ -56,23 +56,20 @@ class ProcessingStock(models.Model):
     processing_completed = models.BooleanField(default=False)
     remarks = models.CharField(max_length=225, blank=True)
 
-    def save(self, *args, **kwargs):
+    def delete(self, using=None, keep_parents=False):
         pre_stocks = self.pre_stocks.all()
         if pre_stocks:
-            pre_stocks.update(added_to_processing_stock=True)
-        return super().save(*args, **kwargs)
+            pre_stocks.update(added_to_processing_stock=False)
+        super(ProcessingStock, self).delete()
 
     def __str__(self):
-        pre_stocks = ''
-        for pre_stock in self.pre_stocks.all():
-            pre_stocks += str(pre_stock.product) + ',\r\n'
-        return pre_stocks
+        product_name = self.pre_stocks.all().first()
+        return product_name
 
-    def all_pre_stocks(self):
-        pre_stocks = ''
-        for pre_stock in self.pre_stocks.all():
-            pre_stocks += str(pre_stock.product) + ',\r\n'
-        return pre_stocks
+    @property
+    def product(self):
+        product_name = self.pre_stocks.all().first()
+        return product_name
 
     @property
     def details(self):

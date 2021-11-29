@@ -14,7 +14,7 @@ class PreStockAdmin(admin.ModelAdmin):
 
 
 class ProcessingStockAdmin(admin.ModelAdmin):
-    list_display = ('all_pre_stocks',)
+    list_display = ('product',)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "pre_stocks":
