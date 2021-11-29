@@ -78,6 +78,11 @@ class ProcessingStock(models.Model):
     def details(self):
         return '0'
 
+    @property
+    def serial(self):
+        from core.views import serial_gen
+        return serial_gen(self.id, 'PROS')
+
     @staticmethod
     def get_absolute_url():
         return reverse('processing-stock-list')

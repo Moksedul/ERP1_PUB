@@ -58,6 +58,7 @@
 		<div class="table-container infinite-trigger">
 			<form id="add_to_processing" action="{% url 'processing-stock-mess-creation' %}" method="post">
 				{% csrf_token %}
+				{% include 'stocks/modal_for_pros_mass_creation.html' %}
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Select</th>
@@ -102,57 +103,8 @@
 		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
 	</div>
 
-
-
-<!-- Modal For Mess Creation of Processing Store -->
-<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-	  <div class="modal-content">
-		<div class="modal-header form-title">
-		  <h6 class="modal-title" id="exampleModalLabel">Select Options</h6>
-		  <div class="close-btn" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true" style="color: white;">&times;</span>
-		  </div>
-		</div>
-		<div class="modal-body">
-			<form method="get" action="" >
-				<div class="form-group">
-				<div class="">
-					<div>
-						<label for="mode">Select Mode </label>
-					</div>
-					<div>
-						<select id="mode" name="mode" >
-							<option selected value="new">New Processing</option>
-							<option value="existing">Existing Processing</option>
-						</select>
-					</div>
-				</div>
-				<div id="select_processing_stock">
-					<div>
-						<label for="processing_stock">Select Existing Processing Stock</label>
-					</div>
-					<div>
-						<select id="processing_stock"
-								name="processing_stock"
-								data-url="{% url 'load-processing-stocks' %}"
-								style="width: 25em;">
-							
-						</select>
-					</div>
-				</div>
-				</div>
-				<button type="submit" class="btn btn-sm btn-info float-right">OK</button>
-			</form>
-		</div>
-	  </div>
-	</div>
-  </div>
-
-
-
 <!-- search options function-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
 $(document).ready(function (){	
 	var processingStock = $('#select_processing_stock');
@@ -186,22 +138,4 @@ $(document).ready(function (){
 		$( "#add_to_processing" ).submit();
 	});
 </script> -->
-
-<script>
-	$("#btn_processing").click(function()
-		{
-			var url1 = $("#processing_stock").attr("data-url");
-			var nameId = $(this).val();
-			$.ajax({
-						url: url1,
-						data: {
-						  'name': nameId
-						},
-						success: function (data) {
-						  $("#processing_stock").html(data);
-						}
-				  });
-		});
-</script>
-
 {% endblock content %}

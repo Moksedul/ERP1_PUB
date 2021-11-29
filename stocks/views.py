@@ -211,9 +211,15 @@ def load_processing_stock(request):
 def processing_stock_mess_creation(request):
 
     selected_pre_stocks = request.POST.getlist('selected_pre_stock')
-    selected_member = request.POST.get('selected_member')
+    selected_processing_stock = request.POST.get('processing_stock')
 
-    print(selected_pre_stocks)
+    if selected_processing_stock:
+        processing_stock = ProcessingStock.objects.get(id=selected_processing_stock)
+        print(processing_stock)
+
+    if selected_pre_stocks:
+        for item in selected_pre_stocks:
+            processing_stock.
 
     return redirect(ProcessingStock)
 
