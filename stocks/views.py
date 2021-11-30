@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -241,8 +242,8 @@ def processing_stock_mess_creation(request):
         pre_stocks.update(added_to_processing_stock=True)
         return redirect(ProcessingStock)
     else:
-        msg = 'Selected Products Are not Same'
-        return HttpResponse(msg, content_type='text/plain')
+        messages.warning(request, 'Please Select Same Products')
+        return redirect(PreStock)
 
 
 class FinishedStockCreate(LoginRequiredMixin, CreateView):
