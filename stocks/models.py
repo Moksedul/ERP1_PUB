@@ -64,7 +64,7 @@ class ProcessingStock(models.Model):
 
     def __str__(self):
         product_name = self.pre_stocks.all().first()
-        return product_name
+        return str(product_name)
 
     @property
     def product(self):

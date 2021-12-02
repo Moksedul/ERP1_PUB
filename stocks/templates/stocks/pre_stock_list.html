@@ -53,9 +53,7 @@
 				</div>
 			</div>
         </form>
-	{% if messages %}
-	<div class="messages" hidden="hidden">{% for message in messages %}{{ message }}{% endfor %}</div>
-	{% endif %}
+		{% include 'main/messages.html' %}
 	<div class="card card-body">
 	<div class="text-center form-title">{{tittle}}</div>
 		<div class="table-container infinite-trigger">

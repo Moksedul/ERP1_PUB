@@ -227,6 +227,9 @@ def processing_stock_mess_creation(request):
         all_pre_stocks = PreStock.objects.filter(id__in=selected_pre_stocks)
         [product_ids.append(pre_stock.product.pk) for pre_stock in all_pre_stocks]
         same_products = all(value == product_ids[0] for value in product_ids)
+    else:
+        messages.warning(request, 'Please Select Some Products')
+        return redirect(PreStock)
 
     if same_products and existing_processing_stock:
         for item in selected_pre_stocks:
