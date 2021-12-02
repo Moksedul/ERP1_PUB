@@ -35,7 +35,7 @@
                 </div>
 				<div class="col-md-2">
 					<button type="submit" class="btn btn-sm btn-info"><i class="fas fa-search"></i></button>
-					<a href="{% url 'pre-stock-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
+					<a href="{% url 'processing-stock-list' %}" class="btn btn-sm btn-info"> &#x21BB;</a>
 				</div>
 			</div>
         </form>
@@ -45,12 +45,10 @@
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Serial</th>
-					<th>Voucher</th>
-					<th>Business</th>
 					<th>Product</th>
+					<th>Business</th>
+					<th>Vouchers</th>
 					<th>Weight</th>
-                    <th>Bags</th>
-					<th>Rate (BDT)</th>
 					<th>Added Time</th>
 					<th>Added by</th>
 					<th>Controls</th>
@@ -59,12 +57,10 @@
 				{% for stock in stocks %}
 					<tr class="infinite-item">
 						<td>{{ stock.id }}</td>
-						<td>{{ stock.voucher_no }}</td>
-						<td><small>{{ stock.business_name }}</small></td>
 						<td>{{ stock.product }}</td>
-						<td>{{ stock.details.net_weight }}</td>
-						<td>{{ stock.number_of_bag }}</td>
-						<td>{{ stock.details.rate }}{{ stock.details.rate_condition }}</td>
+						<td><small>{{ stock.business }}</small></td>
+						<td>{{ stock.vouchers }}</td>
+						<td>{{ stock.weight }}</td>
 						<td>{{ stock.date_time_stamp }}</td>
 						<td>{{ stock.added_by }}</td>
 						<td>

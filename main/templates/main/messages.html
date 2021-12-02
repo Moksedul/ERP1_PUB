@@ -1,3 +1,31 @@
 {% if messages %}
-<div class="messages">{% for message in messages %}{{ message }}{% endfor %}</div>
+<!-- Button trigger modal -->
+<button id='modal_button' type="button" class="btn btn-primary" data-toggle="modal" data-target="#message_modal">
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-labelledby="message_modal_label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header form-title">
+        <h6 class="modal-title" id="message_modal_label">{% for message in messages %}{{ message.tags }}{% endfor %}</h6>
+        <div class="close-btn" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true" style="color: white;">&times;</span>
+        </div>
+      </div>
+      <div class="modal-body">
+       <div class="messages">{% for message in messages %}{{ message }}{% endfor %}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endif %}
+
+<script type="text/javascript">
+     $(document).ready(function(){
+         $('#modal_button').trigger('click')
+      });
+</script>

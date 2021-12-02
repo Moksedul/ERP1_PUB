@@ -72,6 +72,31 @@ class ProcessingStock(models.Model):
         return product_name
 
     @property
+    def vouchers(self):
+        pre_stocks = self.pre_stocks.all()
+        vouchers = []
+        for pre_stock in pre_stocks:
+            vouchers.append(pre_stock.voucher_no.voucher_number)
+        return list(dict.fromkeys(vouchers))
+
+    @property
+    def business(self):
+        pre_stocks = self.pre_stocks.all()
+        business = []
+        for pre_stock in pre_stocks:
+            if pre_stock.business_name:
+                business.append(pre_stock.business_name.name)
+        return list(dict.fromkeys(business))
+
+    @property
+    def weight(self):
+        weight = 0
+        pre_stocks = self.pre_stocks.all()
+        for pre_stock in pre_stocks:
+            weight += pre_stock.details['net_weight']
+        return weight
+
+    @property
     def details(self):
         return '0'
 

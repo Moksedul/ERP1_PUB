@@ -14,7 +14,7 @@ from .models import PreStock, Store, FinishedStock, ProcessingStock
 
 
 # Create your views here.
-class StockCreateView(LoginRequiredMixin, CreateView):
+class PreStockCreate(LoginRequiredMixin, CreateView):
     form_class = PreStockForm
     template_name = 'stocks/pre_stock_form.html'
 
@@ -29,7 +29,7 @@ class StockCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-def stock_view(request):
+def pre_stock_view(request):
     stocks = PreStock.objects.all()
     all_weights = []
     for stock in stocks:
@@ -39,7 +39,7 @@ def stock_view(request):
     return render(request, 'stocks/report.html', context)
 
 
-class StockListView(LoginRequiredMixin, ListView):
+class PreStockList(LoginRequiredMixin, ListView):
     model = PreStock
     template_name = 'stocks/pre_stock_list.html'
     context_object_name = 'stocks'
@@ -91,7 +91,7 @@ class StockListView(LoginRequiredMixin, ListView):
         return stocks
 
 
-class StockUpdateView(LoginRequiredMixin, UpdateView):
+class PreStockUpdate(LoginRequiredMixin, UpdateView):
     form_class = PreStockForm
     model = PreStock
     template_name = 'stocks/pre_stock_form.html'
@@ -103,7 +103,7 @@ class StockUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class StockDeleteView(LoginRequiredMixin, DeleteView):
+class PreStockDelete(LoginRequiredMixin, DeleteView):
     model = PreStock
     template_name = 'main/confirm_delete.html'
     success_url = '/pre_stock_list'
@@ -115,6 +115,8 @@ class ProcessingStockCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.added_by = self.request.user
+        pre_stocks = form.cleaned_data['pre_stocks']
+        pre_stocks.update(added_to_processing_stock=True)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -156,7 +158,7 @@ class ProcessingStockList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        stocks = ProcessingStock.objects.all().order_by('-last_updated_time')
+        stocks = ProcessingStock.objects.all().order_by('-date_time_stamp')
         product_contains = self.request.GET.get('product')
         business_contains = self.request.GET.get('business')
         store_contains = self.request.GET.get('store')
@@ -245,7 +247,7 @@ def processing_stock_mess_creation(request):
         pre_stocks.update(added_to_processing_stock=True)
         return redirect(ProcessingStock)
     else:
-        messages.warning(request, 'Please Select Same Products')
+        messages.warning(request, " Selected Product's are not Same")
         return redirect(PreStock)
 
 
