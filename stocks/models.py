@@ -76,7 +76,8 @@ class ProcessingStock(models.Model):
         pre_stocks = self.pre_stocks.all()
         vouchers = []
         for pre_stock in pre_stocks:
-            vouchers.append(pre_stock.voucher_no.voucher_number)
+            if pre_stock.voucher_no:
+                vouchers.append(pre_stock.voucher_no.voucher_number)
         return list(dict.fromkeys(vouchers))
 
     @property
@@ -113,7 +114,7 @@ class ProcessingStock(models.Model):
 class FinishedStock(models.Model):
     business_name = models.ForeignKey(Organization, on_delete=models.Empty, blank=True, null=True)
     store_name = models.ForeignKey(Store, on_delete=models.Empty, blank=True, null=True)
-    pre_stock = models.ForeignKey(PreStock, on_delete=models.SET_NULL, null=True, blank=True)
+    processing_stock = models.ForeignKey(ProcessingStock, on_delete=models.SET_NULL, null=True, blank=True)
     product = models.ForeignKey(Products, on_delete=models.PROTECT)
     buying_rate_per_kg = models.FloatField(default=0)
     processing_cost_per_kg = models.FloatField(default=0)
@@ -127,7 +128,7 @@ class FinishedStock(models.Model):
     remarks = models.CharField(max_length=225, blank=True)
 
     class Meta:
-        unique_together = [("product", "pre_stock")]
+        unique_together = [("product", "processing_stock")]
 
     def __str__(self):
         return str(self.product)

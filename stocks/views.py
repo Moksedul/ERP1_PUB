@@ -67,11 +67,11 @@ class PreStockList(LoginRequiredMixin, ListView):
         context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
-        context['tittle'] = 'Stock List'
+        context['tittle'] = 'Pre Stock List'
         return context
 
     def get_queryset(self):
-        stocks = PreStock.objects.all().order_by('-last_updated_time')
+        stocks = PreStock.objects.all().order_by('-date_time_stamp')
         product_contains = self.request.GET.get('product')
         business_contains = self.request.GET.get('business')
         store_contains = self.request.GET.get('store')
@@ -99,7 +99,7 @@ class PreStockUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['button_name'] = 'Update'
-        context['tittle'] = 'Update Stock'
+        context['tittle'] = 'Update Pre Stock'
         return context
 
 
@@ -185,6 +185,13 @@ class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        weight = 0
+        pre_stocks = self.object.pre_stocks.all()
+        for pre_stock in pre_stocks:
+            weight += pre_stock.details['net_weight']
+        pre_stocks = pre_stocks.first()
+        context['weight'] = weight
+        context['pre_stocks'] = pre_stocks
         context['button_name'] = 'Update'
         context['tittle'] = 'Update Processing Stock'
         return context

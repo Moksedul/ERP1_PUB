@@ -13,10 +13,10 @@
             <div class="table-container">
                 <form action="" method="post">
                     {% csrf_token %}
-                 <div class="form-row">
-                     <div class="form-group col-md-3 mb-0" >
-                   {{ form.pre_stocks|as_crispy_field }}
+                <div class="text-center">
+                    Product: {{pre_stocks}}, Initial Weight:{{weight}}Kg
                 </div>
+                    <hr>
                 <div class="form-group col-md-5 mb-0" >
                    {{ form.processing_completed|as_crispy_field }}
                 </div>

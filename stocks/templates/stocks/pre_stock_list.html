@@ -92,12 +92,14 @@
 						<td>{{ stock.date_time_stamp }}</td>
 						<td>{{ stock.added_by }}</td>
 						<td>
+						{% if not stock.voucher_no %}
 							{% if perms.stocks.change_prestock %}
 							|<a class="" href="{% url 'pre-stock-update' stock.id%}"><i class="fa fa-edit"></i></a>
 							{% endif %}
 							{% if perms.stocks.delete_prestock %}
 							|<a class="" href="{% url 'pre-stock-delete' stock.id%}"><i class="fa fa-trash"></i></a>
 							{% endif %}
+						{% endif %}
 						</td>
 					</tr>
 				{% endfor %}
