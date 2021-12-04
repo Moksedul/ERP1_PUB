@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Sum
@@ -10,7 +11,7 @@ from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
 from .forms import PreStockForm, FinishedStockForm, ProcessingStockForm
-from .models import PreStock, Store, FinishedStock, ProcessingStock
+from .models import PreStock, Store, FinishedStock, ProcessingStock, PostStock
 
 
 # Create your views here.
@@ -197,6 +198,39 @@ class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
+@login_required
+def processing_stock_update(request, pk):
+    pro_stock = ProcessingStock.objects.get(pk=pk)
+    processing_form = ProcessingStockForm(instance=pro_stock)
+    stock_set = inlineformset_factory(
+                    ProcessingStock, PostStock,
+                    fields=('product', 'weight', 'bags', 'rate_per_kg',), extra=1
+                    )
+    stock_form_set = stock_set(instance=pro_stock)
+    if request.method == 'POST':
+
+        processing_form = ProcessingStockForm(request.POST or None, instance=pro_stock)
+        stock_form_set = stock_set(request.POST, instance=pro_stock)
+        if processing_form.is_valid():
+            processing_form.save()
+            if stock_form_set.is_valid():
+                for stock_form in stock_form_set:
+                    stock_form.save()
+            return redirect('/stock_processing_list')
+    else:
+        processing_form = processing_form
+        stock_form_set = stock_form_set
+
+    context = {
+        'tittle': 'Processing Update',
+        'form': processing_form,
+        'form2set': stock_form_set,
+        'button_name': 'Update',
+        'formset_name': 'poststock_set',
+    }
+    return render(request, 'stocks/processing_stock_form.html', context=context)
+
+
 class ProcessingStockDelete(LoginRequiredMixin, DeleteView):
     model = ProcessingStock
     template_name = 'main/confirm_delete.html'
@@ -301,7 +335,7 @@ class FinishedStockList(LoginRequiredMixin, ListView):
         context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
-        context['tittle'] = 'Processing Stock List'
+        context['tittle'] = 'Finished Stock List'
         return context
 
     def get_queryset(self):

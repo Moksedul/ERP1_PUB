@@ -102,7 +102,7 @@ def buy_update(request, pk):
         'form': buy_form,
         'form2set': stock_form_set,
         'button_name': 'Update',
-        'formset_name': 'stock_set',
+        'formset_name': 'prestock_set',
     }
     return render(request, 'vouchers/buy_voucher_form.html', context=context)
 

@@ -45,6 +45,6 @@ class FinishedStockForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['pre_stock'].disabled = True
+        # self.fields['pre_stock'].disabled = True
         # if self.instance.voucher_no:
         #     self.fields['business_name'].disabled = True

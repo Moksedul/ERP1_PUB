@@ -111,6 +111,14 @@ class ProcessingStock(models.Model):
         return reverse('processing-stock-list')
 
 
+class PostStock(models.Model):
+    processing_stock = models.ForeignKey(ProcessingStock, on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.PROTECT)
+    weight = models.FloatField()
+    rate_per_kg = models.FloatField()
+    bags = models.FloatField(default=0)
+
+
 class FinishedStock(models.Model):
     business_name = models.ForeignKey(Organization, on_delete=models.Empty, blank=True, null=True)
     store_name = models.ForeignKey(Store, on_delete=models.Empty, blank=True, null=True)

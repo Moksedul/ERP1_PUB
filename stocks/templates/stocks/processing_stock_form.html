@@ -1,42 +1,97 @@
 {% extends "main/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<style>
-    .check-box-container{
-    overflow:auto;
-    height:200px;
-    background-color: white;
-    }
-</style>
-
-<div class="text-center form-title">{{tittle}}</div>
+    <div class="text-center form-title">{{tittle}}</div>
             <div class="table-container">
-                <form action="" method="post">
+                <div id="person_image" class="col-md"></div>
+                <form method="post"  id="buyForm" data-image-url="{% url 'load-person-image' %}" novalidate>
                     {% csrf_token %}
-                <div class="text-center">
-                    Product: {{pre_stocks}}, Initial Weight:{{weight}}Kg
+                 <div class="form-row">
+                <div class="col-12 border border-info rounded">
+                    {{ form2set.management_form }}
+                    <div id="form_set" class="form-row">
+                        {% for form in form2set.forms %}
+                            <div class='no_error'>
+                                {{ form2.as_table }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <span title="add more" id="add_more" style="float: right;" class="rounded add-more border border-info">+</span>
+                    <div id="empty_form" style="display:none">
+                        <div class='no_error'>
+                            {{ form2set.empty_form.as_table }}
+                        </div>
+                    </div>
                 </div>
-                    <hr>
-                <div class="form-group col-md-5 mb-0" >
-                   {{ form.processing_completed|as_crispy_field }}
-                </div>
-                <div class="form-group col-md-12 mb-0" >
+
+                <div class="form-group col-md-4 mb-0" >
                    {{ form.remarks|as_crispy_field }}
                 </div>
                 <button class="btn btn-sm btn-outline-info" type="submit">{{button_name}}</button>
                 </div>
         </form>
     </div>
-
-
-
-
-<!-- search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-	$(document).ready(function ()
+$(document).ready(function ()
 {
-    $('#div_id_pre_stocks div:first').addClass('check-box-container');
+   var $select1 = $('#id_seller_name');
+       $select1.on('change',function()
+       {
+            var url2 = $("#buyForm").attr("data-image-url");
+            var nameId = $(this).val();
+             $.ajax({
+                        url: url2,
+                        data: {
+                          'name': nameId
+                        },
+                        success: function (data) {
+                          $("#person_image").html(data);
+                        }
+                  });
+       }).trigger('change');
 });
 </script>
+
+<script>
+    $(document).ready(function ()
+{
+    var totalForms = $('#id_{{formset_name}}-TOTAL_FORMS').val();
+
+      for (let i = 0; i < totalForms; i++) {
+                $("#id_{{formset_name}}-"+ i +"-product").select2({});
+            }
+    $("#id_business_name").select2({});
+    $("#id_seller_name").select2({});
+    $("#id_bazar_or_company_name").select2({});
+
+   var addMore = $('#add_more')
+   var productTitle = $('.product')
+   var lastProductTitle = productTitle[productTitle.length-2]
+   $(lastProductTitle).append(addMore)
+
+});
+
+</script>
+
+<script>
+    $('#add_more').click(function() {
+
+        var form_idx = $('#id_{{formset_name}}-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_{{formset_name}}-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var id = "#id_{{formset_name}}-" + form_idx + "-product"
+        $(id).select2({});
+
+        var productTitle = $('.product')
+        var lastProductTitle = productTitle[productTitle.length-2]
+        var textProduct = 'Product-'  + (productTitle.length-1)
+        $(lastProductTitle).text(textProduct);
+        $(lastProductTitle).append(this)
+
+    });
+</script>
+
+<script src="/static/main/js/responsive.content.height.js"></script>
+
 {% endblock content %}
