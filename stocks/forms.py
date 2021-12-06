@@ -31,10 +31,13 @@ class ProcessingStockForm(ModelForm):
 
     class Meta:
         model = ProcessingStock
-        exclude = ('added_by', 'pre_stocks',)
+        exclude = ('added_by',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self_object = ProcessingStock.objects.get(id=self.instance.id)
+        self.fields['pre_stocks'].queryset= self_object.pre_stocks.all()
+        self.fields['pre_stocks'].widget = CheckboxSelectMultiple()
 
 
 class FinishedStockForm(ModelForm):

@@ -202,29 +202,28 @@ class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
 def processing_stock_update(request, pk):
     pro_stock = ProcessingStock.objects.get(pk=pk)
     processing_form = ProcessingStockForm(instance=pro_stock)
-    stock_set = inlineformset_factory(
+    post_stock_set = inlineformset_factory(
                     ProcessingStock, PostStock,
-                    fields=('product', 'weight', 'bags', 'rate_per_kg',), extra=1
+                    fields=('product', 'weight', 'bags', 'rate_per_kg',), extra=0
                     )
-    stock_form_set = stock_set(instance=pro_stock)
+    post_stock_form_set = post_stock_set(instance=pro_stock)
     if request.method == 'POST':
-
         processing_form = ProcessingStockForm(request.POST or None, instance=pro_stock)
-        stock_form_set = stock_set(request.POST, instance=pro_stock)
+        post_stock_form_set = post_stock_set(request.POST, instance=pro_stock)
         if processing_form.is_valid():
             processing_form.save()
-            if stock_form_set.is_valid():
-                for stock_form in stock_form_set:
-                    stock_form.save()
+            if post_stock_form_set.is_valid():
+                post_stock_form_set.save()
             return redirect('/stock_processing_list')
     else:
         processing_form = processing_form
-        stock_form_set = stock_form_set
+        post_stock_form_set = post_stock_form_set
 
     context = {
+        'processing_stock': pro_stock,
         'tittle': 'Processing Update',
         'form': processing_form,
-        'form2set': stock_form_set,
+        'form2set': post_stock_form_set,
         'button_name': 'Update',
         'formset_name': 'poststock_set',
     }
@@ -277,15 +276,11 @@ def processing_stock_mess_creation(request):
     if same_products and existing_processing_stock:
         for item in selected_pre_stocks:
             existing_processing_stock.pre_stocks.add(item)
-        pre_stocks = PreStock.objects.filter(id__in=selected_pre_stocks)
-        pre_stocks.update(added_to_processing_stock=True)
         return redirect(PreStock)
     elif same_products and not existing_processing_stock:
         new_processing_stock = ProcessingStock()
         new_processing_stock.save()
         new_processing_stock.pre_stocks.set(selected_pre_stocks)
-        pre_stocks = new_processing_stock.pre_stocks.all()
-        pre_stocks.update(added_to_processing_stock=True)
         return redirect(ProcessingStock)
     else:
         messages.warning(request, " Selected Product's are not Same")
@@ -391,3 +386,11 @@ def stock_update():
                                 )
         print('stock updated:'+ str(item.id))
 
+
+def processing_complete(request, pk):
+    processing_stock = ProcessingStock.objects.get(id=pk)
+    processed_products = PostStock.objects.filter(processing_stock=processing_stock)
+    for processed_product in processed_products:
+        FinishedStock.objects.create(business_name=processed_product.)
+    messages.success(request, "Processing Completed and items are added to Finished Stock")
+    return redirect(FinishedStock)

@@ -24,7 +24,7 @@ class ProcessingStockAdmin(admin.ModelAdmin):
 
 class FinishedStockAdmin(admin.ModelAdmin):
     list_display = ('product', 'weight',
-                    'buying_rate_per_kg', 'processing_cost_per_kg',
+                    'buying_rate_per_kg',
                     'number_of_bag', 'date_time_stamp', 'last_updated_time',
                     'added_by', 'updated_by')
 

@@ -88,10 +88,7 @@ def buy_update(request, pk):
             buy.added_by = request.user
             buy.save()
             if stock_form_set.is_valid():
-                for stock_form in stock_form_set:
-                    stock = stock_form.save(commit=False)
-                    stock.business_name = buy.business_name
-                    stock.save()
+                stock_form_set.save()
             return redirect('/buy_list')
     else:
         buy_form = buy_form

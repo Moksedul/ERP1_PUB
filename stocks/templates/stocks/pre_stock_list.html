@@ -84,7 +84,7 @@
                         </td>
 						<td>{{ stock.store_name }}</td>
 						<td>{{ stock.voucher_no }}</td>
-						<td><small>{{ stock.business_name }}</small></td>
+						<td><small>{{ stock.voucher_no.business_name }}</small></td>
 						<td>{{ stock.product }}</td>
 						<td>{{ stock.details.net_weight }}</td>
 						<td>{{ stock.number_of_bag }}</td>
@@ -92,7 +92,7 @@
 						<td>{{ stock.date_time_stamp }}</td>
 						<td>{{ stock.added_by }}</td>
 						<td>
-						{% if not stock.voucher_no %}
+						{% if not stock.voucher_no and not stock.added_to_processing_stock %}
 							{% if perms.stocks.change_prestock %}
 							|<a class="" href="{% url 'pre-stock-update' stock.id%}"><i class="fa fa-edit"></i></a>
 							{% endif %}
@@ -109,7 +109,7 @@
 		</div>
 		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
 	</div>
-	{% include 'main/messages.html' %}
+
 <!-- search options function-->
 
 

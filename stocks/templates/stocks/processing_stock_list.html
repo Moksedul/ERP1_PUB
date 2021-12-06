@@ -57,7 +57,10 @@
 						<td>{{ stock.product }}</td>
 						<td><small>{{ stock.business }}</small></td>
 						<td>{{ stock.vouchers }}</td>
-						<td>{{ stock.weight }}</td>
+						<td>
+							<div>Initial: {{ stock.weight.initial_weight }} Kg</div>
+						    <div>remaining: {{ stock.weight.remaining_weight }} Kg</div>
+						</td>
 						<td>{{ stock.date_time_stamp }}</td>
 						<td>{{ stock.added_by }}</td>
 						<td>

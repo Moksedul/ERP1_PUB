@@ -53,7 +53,6 @@ def sale_update(request, pk):
         form1 = SaleForm(request.POST or None, instance=sale)
         form2set = ProductFormSet(request.POST, instance=sale)
         if form1.is_valid():
-
             sale = form1.save(commit=False)
             sale.posted_by = request.user
             sale.save()
