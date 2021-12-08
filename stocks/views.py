@@ -204,7 +204,7 @@ def processing_stock_update(request, pk):
     processing_form = ProcessingStockForm(instance=pro_stock)
     post_stock_set = inlineformset_factory(
                     ProcessingStock, PostStock,
-                    fields=('product', 'weight', 'bags', 'rate_per_kg',), extra=0
+                    fields=('business_name', 'product', 'weight', 'bags', 'rate_per_kg',), extra=0
                     )
     post_stock_form_set = post_stock_set(instance=pro_stock)
     if request.method == 'POST':
@@ -391,6 +391,11 @@ def processing_complete(request, pk):
     processing_stock = ProcessingStock.objects.get(id=pk)
     processed_products = PostStock.objects.filter(processing_stock=processing_stock)
     for processed_product in processed_products:
-        FinishedStock.objects.create(business_name=processed_product.)
+       FinishedStock.objects.create(business_name=processed_product.business_name,
+                                    rate_per_kg=processed_product.rate_per_kg, weight=processed_product.weight,
+                                    number_of_bag=processed_product.bags,
+                                    product=processed_product.product,
+                                    processing_stock=processed_product.processing_stock
+                                    )
     messages.success(request, "Processing Completed and items are added to Finished Stock")
     return redirect(FinishedStock)

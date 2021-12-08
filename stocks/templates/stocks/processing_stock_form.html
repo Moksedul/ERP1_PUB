@@ -18,15 +18,18 @@
                     {{ form2set.management_form }}
                     <div id="form_set" class="form-row">
                         {% for form in form2set.forms %}
-                            <div class='no_error border border-info col-md-2 rounded'>
-                                <div class="text-center product" style="color: grey;">Product-{{ forloop.counter }}</div>
+                            <div class='no_error border border-info col-md-3 rounded'>
+                                <div class="text-center product" style="color: grey;">
+                                     <span class="rounded add-more border border-info">Complete</span>
+                                    Product-{{ forloop.counter }}
+                                </div>
                                  {{ form|crispy }}
                             </div>
                         {% endfor %}
                     </div>
                     <span title="add more" id="add_more" style="float: right;" class="rounded add-more border border-info">+</span>
                     <div id="empty_form" style="display:none">
-                        <div class='no_error col-md-2 border border-info'>
+                        <div class='no_error col-md-3 border border-info'>
                             <div class="text-center product" style="color: grey;">empty</div>
                             {{ form2set.empty_form|crispy  }}
                         </div>

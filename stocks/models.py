@@ -126,6 +126,7 @@ class ProcessingStock(models.Model):
 
 class PostStock(models.Model):
     processing_stock = models.ForeignKey(ProcessingStock, on_delete=models.CASCADE)
+    business_name = models.ForeignKey(Organization, on_delete=models.Empty)
     product = models.ForeignKey(Products, on_delete=models.PROTECT)
     weight = models.FloatField(default=0)
     rate_per_kg = models.FloatField(default=0)
@@ -137,7 +138,7 @@ class FinishedStock(models.Model):
     store_name = models.ForeignKey(Store, on_delete=models.Empty, blank=True, null=True)
     processing_stock = models.ForeignKey(ProcessingStock, on_delete=models.SET_NULL, null=True, blank=True)
     product = models.ForeignKey(Products, on_delete=models.PROTECT)
-    buying_rate_per_kg = models.FloatField(default=0)
+    rate_per_kg = models.FloatField(default=0)
     weight = models.FloatField(default=0)
     number_of_bag = models.FloatField(default=0)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
