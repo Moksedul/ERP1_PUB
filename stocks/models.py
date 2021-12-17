@@ -131,6 +131,7 @@ class PostStock(models.Model):
     weight = models.FloatField(default=0)
     rate_per_kg = models.FloatField(default=0)
     bags = models.FloatField(default=0)
+    is_finished = models.BooleanField(default=False)
 
 
 class FinishedStock(models.Model):

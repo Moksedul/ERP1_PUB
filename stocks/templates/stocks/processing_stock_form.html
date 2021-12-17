@@ -18,9 +18,13 @@
                     {{ form2set.management_form }}
                     <div id="form_set" class="form-row">
                         {% for form in form2set.forms %}
-                            <div class='no_error border border-info col-md-3 rounded'>
+                            <div data_n='{{ forloop.counter }}' class='form_set no_error border border-info col-md-3 rounded'>
                                 <div class="text-center product" style="color: grey;">
-                                     <span class="rounded add-more border border-info">Complete</span>
+                                     <span 
+                                        id="complete-{{ forloop.counter }}" onclick="completeProcessing('{{forloop.counter}}');"
+                                        class="rounded add-more border border-info">
+                                        Complete
+                                    </span>
                                     Product-{{ forloop.counter }}
                                 </div>
                                  {{ form|crispy }}
@@ -48,7 +52,7 @@
                 <div class="col-12">
                     <div class="float-right">
                     <div class="btn btn-sm btn-primary" >
-                        <a href="{% url 'complete-processing' processing_stock.id %}">Complete Processing</a></div>
+                        <a href="{% url 'complete-processing' processing_stock.id 0 %}">Complete Processing</a></div>
                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
                     </div>
                 </div>
@@ -96,6 +100,40 @@
         $(lastProductTitle).text(textProduct);
         $(lastProductTitle).append(this)
 
+    });
+</script>
+
+<script>
+function completeProcessing(productID)
+{   
+    var productID = productID - 1;
+    var postStockId = '#id_poststock_set-' +  productID  + '-id';
+    var postStock = $(postStockId).val();
+    console.log(postStock);
+    window.location.href = '/complete_processing/{{processing_stock.id}}/'+postStock+'';
+}
+</script>
+
+
+<script>
+     $(document).ready(function(){
+        
+        var formset = $('.form_set');
+
+        $(formset).each(function(i, obj) {
+            var postStockId = '#id_poststock_set-' +  i  + '-id';
+            var postStock = $(postStockId).val();
+
+            if (i == 0){
+                completeButtonID = i+1
+                $(obj).find("input").attr("readonly", true);
+                $(obj).find("input").attr("disabled", true);
+                $(obj).find("select").attr("readonly", true);
+                $(obj).find("select").attr("disabled", true);
+                $(obj).find('#complete-'+ completeButtonID +'').remove();
+            }
+
+        });
     });
 </script>
 

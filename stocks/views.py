@@ -2,8 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.db.models import Sum
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
@@ -203,13 +202,14 @@ def processing_stock_update(request, pk):
     pro_stock = ProcessingStock.objects.get(pk=pk)
     processing_form = ProcessingStockForm(instance=pro_stock)
     post_stock_set = inlineformset_factory(
-                    ProcessingStock, PostStock,
-                    fields=('business_name', 'product', 'weight', 'bags', 'rate_per_kg',), extra=0
-                    )
+        ProcessingStock, PostStock,
+        fields=('business_name', 'product', 'weight', 'bags', 'rate_per_kg',), extra=0
+    )
     post_stock_form_set = post_stock_set(instance=pro_stock)
     if request.method == 'POST':
         processing_form = ProcessingStockForm(request.POST or None, instance=pro_stock)
         post_stock_form_set = post_stock_set(request.POST, instance=pro_stock)
+        print(processing_form)
         if processing_form.is_valid():
             processing_form.save()
             if post_stock_form_set.is_valid():
@@ -252,11 +252,10 @@ def load_processing_stock(request):
 
 @login_required()
 def processing_stock_mess_creation(request):
-
     selected_pre_stocks = request.POST.getlist('selected_pre_stock')
     selected_processing_stock = request.POST.get('processing_stock')
     product_ids = []
-    same_products = None
+    # same_products = None
 
     if selected_processing_stock:
         existing_processing_stock = ProcessingStock.objects.get(id=selected_processing_stock)
@@ -384,18 +383,27 @@ def stock_update():
                                 number_of_bag=item.number_of_bag, weight_of_bags=item.weight_of_each_bag,
                                 added_by=item.added_by, date_time_stamp=item.date_time_stamp,
                                 )
-        print('stock updated:'+ str(item.id))
+        print('stock updated:' + str(item.id))
 
 
-def processing_complete(request, pk):
-    processing_stock = ProcessingStock.objects.get(id=pk)
-    processed_products = PostStock.objects.filter(processing_stock=processing_stock)
-    for processed_product in processed_products:
-       FinishedStock.objects.create(business_name=processed_product.business_name,
-                                    rate_per_kg=processed_product.rate_per_kg, weight=processed_product.weight,
-                                    number_of_bag=processed_product.bags,
-                                    product=processed_product.product,
-                                    processing_stock=processed_product.processing_stock
-                                    )
-    messages.success(request, "Processing Completed and items are added to Finished Stock")
-    return redirect(FinishedStock)
+def processing_complete(request, pk, pro_id):
+
+    def create_fs(processed_stock):
+        FinishedStock.objects.create(business_name=processed_stock.business_name,
+                                     rate_per_kg=processed_stock.rate_per_kg, weight=processed_stock.weight,
+                                     number_of_bag=processed_stock.bags,
+                                     product=processed_stock.product,
+                                     processing_stock=processed_stock.processing_stock
+                                     )
+    if pk is not 0 and pro_id is 0:
+        processing_stock = ProcessingStock.objects.get(id=pk)
+        processed_products = PostStock.objects.filter(processing_stock=processing_stock)
+        for processed_product in processed_products:
+            create_fs(processed_product)
+        messages.success(request, "Processing Completed and items are added to Finished Stock")
+        return redirect(FinishedStock)
+    elif pk is not 0 and pro_id is not 0:
+        processed_product = PostStock.objects.get(id=pro_id)
+        create_fs(processed_product)
+        messages.success(request, "Processing Completed and Selected item is added to Finished Stock")
+        return redirect('processing-stock-update', pk)

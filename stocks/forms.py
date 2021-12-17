@@ -1,6 +1,6 @@
 from django.forms import ModelForm, CheckboxSelectMultiple
 
-from stocks.models import PreStock, FinishedStock, ProcessingStock
+from stocks.models import PreStock, FinishedStock, ProcessingStock, PostStock
 
 
 class PreStockForm(ModelForm):
@@ -36,8 +36,14 @@ class ProcessingStockForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self_object = ProcessingStock.objects.get(id=self.instance.id)
-        self.fields['pre_stocks'].queryset= self_object.pre_stocks.all()
         self.fields['pre_stocks'].widget = CheckboxSelectMultiple()
+        self.fields['pre_stocks'].queryset = self_object.pre_stocks.all()
+
+
+class PostStockForm(ModelForm):
+    class Meta:
+        model = PostStock
+        fields = '__all__'
 
 
 class FinishedStockForm(ModelForm):
