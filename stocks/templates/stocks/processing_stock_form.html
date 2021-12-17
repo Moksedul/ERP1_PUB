@@ -123,15 +123,29 @@ function completeProcessing(productID)
         $(formset).each(function(i, obj) {
             var postStockId = '#id_poststock_set-' +  i  + '-id';
             var postStock = $(postStockId).val();
+            var isCompleted = false;
 
-            if (i == 0){
-                completeButtonID = i+1
-                $(obj).find("input").attr("readonly", true);
-                $(obj).find("input").attr("disabled", true);
-                $(obj).find("select").attr("readonly", true);
-                $(obj).find("select").attr("disabled", true);
-                $(obj).find('#complete-'+ completeButtonID +'').remove();
-            }
+            $.ajax({
+                    url: '/is_completed',
+                    data: {
+                          'post_stock': postStock
+                        },
+                    success: function(response) {
+                       isCompleted = response.is_completed;
+                       if (isCompleted){
+                    completeButtonID = i+1
+                    $(obj).find("input").attr("readonly", true);
+                    $(obj).find("input").attr("disabled", true);
+                    $(obj).find("select").attr("readonly", true);
+                    $(obj).find("select").attr("disabled", true);
+                    $(obj).find('#complete-'+ completeButtonID +'').remove();
+                     }
+
+                    },
+                    failure: function(data) { 
+                        alert('Got an error dude');
+                    }
+                }); 
 
         });
     });

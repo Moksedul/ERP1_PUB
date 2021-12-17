@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -400,10 +401,20 @@ def processing_complete(request, pk, pro_id):
         processed_products = PostStock.objects.filter(processing_stock=processing_stock)
         for processed_product in processed_products:
             create_fs(processed_product)
+            processed_product.is_finished = True
+            processed_product.save()
         messages.success(request, "Processing Completed and items are added to Finished Stock")
         return redirect(FinishedStock)
     elif pk is not 0 and pro_id is not 0:
         processed_product = PostStock.objects.get(id=pro_id)
         create_fs(processed_product)
+        processed_product.is_finished = True
+        processed_product.save()
         messages.success(request, "Processing Completed and Selected item is added to Finished Stock")
         return redirect('processing-stock-update', pk)
+
+
+def is_completed(request):
+    post_stock_id = request.GET.get('post_stock')
+    post_stock = PostStock.objects.get(id=post_stock_id)
+    return JsonResponse({"is_completed": post_stock.is_finished})
