@@ -204,13 +204,12 @@ def processing_stock_update(request, pk):
     processing_form = ProcessingStockForm(instance=pro_stock)
     post_stock_set = inlineformset_factory(
         ProcessingStock, PostStock,
-        fields=('business_name', 'product', 'weight', 'bags', 'rate_per_kg',), extra=0
+        fields=('business_name', 'product', 'weight', 'bags', 'rate_per_kg', 'store'), extra=0
     )
     post_stock_form_set = post_stock_set(instance=pro_stock)
     if request.method == 'POST':
         processing_form = ProcessingStockForm(request.POST or None, instance=pro_stock)
         post_stock_form_set = post_stock_set(request.POST, instance=pro_stock)
-        print(processing_form)
         if processing_form.is_valid():
             processing_form.save()
             if post_stock_form_set.is_valid():
@@ -396,15 +395,26 @@ def processing_complete(request, pk, pro_id):
                                      product=processed_stock.product,
                                      processing_stock=processed_stock.processing_stock
                                      )
+
     if pk is not 0 and pro_id is 0:
         processing_stock = ProcessingStock.objects.get(id=pk)
-        processed_products = PostStock.objects.filter(processing_stock=processing_stock)
-        for processed_product in processed_products:
-            create_fs(processed_product)
-            processed_product.is_finished = True
-            processed_product.save()
-        messages.success(request, "Processing Completed and items are added to Finished Stock")
+        processed_products = PostStock.objects.filter(processing_stock=processing_stock, is_finished=False)
+
+        if processed_products.exists():
+            for processed_product in processed_products:
+                try:
+                    create_fs(processed_product)
+                    processed_product.is_finished = True
+                    processed_product.save()
+                    messages.success(request, "Processing Completed and items are added to Finished Stock")
+                except:
+                    messages.error(request, "Already Finished!")
+                    return redirect('processing-stock-update', pk)
+        else:
+            messages.error(request, "All are Already Finished!")
+            return redirect('processing-stock-update', pk)
         return redirect(FinishedStock)
+
     elif pk is not 0 and pro_id is not 0:
         processed_product = PostStock.objects.get(id=pro_id)
         create_fs(processed_product)
@@ -414,7 +424,7 @@ def processing_complete(request, pk, pro_id):
         return redirect('processing-stock-update', pk)
 
 
-def is_completed(request):
+def post_stock_is_completed(request):
     post_stock_id = request.GET.get('post_stock')
     post_stock = PostStock.objects.get(id=post_stock_id)
     return JsonResponse({"is_completed": post_stock.is_finished})

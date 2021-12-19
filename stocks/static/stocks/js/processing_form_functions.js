@@ -1,79 +1,4 @@
-{% extends "main/base.html" %}
-{% load crispy_forms_tags %}
-{% block content %}
-<style type="text/css">
-    .btn>a {
-        text-decoration: none; 
-        color: white;
-        }
-</style>
-    <div class="container">
-        <div class="text-center form-title">{{tittle}}</div>
-        <div class="table-container">
-        <div class="card">
-            <div>Vouchers: {{processing_stock.vouchers}}</div>
-            <div>Initial Weight: {{processing_stock.weight.initial_weight}} Kg</div>
-            <div>Remaining Weight: {{processing_stock.weight.remaining_weight}} Kg</div>
-        </div>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="form-group col-md-6 mb-0" >
-                        {{ form.pre_stocks|as_crispy_field }}
-                </div>
-                <div class="col-12 border border-info rounded">
-                    {{ form2set.management_form }}
-                    <div id="form_set" class="form-row">
-                        {% for form in form2set.forms %}
-                            <div data_n='{{ forloop.counter }}' class='form_set no_error border border-info col-md-3 rounded'>
-                                <div class="text-center product" style="color: grey;">
-                                     <span 
-                                        id="complete-{{ forloop.counter }}" onclick="completeProcessing('{{forloop.counter}}');"
-                                        class="rounded add-more border border-info">
-                                        Complete
-                                    </span>
-                                    Product-{{ forloop.counter }}
-                                </div>
-                                 {{ form|crispy }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <span title="add more" id="add_more" style="float: right;" class="rounded add-more border border-info">+</span>
-                    <div id="empty_form" style="display:none">
-                        <div class='no_error col-md-3 border border-info'>
-                            <div class="text-center product" style="color: grey;">empty</div>
-                            {{ form2set.empty_form|crispy  }}
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-12">
-                    <hr>
-                </div>
-
-                    <div class="form-group col-md-6 mb-0" >
-                        {{ form.remarks|as_crispy_field }}
-                    </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="float-right">
-                    <div class="btn btn-sm btn-primary" >
-                        <a href="{% url 'complete-processing' processing_stock.id 0 %}">Complete Processing</a>
-                    </div>
-                    <button id="form_submit" class="btn btn-sm btn-primary" type="submit">Update</button>
-                    </div>
-                </div>
-            </div>
-
-        </form>
-    </div>
-    </div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<script>
-    
 $(document).ready(function ()
 {
     var totalForms = $('#id_{{formset_name}}-TOTAL_FORMS').val(); // for getting total forms number
@@ -165,9 +90,3 @@ $('#form_submit').click(function() {
     $('#form_set').find("select").attr("disabled", false);
 
 });
-
-</script>
- 
-<script src="/static/main/js/responsive.content.height.js"></script>
-
-{% endblock content %}

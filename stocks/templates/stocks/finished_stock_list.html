@@ -39,6 +39,9 @@
 				</div>
 			</div>
         </form>
+	<div class="row">
+	<div class="col-md-4"></div>
+	<div class="col-md-8">			
 	<div class="card card-body">
 	<div class="text-center form-title">{{tittle}}</div>
 		<div class="table-container infinite-trigger">
@@ -63,7 +66,7 @@
 						<td>{{ stock.weight }}</td>
 						<td>{{ stock.number_of_bag }}</td>
 						<td>{{ stock.rate_per_kg }}</td>
-						<td>{{ stock.date_time_stamp }}</td>
+						<td>{{ stock.date_time_stamp.date }}</td>
 						<td>{{ stock.added_by }}</td>
 						<td>
 							{% if perms.stocks.change_finishedstock %}
@@ -80,6 +83,8 @@
 			</table>
 		</div>
 		<span hidden="hidden">{% include 'main/pagination.html' %}</span>
+	</div>
+	</div>
 	</div>
 
 
