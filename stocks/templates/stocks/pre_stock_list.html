@@ -78,6 +78,7 @@
 				{% for stock in stocks %}
 					<tr class="infinite-item">
 						<td>
+							
                             {% if not stock.added_to_processing_stock %}
                             <input name="selected_pre_stock" value="{{stock.id}}" type="checkbox">
 							{% endif %}
@@ -120,7 +121,7 @@ $(document).ready(function (){
 	var processingStock = $('#select_processing_stock');
 	processingStock.hide();
 	
-    $("select").select2({});
+    // $("select").select2({});
 
 	$('#mode').change(function(){
 	var mode = $('#mode').val();

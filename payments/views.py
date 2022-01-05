@@ -49,7 +49,7 @@ class PaymentCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.payed_by = self.request.user
         super().form_valid(form=form)
-        voucher = get_object_or_404(Payment, payment_no=form.cleaned_data['payment_no'])
+        voucher = get_object_or_404(Payment, id=self.object.id)
         data = {
             'general_voucher': None,
             'payment_no': voucher,

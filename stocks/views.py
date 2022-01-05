@@ -187,7 +187,7 @@ class ProcessingStockUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         weight = 0
-        pre_stocks = self.object.pre_stocks.all()
+        pre_stocks = self.object.pre_processing_stocks.all()
         for pre_stock in pre_stocks:
             weight += pre_stock.details['net_weight']
         pre_stocks = pre_stocks.first()
@@ -254,12 +254,17 @@ def load_processing_stock(request):
 def processing_stock_mess_creation(request):
     selected_pre_stocks = request.POST.getlist('selected_pre_stock')
     selected_processing_stock = request.POST.get('processing_stock')
+    weight = request.POST.get('weight')
     product_ids = []
-    # same_products = None
+    if weight == '' or not weight:
+        messages.warning(request, 'Please Enter Weight')
+        return redirect(PreStock)
+    else:
+        pass
 
     if selected_processing_stock:
         existing_processing_stock = ProcessingStock.objects.get(id=selected_processing_stock)
-        pre_stocks_in_exs_pros = existing_processing_stock.pre_stocks.all()
+        pre_stocks_in_exs_pros = existing_processing_stock.pre_processing_stocks.all()
         [product_ids.append(pre_stock.product.pk) for pre_stock in pre_stocks_in_exs_pros]
     else:
         existing_processing_stock = None
@@ -279,7 +284,7 @@ def processing_stock_mess_creation(request):
     elif same_products and not existing_processing_stock:
         new_processing_stock = ProcessingStock()
         new_processing_stock.save()
-        new_processing_stock.pre_stocks.set(selected_pre_stocks)
+        new_processing_stock.pre_processing_stocks.set(selected_pre_stocks)
         return redirect(ProcessingStock)
     else:
         messages.warning(request, " Selected Product's are not Same")
@@ -408,7 +413,7 @@ def processing_complete(request, pk, pro_id):
                     processed_product.save()
                     messages.success(request, "Processing Completed and items are added to Finished Stock")
                 except:
-                    messages.error(request, "Already Finished!")
+                    messages.error(request, "Something Wrong !!")
                     return redirect('processing-stock-update', pk)
         else:
             messages.error(request, "All are Already Finished!")
@@ -417,10 +422,13 @@ def processing_complete(request, pk, pro_id):
 
     elif pk is not 0 and pro_id is not 0:
         processed_product = PostStock.objects.get(id=pro_id)
-        create_fs(processed_product)
-        processed_product.is_finished = True
-        processed_product.save()
-        messages.success(request, "Processing Completed and Selected item is added to Finished Stock")
+        try:
+            create_fs(processed_product)
+            processed_product.is_finished = True
+            processed_product.save()
+            messages.success(request, "Processing Completed and Selected item is added to Finished Stock")
+        except:
+            messages.error(request, "Something Wrong !!")
         return redirect('processing-stock-update', pk)
 
 

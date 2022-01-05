@@ -43,10 +43,12 @@ class PreStock(models.Model):
 
     @property
     def added_to_processing_stock(self):
-        processing_stock = ProcessingStock.objects.filter(pre_stocks__id=self.id)
+        processing_stock = ''
         if processing_stock:
-            return True
+
+            return False
         else:
+
             return False
 
     @staticmethod
@@ -54,8 +56,16 @@ class PreStock(models.Model):
         return reverse('pre-stock-list')
 
 
+class PreProcessingStock(models.Model):
+    pre_stock = models.ForeignKey
+    weight = models.FloatField()
+
+    def __str__(self):
+        return str(self.pre_stock)
+
+
 class ProcessingStock(models.Model):
-    pre_stocks = models.ManyToManyField(PreStock)
+    pre_processing_stocks = models.ManyToManyField(PreProcessingStock)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
     last_updated_time = models.DateTimeField(auto_now=True, null=True)
     added_by = CurrentUserField(related_name='processing_stock_added_by')
@@ -64,17 +74,17 @@ class ProcessingStock(models.Model):
     remarks = models.CharField(max_length=225, blank=True)
 
     def __str__(self):
-        product_name = self.pre_stocks.all().first()
+        product_name = self.pre_processing_stocks.all().first()
         return str(product_name)
 
     @property
     def product(self):
-        product_name = self.pre_stocks.all().first()
+        product_name = self.pre_processing_stocks.all().first()
         return product_name
 
     @property
     def vouchers(self):
-        pre_stocks = self.pre_stocks.all()
+        pre_stocks = self.pre_processing_stocks.all()
         vouchers = []
         for pre_stock in pre_stocks:
             if pre_stock.voucher_no:
@@ -83,7 +93,7 @@ class ProcessingStock(models.Model):
 
     @property
     def business(self):
-        pre_stocks = self.pre_stocks.all()
+        pre_stocks = self.pre_processing_stocks.all()
         business = []
         for pre_stock in pre_stocks:
             if pre_stock.voucher_no:
@@ -93,7 +103,7 @@ class ProcessingStock(models.Model):
     @property
     def weight(self):
         initial_weight = 0
-        pre_stocks = self.pre_stocks.all()
+        pre_stocks = self.pre_processing_stocks.all()
 
         for pre_stock in pre_stocks:
             initial_weight += pre_stock.details['net_weight']
@@ -132,7 +142,7 @@ class PostStock(models.Model):
     rate_per_kg = models.FloatField(default=0)
     bags = models.FloatField(default=0)
     is_finished = models.BooleanField(default=False)
-    store = models.ForeignKey(Store, on_delete=models.Empty, null=True)
+    store = models.ForeignKey(Store, on_delete=models.Empty, default=1)
 
 
 class FinishedStock(models.Model):

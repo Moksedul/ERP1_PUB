@@ -32,7 +32,7 @@ class PaymentForm(ModelForm):
             try:
                 name = int(self.data.get('payment_for_person'))
                 self.fields['voucher_no'].queryset = BuyVoucher.objects.filter(
-                    seller_name=name).order_by('voucher_number')
+                    seller_name=name).order_by('id')
 
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty Voucher queryset

@@ -37,7 +37,7 @@ class ProcessingStockForm(ModelForm):
         super().__init__(*args, **kwargs)
         self_object = ProcessingStock.objects.get(id=self.instance.id)
         self.fields['pre_stocks'].widget = CheckboxSelectMultiple()
-        self.fields['pre_stocks'].queryset = self_object.pre_stocks.all()
+        self.fields['pre_stocks'].queryset = self_object.pre_processing_stocks.all()
 
 
 class PostStockForm(ModelForm):
