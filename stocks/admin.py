@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PreStock, Store, FinishedStock, ProcessingStock, PostStock
+from .models import PreStock, Store, FinishedStock, ProcessingStock, PostStock, PreProcessingStock, YardLocation
 
 
 class StoreAdmin(admin.ModelAdmin):
@@ -30,8 +30,10 @@ class FinishedStockAdmin(admin.ModelAdmin):
 
 
 admin.site.register(PreStock, PreStockAdmin)
+admin.site.register(PreProcessingStock)
 admin.site.register(ProcessingStock, ProcessingStockAdmin)
 admin.site.register(FinishedStock, FinishedStockAdmin)
 admin.site.register(Store, StoreAdmin)
+admin.site.register(YardLocation)
 admin.site.register(PostStock)
 

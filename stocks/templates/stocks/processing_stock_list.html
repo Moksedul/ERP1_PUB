@@ -23,10 +23,10 @@
                   </select>
             	</div>
                 <div class="form-group col-md-2">
-                  <select id="store" class="form-control" name="store" onchange="this.form.submit()">
-                    <option selected>{{ store_selected }}</option>
-					  {% for store in stores %}
-                    <option>{{ store }}</option>
+                  <select id="yard_location" class="form-control" name="yard_location" onchange="this.form.submit()">
+                    <option selected>{{ yard_location_selected }}</option>
+					  {% for yard_location in yard_locations %}
+                    <option>{{ yard_location }}</option>
 					  {% endfor %}
                   </select>
                 </div>

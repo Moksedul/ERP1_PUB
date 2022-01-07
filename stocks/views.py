@@ -7,11 +7,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from core.views import pre_processing_stock_create
 from organizations.models import Organization
 from products.models import Products
 from vouchers.models import BuyVoucher
 from .forms import PreStockForm, FinishedStockForm, ProcessingStockForm
-from .models import PreStock, Store, FinishedStock, ProcessingStock, PostStock
+from .models import PreStock, Store, FinishedStock, ProcessingStock, PostStock, PreProcessingStock, YardLocation
 
 
 # Create your views here.
@@ -83,9 +84,10 @@ class PreStockList(LoginRequiredMixin, ListView):
 
         if business_contains != 'Select Business' and business_contains is not None:
             business = Organization.objects.get(name=business_contains)
-            stocks = stocks.filter(business_name=business)
+            buy_vouchers = BuyVoucher.objects.filter(business_name=business)
+            stocks = stocks.filter(voucher_no__in=buy_vouchers)
 
-        if store_contains != 'Select store' and business_contains is not None:
+        if store_contains != 'Select store' and store_contains is not None:
             store = Store.objects.get(name=store_contains)
             stocks = stocks.filter(store_name=store)
 
@@ -137,7 +139,7 @@ class ProcessingStockList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         products = Products.objects.all()
         business_names = Organization.objects.all()
-        stores = Store.objects.all()
+        yard_locations = YardLocation.objects.all()
 
         product_contains = self.request.GET.get('product')
         if product_contains is None:
@@ -145,14 +147,14 @@ class ProcessingStockList(LoginRequiredMixin, ListView):
         business_contains = self.request.GET.get('business')
         if business_contains is None or business_contains == '':
             business_contains = 'Select Business'
-        store_contains = self.request.GET.get('store')
-        if store_contains is None or store_contains == '':
-            store_contains = 'Select store'
+        yard_location_contains = self.request.GET.get('yard_location')
+        if yard_location_contains is None or yard_location_contains == '':
+            yard_location_contains = 'Select Location'
 
         context['products'] = products
         context['product_selected'] = product_contains
-        context['stores'] = stores
-        context['store_selected'] = store_contains
+        context['yard_locations'] = yard_locations
+        context['yard_location_selected'] = yard_location_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
         context['tittle'] = 'Processing Stock List'
@@ -162,19 +164,24 @@ class ProcessingStockList(LoginRequiredMixin, ListView):
         stocks = ProcessingStock.objects.all().order_by('-date_time_stamp')
         product_contains = self.request.GET.get('product')
         business_contains = self.request.GET.get('business')
-        store_contains = self.request.GET.get('store')
+        yard_location_contains = self.request.GET.get('yard_location')
 
         if product_contains != 'Select Product' and product_contains is not None:
             product = Products.objects.get(product_name=product_contains)
-            stocks = stocks.filter(product=product)
+            pre_stocks = PreStock.objects.filter(product=product)
+            pre_pro_stock = PreProcessingStock.objects.filter(pre_stock__in=pre_stocks)
+            stocks = stocks.filter(pre_processing_stocks__in=pre_pro_stock)
 
         if business_contains != 'Select Business' and business_contains is not None:
             business = Organization.objects.get(name=business_contains)
-            stocks = stocks.filter(business_name=business)
+            buy_vouchers = BuyVoucher.objects.filter(business_name=business)
+            pre_stocks = PreStock.objects.filter(voucher_no__in=buy_vouchers)
+            pre_pro_stock = PreProcessingStock.objects.filter(pre_stock__in=pre_stocks)
+            stocks = stocks.filter(pre_processing_stocks__in=pre_pro_stock)
 
-        if store_contains != 'Select store' and business_contains is not None:
-            store = Store.objects.get(name=store_contains)
-            stocks = stocks.filter(store_name=store)
+        if yard_location_contains != 'Select Location' and yard_location_contains is not None:
+            yard_location = YardLocation.objects.get(location_name=yard_location_contains)
+            stocks = stocks.filter(yard_location=yard_location)
 
         return stocks
 
@@ -264,14 +271,18 @@ def processing_stock_mess_creation(request):
 
     if selected_processing_stock:
         existing_processing_stock = ProcessingStock.objects.get(id=selected_processing_stock)
-        pre_stocks_in_exs_pros = existing_processing_stock.pre_processing_stocks.all()
-        [product_ids.append(pre_stock.product.pk) for pre_stock in pre_stocks_in_exs_pros]
+        pre_processing_stocks_in_exs_pros = existing_processing_stock.pre_processing_stocks.all()
+        [product_ids.append(product.pre_stock.product.pk) for product in pre_processing_stocks_in_exs_pros]
     else:
         existing_processing_stock = None
 
     if selected_pre_stocks:  # checking all selected products are same
         all_pre_stocks = PreStock.objects.filter(id__in=selected_pre_stocks)
-        [product_ids.append(pre_stock.product.pk) for pre_stock in all_pre_stocks]
+        for pre_stock in all_pre_stocks:
+            if (pre_stock.details['remaining_weight']) < float(weight):
+                messages.warning(request, 'Weight is Greater than remaining')
+                return redirect(PreStock)
+            product_ids.append(pre_stock.product.pk)
         same_products = all(value == product_ids[0] for value in product_ids)
     else:
         messages.warning(request, 'Please Select Some Products')
@@ -279,12 +290,13 @@ def processing_stock_mess_creation(request):
 
     if same_products and existing_processing_stock:
         for item in selected_pre_stocks:
-            existing_processing_stock.pre_stocks.add(item)
+            existing_processing_stock.pre_processing_stocks.add(pre_processing_stock_create(item, weight))
         return redirect(PreStock)
     elif same_products and not existing_processing_stock:
         new_processing_stock = ProcessingStock()
         new_processing_stock.save()
-        new_processing_stock.pre_processing_stocks.set(selected_pre_stocks)
+        for item in selected_pre_stocks:
+            new_processing_stock.pre_processing_stocks.add(pre_processing_stock_create(item, weight))
         return redirect(ProcessingStock)
     else:
         messages.warning(request, " Selected Product's are not Same")
@@ -412,8 +424,8 @@ def processing_complete(request, pk, pro_id):
                     processed_product.is_finished = True
                     processed_product.save()
                     messages.success(request, "Processing Completed and items are added to Finished Stock")
-                except:
-                    messages.error(request, "Something Wrong !!")
+                except Exception as e:
+                    messages.error(request, "Something Wrong !!{}".format(e))
                     return redirect('processing-stock-update', pk)
         else:
             messages.error(request, "All are Already Finished!")
@@ -427,8 +439,8 @@ def processing_complete(request, pk, pro_id):
             processed_product.is_finished = True
             processed_product.save()
             messages.success(request, "Processing Completed and Selected item is added to Finished Stock")
-        except:
-            messages.error(request, "Something Wrong !!")
+        except Exception as e:
+            messages.error(request, "Something Wrong !! {}".format(e))
         return redirect('processing-stock-update', pk)
 
 

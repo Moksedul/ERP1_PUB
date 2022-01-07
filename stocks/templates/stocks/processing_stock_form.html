@@ -19,7 +19,7 @@
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-6 mb-0" >
-                        {{ form.pre_stocks|as_crispy_field }}
+                        {{ form.pre_processing_stocks|as_crispy_field }}
                 </div>
                 <div class="col-12 border border-info rounded">
                     {{ form2set.management_form }}

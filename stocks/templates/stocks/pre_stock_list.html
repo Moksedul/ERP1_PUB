@@ -79,7 +79,8 @@
 					<tr class="infinite-item">
 						<td>
 							
-                            {% if not stock.added_to_processing_stock %}
+                            {% if stock.details.remaining_weight == 0 %}
+							{% else %}
                             <input name="selected_pre_stock" value="{{stock.id}}" type="checkbox">
 							{% endif %}
                         </td>
@@ -87,13 +88,16 @@
 						<td>{{ stock.voucher_no }}</td>
 						<td><small>{{ stock.voucher_no.business_name }}</small></td>
 						<td>{{ stock.product }}</td>
-						<td>{{ stock.details.net_weight }}</td>
+						<td>
+							Net weight: {{ stock.details.net_weight }} <br>
+							Added to Process: {{ stock.details.weight_added_to_processing }}
+						</td>
 						<td>{{ stock.number_of_bag }}</td>
 						<td>{{ stock.details.rate }}{{ stock.details.rate_condition }}</td>
 						<td>{{ stock.date_time_stamp }}</td>
 						<td>{{ stock.added_by }}</td>
 						<td>
-						{% if not stock.voucher_no and not stock.added_to_processing_stock %}
+						{% if not stock.voucher_no and not stock.details.remaining_weight == 0 %}
 							{% if perms.stocks.change_prestock %}
 							|<a class="" href="{% url 'pre-stock-update' stock.id%}"><i class="fa fa-edit"></i></a>
 							{% endif %}

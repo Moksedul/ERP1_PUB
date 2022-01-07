@@ -15,6 +15,13 @@ class Store(models.Model):
         return str(self.name)
 
 
+class YardLocation(models.Model):
+    location_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.location_name)
+
+
 class PreStock(models.Model):
     voucher_no = models.ForeignKey(BuyVoucher, on_delete=models.CASCADE, null=True, blank=True)
     store_name = models.ForeignKey(Store, on_delete=models.Empty, blank=True, null=True)
@@ -38,8 +45,8 @@ class PreStock(models.Model):
 
     @property
     def details(self):
-        from core.views import stock_details
-        return stock_details(self.pk)
+        from core.views import pre_stock_details
+        return pre_stock_details(self.pk)
 
     @property
     def added_to_processing_stock(self):
@@ -57,15 +64,16 @@ class PreStock(models.Model):
 
 
 class PreProcessingStock(models.Model):
-    pre_stock = models.ForeignKey
+    pre_stock = models.ForeignKey(PreStock, on_delete=models.CASCADE)
     weight = models.FloatField()
 
     def __str__(self):
-        return str(self.pre_stock)
+        return '' + str(self.pre_stock) + f' ({str(self.weight)} Kg)'
 
 
 class ProcessingStock(models.Model):
     pre_processing_stocks = models.ManyToManyField(PreProcessingStock)
+    yard_location = models.ForeignKey(YardLocation, on_delete=models.Empty, blank=True, null=True)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
     last_updated_time = models.DateTimeField(auto_now=True, null=True)
     added_by = CurrentUserField(related_name='processing_stock_added_by')
@@ -87,8 +95,8 @@ class ProcessingStock(models.Model):
         pre_stocks = self.pre_processing_stocks.all()
         vouchers = []
         for pre_stock in pre_stocks:
-            if pre_stock.voucher_no:
-                vouchers.append(pre_stock.voucher_no.voucher_number)
+            if pre_stock.pre_stock.voucher_no:
+                vouchers.append(pre_stock.pre_stock.voucher_no.voucher_number)
         return list(dict.fromkeys(vouchers))
 
     @property
@@ -96,8 +104,8 @@ class ProcessingStock(models.Model):
         pre_stocks = self.pre_processing_stocks.all()
         business = []
         for pre_stock in pre_stocks:
-            if pre_stock.voucher_no:
-                business.append(pre_stock.voucher_no.business_name.name)
+            if pre_stock.pre_stock.voucher_no:
+                business.append(pre_stock.pre_stock.voucher_no.business_name.name)
         return list(dict.fromkeys(business))
 
     @property
@@ -106,7 +114,7 @@ class ProcessingStock(models.Model):
         pre_stocks = self.pre_processing_stocks.all()
 
         for pre_stock in pre_stocks:
-            initial_weight += pre_stock.details['net_weight']
+            initial_weight += pre_stock.weight
 
         post_stocks = PostStock.objects.filter(processing_stock_id=self.pk)
         remaining_weight = initial_weight
@@ -132,6 +140,13 @@ class ProcessingStock(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('processing-stock-list')
+
+    def delete(self, using=None, keep_parents=False):
+        pre_processing_stocks = self.pre_processing_stocks.all()
+        for item in pre_processing_stocks:
+            pps = PreProcessingStock.objects.get(id=item.id)
+            pps.delete()
+        super(ProcessingStock, self).delete()
 
 
 class PostStock(models.Model):

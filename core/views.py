@@ -11,7 +11,7 @@ from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
-from stocks.models import PreStock
+from stocks.models import PreStock, PreProcessingStock
 from vouchers.models import SaleVoucher as Sale, Persons, GeneralVoucher, BuyVoucher, SaleExpense
 
 
@@ -410,7 +410,7 @@ def serial_gen(pk, initial):
     return serial
 
 
-def stock_details(pk):
+def pre_stock_details(pk):
     product = PreStock.objects.get(id=pk)
     rate = 0
     weight = product.weight + product.weight_adjustment
@@ -428,10 +428,19 @@ def stock_details(pk):
         amount = net_weight * rate
         rate_condition = '/kg'
 
+    pre_processing_stocks = PreProcessingStock.objects.filter(pre_stock=product)
+    weight_added_to_processing = 0
+
+    if pre_processing_stocks:
+        for item in pre_processing_stocks:
+            weight_added_to_processing += item.weight
+    remaining_weight = net_weight - weight_added_to_processing
     context = {
         'rate': rate,
         'amount': amount,
         'weight': weight,
+        'weight_added_to_processing': weight_added_to_processing,
+        'remaining_weight': remaining_weight,
         'rate_condition': rate_condition,
         'net_weight': net_weight,
         'total_weight_of_bags': total_weight_of_bags,
@@ -439,3 +448,10 @@ def stock_details(pk):
     }
 
     return context
+
+
+def pre_processing_stock_create(pre_stock_id, weight):
+    pre_stock = PreStock.objects.get(id=pre_stock_id)
+    new_pre_processing_stock = PreProcessingStock(pre_stock=pre_stock, weight=weight)
+    new_pre_processing_stock.save()
+    return new_pre_processing_stock.pk
