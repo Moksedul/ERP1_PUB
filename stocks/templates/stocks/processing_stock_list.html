@@ -42,6 +42,7 @@
 			<table id="myTable" class="table table-sm table-striped table-bordered">
 				<tr>
 					<th>Serial</th>
+					<th>Location</th>
 					<th>Product</th>
 					<th>Business</th>
 					<th>Vouchers</th>
@@ -54,6 +55,7 @@
 				{% for stock in stocks %}
 					<tr class="infinite-item">
 						<td>{{ stock.id }}</td>
+						<td>{{ stock.yard_location }}</td>
 						<td>{{ stock.product }}</td>
 						<td><small>{{ stock.business }}</small></td>
 						<td>{{ stock.vouchers }}</td>

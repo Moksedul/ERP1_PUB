@@ -52,6 +52,7 @@ class PreStockList(LoginRequiredMixin, ListView):
         products = Products.objects.all()
         business_names = Organization.objects.all()
         stores = Store.objects.all()
+        locations = YardLocation.objects.all()
 
         product_contains = self.request.GET.get('product')
         if product_contains is None:
@@ -66,6 +67,7 @@ class PreStockList(LoginRequiredMixin, ListView):
         context['products'] = products
         context['product_selected'] = product_contains
         context['stores'] = stores
+        context['locations'] = locations
         context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
@@ -262,6 +264,7 @@ def processing_stock_mess_creation(request):
     selected_pre_stocks = request.POST.getlist('selected_pre_stock')
     selected_processing_stock = request.POST.get('processing_stock')
     weight = request.POST.get('weight')
+    location = request.POST.get('location')
     product_ids = []
     if weight == '' or not weight:
         messages.warning(request, 'Please Enter Weight')
@@ -293,7 +296,8 @@ def processing_stock_mess_creation(request):
             existing_processing_stock.pre_processing_stocks.add(pre_processing_stock_create(item, weight))
         return redirect(PreStock)
     elif same_products and not existing_processing_stock:
-        new_processing_stock = ProcessingStock()
+        location = YardLocation.objects.get(id=location)
+        new_processing_stock = ProcessingStock(yard_location=location)
         new_processing_stock.save()
         for item in selected_pre_stocks:
             new_processing_stock.pre_processing_stocks.add(pre_processing_stock_create(item, weight))
@@ -326,13 +330,16 @@ class FinishedStockList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = Products.objects.all()
+        products_selection = Products.objects.all()
         business_names = Organization.objects.all()
         stores = Store.objects.all()
 
         product_contains = self.request.GET.get('product')
         if product_contains is None:
             product_contains = 'Select Product'
+            products = Products.objects.all()
+        else:
+            products = Products.objects.filter(product_name=product_contains)
         business_contains = self.request.GET.get('business')
         if business_contains is None or business_contains == '':
             business_contains = 'Select Business'
@@ -340,13 +347,14 @@ class FinishedStockList(LoginRequiredMixin, ListView):
         if store_contains is None or store_contains == '':
             store_contains = 'Select store'
 
-        context['products'] = products
+        context['products_selection'] = products_selection
         context['product_selected'] = product_contains
         context['stores'] = stores
         context['store_selected'] = store_contains
         context['business_selected'] = business_contains
         context['business_names'] = business_names
         context['tittle'] = 'Finished Stock List'
+        context['products'] = products
         return context
 
     def get_queryset(self):
@@ -394,7 +402,7 @@ def stock_update():
     for item in buy:
         if not item.weight_of_each_bag:
             item.weight_of_each_bag = 0
-        PreStock.objects.create(voucher_no=item, business_name=item.business_name,
+        PreStock.objects.create(voucher_no=item,
                                 product=item.product_name, weight=item.weight,
                                 rate_per_kg=item.rate_per_kg, rate_per_mann=item.rate_per_mann,
                                 number_of_bag=item.number_of_bag, weight_of_bags=item.weight_of_each_bag,

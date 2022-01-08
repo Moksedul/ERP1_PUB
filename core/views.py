@@ -5,13 +5,14 @@ from django.shortcuts import render
 from LC.models import LC, LCProduct, LCExpense
 from accounts.models import Investment
 from bkash.models import PaymentBkashAgent
+from challan.models import Challan
 from collection.models import Collection
 from core.digit2words import d2w
 from ledger.models import AccountLedger
 from local_sale.models import LocalSale, Product
 from payments.models import Payment
 from payroll.models import SalaryPayment
-from stocks.models import PreStock, PreProcessingStock
+from stocks.models import PreStock, PreProcessingStock, FinishedStock
 from vouchers.models import SaleVoucher as Sale, Persons, GeneralVoucher, BuyVoucher, SaleExpense
 
 
@@ -450,8 +451,33 @@ def pre_stock_details(pk):
     return context
 
 
+# used in processing_stock_mess_creation()
 def pre_processing_stock_create(pre_stock_id, weight):
     pre_stock = PreStock.objects.get(id=pre_stock_id)
     new_pre_processing_stock = PreProcessingStock(pre_stock=pre_stock, weight=weight)
     new_pre_processing_stock.save()
     return new_pre_processing_stock.pk
+
+
+# checking product availabilities
+def product_details(pk):
+    finishing_stocks = FinishedStock.objects.filter(product_id=pk)
+    challans = Challan.objects.filter(product_name_id=pk)
+
+    total_stock = 0
+    total_sold = 0
+
+    for finishing_stock in finishing_stocks:
+        total_stock += finishing_stock.weight
+    for challan in challans:
+        total_sold += challan.total_weight
+
+    remaining_stock = total_stock - total_sold
+
+    data = {
+        'total_sold': round(total_sold, 3),
+        'total_stock': round(total_stock, 3),
+        'remaining_stock': round(remaining_stock, 3)
+    }
+
+    return data

@@ -15,14 +15,22 @@
 						<label for="mode">Select Mode </label>
 					</div>
 					<div class="form-row">
-						<div class="form-group col-md-6">
+						<div class="form-group col-md-4">
 							<select id="mode" name="mode" class="form-control">
 								<option selected value="new">New Processing</option>
 								<option value="existing">Existing Processing</option>
 							</select>
 						</div>
-						<div class="form-group col-md-6">
+						<div class="form-group col-md-4">
 							<input class="form-control" step="any" type="number" name="weight" id="weight" placeholder="weight eg: 5.20">
+						</div>
+						<div class="form-group col-md-4">
+							<select id="location" name="location" class="form-control">
+								<option selected value="">Select Location</option>
+								{% for location in locations %}
+								<option value="{{location.id}}">{{location}}</option>
+								{% endfor %}
+							</select>
 						</div>
 					</div>
 				</div>

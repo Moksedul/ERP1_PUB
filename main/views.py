@@ -11,6 +11,7 @@ from local_sale.models import LocalSale
 from orders.models import Orders
 from organizations.models import Persons
 from payments.models import Payment
+from payments.views import update_account_ledger_for_payments
 from payroll.models import Employee, Attendance, Day
 from stocks.views import stock_update
 from vouchers.models import SaleVoucher, BuyVoucher
@@ -55,4 +56,6 @@ def home(request):
 
 @login_required()
 def settings(request):
+    # stock_update()
+    # update_account_ledger_for_payments()
     return render(request, 'main/settings_home.html')

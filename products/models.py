@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 
 
+
 class Products(models.Model):
     product_name = models.CharField(max_length=200)
     product_category = models.CharField(max_length=200)
@@ -16,6 +17,10 @@ class Products(models.Model):
     def get_absolute_url():
         return reverse('product-list')
 
+    @property
+    def details(self):
+        from core.views import product_details
+        return product_details(self.pk)
     # def save(self, *args, **kwargs):
     #     items = Products.objects.filter(product_name=self.product_name)
     #     if items:  # if some items are found in the database

@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from LC.models import LC
+from ledger.models import AccountLedger
 
 from ledger.views import create_account_ledger
 
@@ -112,6 +113,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        update_account_ledger_for_payments()
         admin = self.request.user.is_staff
         names = Persons.objects.all()
         lc_selection = LC.objects.all()
@@ -276,3 +278,34 @@ def payment_search(request):
         'remaining_amount': remaining_amount
     }
     return render(request, "payments/payment_search_form.html", context)
+
+
+def update_account_ledger_for_payments():
+    vouchers = Payment.objects.all()
+    for voucher in vouchers:
+        try:
+            account_ledger = AccountLedger.objects.get(payment_no=voucher.id)
+        except AccountLedger.DoesNotExist:
+            account_ledger = None
+        if not account_ledger:
+            data = {
+                'general_voucher': None,
+                'payment_no': voucher,
+                'collection_no': None,
+                'investment_no': None,
+                'bk_payment_no': None,
+                'salary_payment': None,
+                'description': 'for buy',
+                'type': 'P',
+                'date': voucher.payment_date
+            }
+            create_account_ledger(data)
+            print('updated-' + str(voucher.id))
+
+
+def delete_account_ledger_for_payments():
+    vouchers = Payment.objects.all()
+    account_ledger = AccountLedger.objects.filter(payment_no__in=vouchers)
+    for a in account_ledger:
+        a.delete()
+        print(a.id)

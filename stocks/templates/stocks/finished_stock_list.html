@@ -40,8 +40,34 @@
 			</div>
         </form>
 	<div class="row">
-	<div class="col-md-4"></div>
-	<div class="col-md-8">			
+	<div class="col-md-5">
+		<div class="card card-body">
+			<div class="text-center form-title">{{tittle}}</div>
+			<div class="table-container">
+			<table class="table table-sm table-striped table-bordered">
+				<tr>
+					<th>Product Name</th>
+					<th>Total Stock</th>
+					<th>Sold</th>
+					<th>Remaining Stock</th>
+				</tr>
+				<tbody>
+				{% for product in products %}
+				<tr>
+					<td>{{product.product_name}}</td>
+					<td>{{product.details.total_stock}} Kg</td>
+					<td>{{product.details.total_sold}} Kg</td>
+					<td class="{% if product.details.remaining_stock < 0 %} bg-danger {% endif %}">
+						{{product.details.remaining_stock}} Kg
+					</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-7">
 	<div class="card card-body">
 	<div class="text-center form-title">{{tittle}}</div>
 		<div class="table-container infinite-trigger">
