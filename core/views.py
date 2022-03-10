@@ -193,18 +193,18 @@ def buy_details_calc(pk):
     previous_amount = 0
 
     rate = 0
-    if buy.rate_per_kg is not None and buy.rate_per_kg != 0:
-        rate = buy.rate_per_kg
-    elif buy.rate_per_mann is not None and buy.rate_per_mann != 0:
-        rate = buy.rate_per_mann / 40.0
-    else:
-        rate = rate
+    # if buy.rate_per_kg is not None and buy.rate_per_kg != 0:
+    #     rate = buy.rate_per_kg
+    # elif buy.rate_per_mann is not None and buy.rate_per_mann != 0:
+    #     rate = buy.rate_per_mann / 40.0
+    # else:
+    #     rate = rate
 
-    total_weight = buy.weight
+    total_weight = 0
     total_amount = total_weight * rate
 
-    if buy.weight_of_each_bag is not None:
-        total_self_weight_of_bag = buy.weight_of_each_bag * product_bags
+    # if buy.weight_of_each_bag is not None:
+    #     total_self_weight_of_bag = buy.weight_of_each_bag * product_bags
 
     if buy.per_bag_unloading_cost is not None:
         total_unloading_cost = buy.per_bag_unloading_cost * product_bags
