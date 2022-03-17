@@ -155,17 +155,16 @@ def ledger(request):
         })
 
     for voucher in buys:
-        amount = buy_details_calc(voucher.id)
+        detail = buy_details_calc(voucher.id)
         key = "voucher"
         ledgers.setdefault(key, [])
         ledgers[key].append({
             'date': voucher.date_added,
             'name': voucher.seller_name,
             'voucher_no': voucher.voucher_number,
-            'descriptions': ' Weight: ' + str(voucher.weight) +
-                            ' Kg | Rate/Kg:' + str(voucher.rate_per_kg) +
-                            'Tk. | Rate/mann:' + str(voucher.rate_per_kg) + 'Tk.',
-            'credit_amount': amount['grand_total_amount'],
+            'descriptions': ' Weight: ' + str(detail['total_weight']) +
+                            ' Kg',
+            'credit_amount': detail['grand_total_amount'],
             'debit_amount': 0,
             'url1': 'buy/' + str(voucher.id) + '/detail',
             'url2': 'buy/' + str(voucher.id) + '/detail'

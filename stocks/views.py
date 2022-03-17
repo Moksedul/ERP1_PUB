@@ -414,7 +414,9 @@ def stock_update():
 def processing_complete(request, pk, pro_id):
 
     def create_fs(processed_stock):
-        FinishedStock.objects.create(business_name=processed_stock.business_name,
+        FinishedStock.objects.create(
+                                     store_name=processed_stock.store,
+                                     business_name=processed_stock.business_name,
                                      rate_per_kg=processed_stock.rate_per_kg, weight=processed_stock.weight,
                                      number_of_bag=processed_stock.bags,
                                      product=processed_stock.product,

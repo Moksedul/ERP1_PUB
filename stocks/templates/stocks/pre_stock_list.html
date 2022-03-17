@@ -66,6 +66,7 @@
 					<th>Store</th>
 					<th>Voucher</th>
 					<th>Business</th>
+					<th>Seller</th>
 					<th>Product</th>
 					<th>Weight</th>
                     <th>Bags</th>
@@ -87,6 +88,7 @@
 						<td>{{ stock.store_name }}</td>
 						<td>{{ stock.voucher_no }}</td>
 						<td><small>{{ stock.voucher_no.business_name }}</small></td>
+						<td><small>{{ stock.voucher_no.seller_name }}</small></td>
 						<td>{{ stock.product }}</td>
 						<td>
 							Net weight: {{ stock.details.net_weight }} <br>

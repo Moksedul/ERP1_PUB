@@ -4,12 +4,28 @@
 {% load humanize %}
 {% load indian_numbers_tags %}
 {% block content %}
+<style>
+	td{
+	padding-top: 10!important;
+	padding-bottom: 10!important;
+	}
+	main{
+	margin-left: 15px;
+	margin-right: 15px;
+	}
+
+	.row{
+	margin: 0!important;
+	}
+
+</style>
+
 	<form method="GET" id="search">
 		<div class="form-row">
-				<div class="form-group col-md-1">
+				<div class="form-group">
 					<a class="btn btn-secondary  btn-sm btn-block bg-steel" href="{% url 'add-finished-stock'%}">Add Stock</a>
 				</div>
-                <div class="form-group col-md-3">
+                <div class="form-group">
 					<select id="product" class="form-control" name="product" onchange="this.form.submit()">
 						<option selected>{{ product_selected }}</option>
 						  {% for product in products %}
@@ -17,7 +33,7 @@
 						  {% endfor %}
 					  </select>
             	</div>
-                <div class="form-group col-md-2">
+                <div class="form-group">
                     <select id="business" class="form-control" name="business" onchange="this.form.submit()">
                     <option selected>{{ business_selected }}</option>
 					  {% for name in business_names %}
@@ -39,8 +55,8 @@
 				</div>
 			</div>
         </form>
-	<div class="row">
-	<div class="col-md-5">
+	<div class="row" >
+	<div class="col-md-5 p-0">
 		<div class="card card-body">
 			<div class="text-center form-title">{{tittle}}</div>
 			<div class="table-container">
@@ -54,11 +70,11 @@
 				<tbody>
 				{% for product in products %}
 				<tr>
-					<td>{{product.product_name}}</td>
-					<td>{{product.details.total_stock}} Kg</td>
-					<td>{{product.details.total_sold}} Kg</td>
+					<td><small>{{product.product_name}}</small></td>
+					<td>{{product.details.total_stock}} Kg <br> {{ product.details.total_bag }} Sacks</td>
+					<td>{{product.details.total_sold}} Kg  <br> {{ product.details.total_bag_sold }} Sacks</td>
 					<td class="{% if product.details.remaining_stock < 0 %} bg-danger {% endif %}">
-						{{product.details.remaining_stock}} Kg
+						{{product.details.remaining_stock}} Kg <br> {{ product.details.total_bag_remaining }} Sacks
 					</td>
 				</tr>
 				{% endfor %}
@@ -67,7 +83,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-7">
+	<div class="col-md-7 p-0">
 	<div class="card card-body">
 	<div class="text-center form-title">{{tittle}}</div>
 		<div class="table-container infinite-trigger">
@@ -115,13 +131,16 @@
 
 
 
+
 <!-- search options function-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function ()
 {
     $("select").select2({});
+    $("main").removeClass("container");
 });
+
 </script>
 <!--for infinite scrolling-->
 <script type="text/javascript" src="{% static 'main/js/jquery.waypoints.min.js' %}"></script>

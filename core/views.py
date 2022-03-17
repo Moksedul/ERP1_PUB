@@ -228,7 +228,7 @@ def buy_details_calc(pk):
         'tittle': 'Buy Voucher: ' + str(buy.voucher_number),
         'buy': buy,
         'grand_total_amount': round(grand_total_amount, 2),
-        'total_weight': round(total_weight, 2),
+        'total_weight': round(product_weight, 2),
         'amount_after_deduction': round(amount_after_deduction, 2),
         'total_amount': round(total_amount, 2),
         'total_unloading_cost': total_unloading_cost,
@@ -466,18 +466,26 @@ def product_details(pk):
 
     total_stock = 0
     total_sold = 0
+    total_bag = 0
+    total_bag_sold = 0
 
     for finishing_stock in finishing_stocks:
         total_stock += finishing_stock.weight
+        total_bag += finishing_stock.number_of_bag
     for challan in challans:
         total_sold += challan.total_weight
+        total_bag_sold += challan.number_of_bag
 
     remaining_stock = total_stock - total_sold
+    total_bag_remaining = total_bag - total_bag_sold
 
     data = {
         'total_sold': round(total_sold, 3),
         'total_stock': round(total_stock, 3),
-        'remaining_stock': round(remaining_stock, 3)
+        'remaining_stock': round(remaining_stock, 3),
+        'total_bag_remaining': round(total_bag_remaining, 3),
+        'total_bag': round(total_bag, 3),
+        'total_bag_sold': round(total_bag_sold, 3),
     }
 
     return data

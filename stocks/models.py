@@ -74,6 +74,7 @@ class PreProcessingStock(models.Model):
 class ProcessingStock(models.Model):
     pre_processing_stocks = models.ManyToManyField(PreProcessingStock)
     yard_location = models.ForeignKey(YardLocation, on_delete=models.Empty, blank=True, null=True)
+    weight_loss = models.FloatField(default=0)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True)
     last_updated_time = models.DateTimeField(auto_now=True, null=True)
     added_by = CurrentUserField(related_name='processing_stock_added_by')
@@ -175,8 +176,8 @@ class FinishedStock(models.Model):
     inventory_updated = models.BooleanField(default=False)
     remarks = models.CharField(max_length=225, blank=True)
 
-    class Meta:
-        unique_together = [("product", "processing_stock")]
+    # class Meta:
+    #     unique_together = [("product", "processing_stock")]
 
     def __str__(self):
         return str(self.product)
