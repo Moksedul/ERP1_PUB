@@ -14,6 +14,7 @@
             <div>Vouchers: {{processing_stock.vouchers}}</div>
             <div>Initial Weight: {{processing_stock.weight.initial_weight}} Kg</div>
             <div>Remaining Weight: {{processing_stock.weight.remaining_weight}} Kg</div>
+            <div>Weight Loss: {{processing_stock.weight_loss}} Kg</div>
         </div>
         <form method="post">
             {% csrf_token %}

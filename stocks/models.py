@@ -118,7 +118,7 @@ class ProcessingStock(models.Model):
             initial_weight += pre_stock.weight
 
         post_stocks = PostStock.objects.filter(processing_stock_id=self.pk)
-        remaining_weight = initial_weight
+        remaining_weight = initial_weight - self.weight_loss
 
         for post_stock in post_stocks:
             remaining_weight -= post_stock.weight

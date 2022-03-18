@@ -51,7 +51,7 @@ TRANSACTION_AGAINST = [
 
 class BkashTransaction(models.Model):
     invoice_no = models.CharField(max_length=10, default=increment_invoice_number, unique=True)
-    transaction_type = models.CharField(max_length=10, choices=TRANSACTION_AGAINST, default=TRANSACTION_AGAINST[0])
+    transaction_type = models.CharField(max_length=50, choices=TRANSACTION_AGAINST, default='na')
     payed_to = models.ForeignKey(Persons, on_delete=models.CASCADE)
     ordered_by = models.CharField(max_length=50, null=True, blank=True)
     agent_name = models.ForeignKey(BkashAgents, on_delete=models.CASCADE)

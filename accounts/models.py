@@ -7,8 +7,8 @@ from organizations.models import Organization
 
 
 def default_account():
-    account = Accounts.objects.get(account_name='Daily Cash').pk
-    return account
+    # account = Accounts.objects.get(account_name='Daily Cash').pk
+    return 1
 
 
 class Accounts(models.Model):
