@@ -24,7 +24,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = 'v-tx4u7u$qcjfrn=uy*=h1t6iybrn(kwkjr4vnl(mfkgdh8s=f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '104.248.195.212']
 
@@ -98,55 +98,55 @@ WSGI_APPLICATION = 'techAlong_ERP.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    # local DB connection
+    # DATABASES = {
+    #
+    #     'default': {
+    #
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #
+    #         'NAME': 'erp_db',
+    #
+    #         'USER': 'postgres',
+    #
+    #         'PASSWORD': '85213',
+    #
+    #         'HOST': 'localhost',
+    #
+    #         'PORT': '5432',
+    #
+    #     }
+    #
+    # }
 
-# local DB connection
-# DATABASES = {
-#
-#     'default': {
-#
-#         'ENGINE': 'django.db.backends.postgresql',
-#
-#         'NAME': 'erp_db',
-#
-#         'USER': 'postgres',
-#
-#         'PASSWORD': '85213',
-#
-#         'HOST': 'localhost',
-#
-#         'PORT': '5432',
-#
-#     }
-#
-# }
+    #  digital ocean server DB connection
+    DATABASES = {
 
+        'default': {
 
-# digital ocean server DB connection
-# DATABASES = {
-#
-#     'default': {
-#
-#         'ENGINE': 'django.db.backends.postgresql',
-#
-#         'NAME': 'erp_db',
-#
-#         'USER': 'postgres',
-#
-#         'PASSWORD': '85213',
-#
-#         'HOST': 'localhost',
-#
-#         'PORT': '5432',
-#
-#     }
-#
-# }
+            'ENGINE': 'django.db.backends.postgresql',
+
+            'NAME': 'erp_db',
+
+            'USER': 'moksedul',
+
+            'PASSWORD': 'm0ks3du11212@#',
+
+            'HOST': 'localhost',
+
+            'PORT': '',
+
+        }
+
+    }
 
 
 # Password validation
