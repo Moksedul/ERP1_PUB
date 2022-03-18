@@ -189,7 +189,7 @@ USE_THOUSAND_SEPARATOR = False
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = '/home/techalong/techAlong_ERP/static'
-STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+STATIC_ROOT = '/home/moksedul/erp1/static'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
