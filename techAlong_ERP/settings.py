@@ -26,7 +26,7 @@ SECRET_KEY = 'v-tx4u7u$qcjfrn=uy*=h1t6iybrn(kwkjr4vnl(mfkgdh8s=f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '192.168.1.253']
+ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '104.248.195.212']
 
 
 # Application definition
@@ -105,6 +105,7 @@ DATABASES = {
     }
 }
 
+# local DB connection
 # DATABASES = {
 #
 #     'default': {
@@ -124,6 +125,29 @@ DATABASES = {
 #     }
 #
 # }
+
+
+# digital ocean server DB connection
+# DATABASES = {
+#
+#     'default': {
+#
+#         'ENGINE': 'django.db.backends.postgresql',
+#
+#         'NAME': 'erp_db',
+#
+#         'USER': 'postgres',
+#
+#         'PASSWORD': '85213',
+#
+#         'HOST': 'localhost',
+#
+#         'PORT': '5432',
+#
+#     }
+#
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
