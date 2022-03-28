@@ -381,6 +381,7 @@ def bill_print(request, pk):
         tds_text = ''
 
     total_amount = weight * rate
+    total_amount = round(total_amount, 2)
 
     if style == 'table':
         amount_in_word = d2w(total_amount)
