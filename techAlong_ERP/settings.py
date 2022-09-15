@@ -136,9 +136,9 @@ else:
 
             'NAME': 'erp_db',
 
-            'USER': 'moksedul',
+            'USER': 'dbuser',  # user name for server database
 
-            'PASSWORD': 'm0ks3du11212@#',
+            'PASSWORD': 'userpassword',  # password for the user of server database
 
             'HOST': 'localhost',
 
