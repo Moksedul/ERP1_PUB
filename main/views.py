@@ -49,7 +49,7 @@ def home(request):
         'present': present,
         'absent': absent,
         'persons': persons,
-        'tittle': 'techAlong Business | Home'
+        'tittle': 'ERP1 | Home'
     }
     return render(request, 'main/home.html', context)
 
