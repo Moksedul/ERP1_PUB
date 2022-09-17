@@ -2,7 +2,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from core.views import load_person_image
-from test import convert_to_demo
+from core.test import convert_to_demo
 from . import views
 
 urlpatterns = [
