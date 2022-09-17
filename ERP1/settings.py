@@ -191,12 +191,12 @@ USE_THOUSAND_SEPARATOR = False
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/techalong/ERP1/static'
+# STATIC_ROOT = '/home/techalong/ERP1/static'
 # STATIC_ROOT = '/home/moksedul/erp1/static'
 
 # FOR HEROKU DEPLOYMENT
-# PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
