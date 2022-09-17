@@ -1,15 +1,12 @@
-value = 2**38
-print(value)
+from organizations.models import Companies
+from organizations.models import Persons
 
-txt = "map"
 
-mytable = txt.maketrans("abcdefghijklmnopqrstuvwxyz", "cdefghijklmnopqrstuvwxyzab")
+def convert_to_demo(request):
+    companies = Companies.objects.all()
+    persons = Persons.objects.all()
 
-print(txt.translate(mytable))
-string = "dfdf" \
-         ""
-char_seen = []
-for char in string:
-    if char not in char_seen:
-        char_seen.append(char)
-print(''.join(char_seen))
+    company_name_str = ''
+
+    for company in companies:
+        company.name_of_company =
