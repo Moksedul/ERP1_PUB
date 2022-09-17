@@ -29,7 +29,7 @@ SECRET_KEY = 'v-tx4u7u$qcjfrn=uy*=h1t6iybrn(kwkjr4vnl(mfkgdh8s=f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['techalong.pythonanywhere.com', '127.0.0.1', '104.248.195.212']
+ALLOWED_HOSTS = ['erp1.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
