@@ -192,7 +192,8 @@ STATIC_URL = '/static/'
 # STATIC_ROOT = '/home/techalong/ERP1/static'
 # STATIC_ROOT = '/home/moksedul/erp1/static'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
