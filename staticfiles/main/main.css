@@ -1,0 +1,448 @@
+.add-more{
+  width: 20px;
+  text-align: center;
+  padding: 0 3 0 3;
+  margin: 5px;
+  position: relative;
+
+}
+
+.add-more:hover{
+  cursor: pointer;
+  background-color: #1a143c;
+  color: white;
+}
+
+.table-container{
+height: 375px;
+overflow-y: auto;
+overflow-x: auto;
+}
+
+.table-title{
+border-bottom: 2px solid blue;
+
+}
+.form-title{
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+background: #1a143c;
+color: white;
+border-bottom: 2px solid blue;
+
+}
+
+.business-name{
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.form-control{
+  height: 28px;
+  font-size: small;
+  padding: 2;
+
+}
+
+#form_set .form-control{
+    height: 22px;
+    font-size: small;
+    padding: 2;
+
+}
+
+#form_set .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #444;
+  line-height: 20px!important;
+}
+
+#form_set .select2-container .select2-selection--single {
+  height: 22px!important;
+  font-size: small;
+  padding: 2;
+}
+
+label {
+    font-size: small;
+    display: inline-block;
+    margin-bottom: 0px;
+}
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0em .5em 0em .5em;
+}
+
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  /* change if the mask should have another color then white */
+  z-index: 99;
+  /* makes sure it stays on top */
+}
+
+#status {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  /* centers the loading animation horizontally one the screen */
+  top: 50%;
+  /* centers the loading animation vertically one the screen */
+  background-image: url(https://raw.githubusercontent.com/niklausgerber/PreLoadMe/master/img/status.gif);
+  /* path to your loading animation */
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: -100px 0 0 -100px;
+  /* is width and height divided by two */
+}
+
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   margin:auto;
+   width: 100%;
+   height: auto;
+   background-color: #005266a1;
+   color: white;
+   text-align: center;
+
+}
+
+
+.centered{
+padding: 5px 0;
+}
+
+form {
+    background-color: #dee9f7;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    border-radius: .25rem;
+}
+
+#searchForm{
+
+    background-color: #00ffff00;
+    padding-top: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    border-radius: .25rem;
+}
+
+.modal-header{
+  height: 25px;
+  padding: 2px;
+  padding-left: 15px;
+}
+
+.modal-content{
+  border-radius: 11px;
+}
+
+.close-btn{
+  border: 1px solid tomato;
+  width: 25;
+  font-size: 13;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.close-btn:hover{
+  background-color: tomato;
+}
+
+#menuButtons{
+    background-color: #00ffff00;
+    padding-top: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+    border-radius: .25rem;
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+.container main{
+display: table;
+
+
+}
+
+.responsive-table{
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+@media screen and (max-width: 600px) {
+table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+}
+
+#myInput{
+width: 100%;
+}
+
+.table td, .table th, .table tr {
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+td .fa-edit{
+color: #005266;
+}
+
+td .fa-trash{
+color: red;
+}
+
+td .btn{
+display:inline;
+}
+
+.table-header th{
+background-color: red;
+}
+
+.table-footer td{
+background-color: lightslategrey;
+font-weight:bold;
+}
+
+#tableta {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+tr:hover {
+  background-color:gray!important;
+  box-shadow: 0px 0px 10px gray;
+  z-index:2;
+  -webkit-transition: background-color 1000ms linear;
+  -moz-transition: background-color 1000ms linear;
+  -o-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+  -webkit-animation-direction: alternate; /* Chrome, Safari, Opera */
+  animation-direction: alternate;
+  
+  -webkit-animation-iteration-count: 2; /* Chrome, Safari, Opera */
+  animation-iteration-count: 2;
+  
+  }
+  
+ tr:hover a {
+  color: #331919;
+  }
+  
+ tr:hover .disabled {
+      color: #331919;
+  }
+
+#tableta td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#tableta tr:nth-child(even){background-color: #f2f2f2;}
+
+#tableta tr:hover {background-color: #ddd;}
+
+#tableta th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+body {
+ overflow: hidden;
+  margin-top: 65px;
+  background-color: #002933;
+  font-family: 'Arial', monospace;
+}
+
+div{
+   font-size: 11pt;
+}
+.bg-ta {
+  background-image: url("/media/backgrounds/home_bg2.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-top {
+    background-color: #e6e6fa29;
+    padding: 4px;
+    border: 1px solid rgba(225,225,225,0.5);
+}
+
+.rectangle {
+      text-align: center;
+      border-radius: 12px;
+      background: #005266;
+      width: 200px;
+      height: 150px;
+      padding: 55px;
+    }
+.home-box{
+      text-align: center;
+      border-radius: 12px;
+      background: grey;
+      width: 200px;
+      height: 185px;
+    }
+
+h1, h2, h3, h4, h5, h6 {
+  color: #00000;
+}
+
+ul {
+  margin: 0;
+}
+
+.bg-steel {
+  background-color: #005266;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    background: rgba(0,58,58,0.4);
+    border-bottom: 1px solid rgba(225,225,225,0.4);
+    z-index: 1000;
+}
+.navbar-brand{
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.navbar-toggler {
+    padding: 0.2rem 0.5rem;
+    font-size: 15px;
+    line-height: 0;
+    background-color: transparent;
+    border: 1px solid;
+    border-radius: 0.25rem;
+}
+.navbar-collapse{
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #17a2b8;
+    padding-left: 15px;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+@media (min-width: 992px){
+.navbar-expand-lg .navbar-collapse{
+background-color: rgba(0,0,0,0.0);
+}
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+  color: grey;
+}
